@@ -52,9 +52,7 @@ public class PasswordProtect extends JavaPlugin  {
         getCommand("setpassword").setExecutor(new SetPasswordCommand(this));
     }
 
-    public void onDisable() {
-        System.out.println("PasswordProtect disabled");
-    }
+    public void onDisable() {}
 
     public Configuration getConfig() {
         return configuration;
