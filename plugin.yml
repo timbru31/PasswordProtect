@@ -1,0 +1,15 @@
+name: PasswordProtect
+main: com.disabledhamster.bukkit.PasswordProtect.PasswordProtect
+description: Force non-ops to provide a password to play on the server
+version: 0.1
+
+commands:
+  password:
+    description: Login using this server's password
+    usage: /<command> password
+  setpasswordjail:
+    description: Set the password jail to your current location
+    usage: /<command>
+  setpassword:
+    description: Set the password required for non-ops to play on this server
+    usage: /<command> password
