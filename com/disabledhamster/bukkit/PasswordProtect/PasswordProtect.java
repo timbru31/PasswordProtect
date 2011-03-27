@@ -24,6 +24,7 @@ public class PasswordProtect extends JavaPlugin  {
     private HashMap<World, JailLocation> jailLocations = new HashMap<World, JailLocation>();
 
     private String password;
+    private Boolean requireOpsPassword;
 
     public void onEnable() {
         configuration = getConfiguration();
@@ -50,6 +51,7 @@ public class PasswordProtect extends JavaPlugin  {
         getCommand("password").setExecutor(new PasswordCommand(this));
         getCommand("setpasswordjail").setExecutor(new SetJailCommand(this));
         getCommand("setpassword").setExecutor(new SetPasswordCommand(this));
+        getCommand("opsrequirepassword").setExecutor(new OpsRequirePasswordCommand(this));
     }
 
     public void onDisable() {}
@@ -120,5 +122,20 @@ public class PasswordProtect extends JavaPlugin  {
         }
         
         return password;
+    }
+
+    public void setRequireOpsPassword(boolean requireOpsPassword) {
+        this.requireOpsPassword = requireOpsPassword;
+
+        configuration.setProperty("requireOpsPassword", requireOpsPassword);
+        configuration.save();
+    }
+
+    public boolean getRequireOpsPassword() {
+        if (requireOpsPassword == null) {
+            requireOpsPassword = configuration.getBoolean("requireOpsPassword", false);
+        }
+
+        return requireOpsPassword;
     }
 }

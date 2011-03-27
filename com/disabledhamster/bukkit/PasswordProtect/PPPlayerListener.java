@@ -25,7 +25,7 @@ public class PPPlayerListener extends PlayerListener {
                 player.sendMessage(ChatColor.YELLOW + "PasswordProtect is enabled but no password has been set");
                 player.sendMessage(ChatColor.YELLOW + "Use " + ChatColor.GREEN + "/setpassword " + ChatColor.RED + "<password>" + ChatColor.YELLOW + " to set it");
             }
-        } else if (!player.isOp()) {
+        } else if (!player.isOp() || plugin.getRequireOpsPassword()) {
             sendToJail(player);
             plugin.jailedPlayers.add(player);
         }
