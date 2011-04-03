@@ -33,17 +33,16 @@ public class PasswordProtect extends JavaPlugin  {
         String serverPassword = getPassword();
         if (serverPassword != null)
             System.out.println("Server password is " + getPassword());
-        else {
+        else
             System.out.println("Server password is not set. Use /setpassword <password>");
-        }
 
         PluginManager pluginManager = getServer().getPluginManager();
         pluginManager.registerEvent(Type.PLAYER_JOIN, playerListener, Priority.Normal, this);
         pluginManager.registerEvent(Type.PLAYER_MOVE, playerListener, Priority.High, this);
-        pluginManager.registerEvent(Type.PLAYER_ITEM, playerListener, Priority.High, this);
+        pluginManager.registerEvent(Type.PLAYER_INTERACT, playerListener, Priority.High, this);
         pluginManager.registerEvent(Type.PLAYER_DROP_ITEM, playerListener, Priority.High, this);
 
-        pluginManager.registerEvent(Type.BLOCK_PLACED, blockListener, Priority.Normal, this);
+        pluginManager.registerEvent(Type.BLOCK_PLACE, blockListener, Priority.Normal, this);
         pluginManager.registerEvent(Type.BLOCK_BREAK, blockListener, Priority.Normal, this);
 
         pluginManager.registerEvent(Type.PLAYER_COMMAND_PREPROCESS, playerListener, Priority.Monitor, this);

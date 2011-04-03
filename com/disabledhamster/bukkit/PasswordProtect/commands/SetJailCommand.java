@@ -34,7 +34,9 @@ public class SetJailCommand implements CommandExecutor {
 
         int radius = 0;
         if (args.length >= 1) {
-            radius = Integer.parseInt(args[0]);
+            try {
+                radius = Integer.parseInt(args[0]);
+            } catch (NumberFormatException nfe) {}
         }
 
         JailLocation loc = new JailLocation(player.getLocation(), radius);

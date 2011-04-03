@@ -3,12 +3,12 @@ package com.disabledhamster.bukkit.PasswordProtect;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.event.player.PlayerListener;
-import org.bukkit.event.player.PlayerEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.entity.Player;
-import org.bukkit.event.player.PlayerChatEvent;
+import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import org.bukkit.event.player.PlayerDropItemEvent;
-import org.bukkit.event.player.PlayerItemEvent;
+import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.event.player.PlayerJoinEvent;
 
 public class PPPlayerListener extends PlayerListener {
     private PasswordProtect plugin;
@@ -18,7 +18,7 @@ public class PPPlayerListener extends PlayerListener {
     }
 
     @Override
-    public void onPlayerJoin(PlayerEvent event) {
+    public void onPlayerJoin(PlayerJoinEvent event) {
         Player player = event.getPlayer();
         if (plugin.getPassword() == null) {
             if (player.isOp()) {
@@ -72,7 +72,7 @@ public class PPPlayerListener extends PlayerListener {
     }
 
     @Override
-    public void onPlayerItem(PlayerItemEvent event) {
+    public void onPlayerInteract(PlayerInteractEvent event) {
         if (event.isCancelled()) {
             return;
         }
@@ -96,10 +96,10 @@ public class PPPlayerListener extends PlayerListener {
     }
 
     @Override
-    public void onPlayerCommandPreprocess(PlayerChatEvent event) {
+    public void onPlayerCommandPreprocess(PlayerCommandPreprocessEvent event) {
         Player player = event.getPlayer();
         String message = event.getMessage();
-
+        
         if (plugin.jailedPlayers.contains(player)) {
             if (message.startsWith("/password")) {
                 String password = message.replaceFirst("\\/password ", "");
