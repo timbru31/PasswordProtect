@@ -22,15 +22,16 @@ public class SetJailCommand implements CommandExecutor {
         if (!(sender instanceof Player)) {
             sender.sendMessage(ChatColor.RED + "This command must be used in-game");
             return true;
+        } else {
+            Player player = (Player)sender;
+            if (!plugin.permissions.canSetJail(player)) {
+                sender.sendMessage(ChatColor.RED + "You do not have permission to use this command");
+                return true;
+            }
         }
         
         Player player = (Player)sender;
         World world = player.getWorld();
-        
-        if (!player.isOp()) {
-            player.sendMessage(ChatColor.RED + "Only ops may use this command");
-            return true;
-        }
 
         int radius = 0;
         if (args.length >= 1) {

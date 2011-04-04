@@ -1,7 +1,7 @@
 name: PasswordProtect
 main: com.disabledhamster.bukkit.PasswordProtect.PasswordProtect
 description: Force non-ops to provide a password to play on the server
-version: 0.2.5
+version: 0.3
 
 commands:
   password:

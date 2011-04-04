@@ -26,6 +26,8 @@ public class PasswordProtect extends JavaPlugin  {
     private String password;
     private Boolean requireOpsPassword;
 
+    public Permissions permissions;
+
     public void onEnable() {
         configuration = getConfiguration();
 
@@ -35,6 +37,8 @@ public class PasswordProtect extends JavaPlugin  {
             System.out.println("Server password is " + getPassword());
         else
             System.out.println("Server password is not set. Use /setpassword <password>");
+
+        permissions = new Permissions(this);
 
         PluginManager pluginManager = getServer().getPluginManager();
         pluginManager.registerEvent(Type.PLAYER_JOIN, playerListener, Priority.Normal, this);

@@ -17,7 +17,13 @@ public class PasswordCommand implements CommandExecutor {
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-        if (!sender.isOp()) {
+        if (sender instanceof Player) {
+            Player player = (Player)sender;
+            if (!plugin.permissions.canGetPassword(player)) {
+                sender.sendMessage(ChatColor.RED + "You don't have permission to use this command");
+                return true;
+            }
+        } else if (!sender.isOp()) {
             sender.sendMessage(ChatColor.RED + "Only server ops can use this command");
             return true;
         }

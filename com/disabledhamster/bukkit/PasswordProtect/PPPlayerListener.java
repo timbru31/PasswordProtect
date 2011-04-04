@@ -21,11 +21,11 @@ public class PPPlayerListener extends PlayerListener {
     public void onPlayerJoin(PlayerJoinEvent event) {
         Player player = event.getPlayer();
         if (plugin.getPassword() == null) {
-            if (player.isOp()) {
+            if (plugin.permissions.canSetPassword(player)) {
                 player.sendMessage(ChatColor.YELLOW + "PasswordProtect is enabled but no password has been set");
                 player.sendMessage(ChatColor.YELLOW + "Use " + ChatColor.GREEN + "/setpassword " + ChatColor.RED + "<password>" + ChatColor.YELLOW + " to set it");
             }
-        } else if (!player.isOp() || plugin.getRequireOpsPassword()) {
+        } else if (plugin.permissions.needsPassword(player)) {
             sendToJail(player);
             plugin.jailedPlayers.add(player);
         }
@@ -49,7 +49,7 @@ public class PPPlayerListener extends PlayerListener {
 
     public void sendToJail(Player player) {
         JailLocation jailLocation = plugin.getJailLocation(player);
-        player.teleportTo(jailLocation);
+        player.teleport(jailLocation);
         sendPasswordRequiredMessage(player);
     }
 
