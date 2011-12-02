@@ -5,10 +5,10 @@ import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockListener;
 import org.bukkit.event.block.BlockPlaceEvent;
 
-public class PPBlockListener extends BlockListener {
+public class PasswordProtectBlockListener extends BlockListener {
     private PasswordProtect plugin;
 
-    public PPBlockListener(PasswordProtect plugin) {
+    public PasswordProtectBlockListener(PasswordProtect plugin) {
         this.plugin = plugin;
     }
 

@@ -1,5 +1,5 @@
 name: PasswordProtect
-main: de.xghostkillerx.passwordprotct.PasswordProtect
+main: de.xghostkillerx.passwordprotect.PasswordProtect
 description: Force non-ops to provide a password to play on the server
 version: 1.0
 author: xGhOsTkiLLeRx

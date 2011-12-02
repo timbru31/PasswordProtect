@@ -4,142 +4,155 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-
+import java.util.logging.Logger;
 import org.bukkit.World;
+import org.bukkit.command.Command;
+import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event.Priority;
 import org.bukkit.event.Event.Type;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.plugin.PluginDescriptionFile;
 import org.bukkit.plugin.PluginManager;
 
 public class PasswordProtect extends JavaPlugin  {
-    private final PPPlayerListener playerListener = new PPPlayerListener(this);
-    private final PPBlockListener blockListener = new PPBlockListener(this);
+
+	public static final Logger log = Logger.getLogger("Minecraft");
+	private final PasswordProtectPlayerListener playerListener = new PasswordProtectPlayerListener(this);
+	private final PasswordProtectBlockListener blockListener = new PasswordProtectBlockListener(this);
 
 	public FileConfiguration config;
 	public File configFile;
 
-    public ArrayList<Player> jailedPlayers = new ArrayList<Player>();
-    private HashMap<World, JailLocation> jailLocations = new HashMap<World, JailLocation>();
+	public ArrayList<Player> jailedPlayers = new ArrayList<Player>();
+	private HashMap<World, JailLocation> jailLocations = new HashMap<World, JailLocation>();
 
-    private String password;
-    private Boolean requireOpsPassword;
+	private String password;
+	private Boolean requireOpsPassword;
+	
 
-
-    public void onEnable() {
+	// Shutdown
+	public void onDisable() {
+		PluginDescriptionFile pdfFile = this.getDescription();
+		log.info(pdfFile.getName() + " " + pdfFile.getVersion()	+ " has been disabled!");
+	}
+	
+	// Start
+	public void onEnable() {
+		// Events
+		PluginManager pluginManager = getServer().getPluginManager();
+		pluginManager.registerEvent(Type.PLAYER_JOIN, playerListener, Priority.Normal, this);
+		pluginManager.registerEvent(Type.PLAYER_MOVE, playerListener, Priority.High, this);
+		pluginManager.registerEvent(Type.PLAYER_INTERACT, playerListener, Priority.High, this);
+		pluginManager.registerEvent(Type.PLAYER_DROP_ITEM, playerListener, Priority.High, this);
+		pluginManager.registerEvent(Type.BLOCK_PLACE, blockListener, Priority.Normal, this);
+		pluginManager.registerEvent(Type.BLOCK_BREAK, blockListener, Priority.Normal, this);
+		pluginManager.registerEvent(Type.PLAYER_COMMAND_PREPROCESS, playerListener, Priority.Monitor, this);
+		
+		// Config
 		config = this.getConfig();
+		
+		// Check for the server password
+		String serverPassword = getPassword();
+		if (serverPassword != null) log.info("Server password is " + getPassword());
+		else log.info("Server password is not set. Use /setpassword <password>");
+		
+		// Message
+		PluginDescriptionFile pdfFile = this.getDescription();
+		log.info(pdfFile.getName() + " " + pdfFile.getVersion() + " is enabled!");
 
-        System.out.println(getDescription().getName() + " " + getDescription().getVersion() + " enabled");
-        String serverPassword = getPassword();
-        if (serverPassword != null)
-            System.out.println("Server password is " + getPassword());
-        else
-            System.out.println("Server password is not set. Use /setpassword <password>");
+		getCommand("opsrequirepassword").setExecutor(new OpsRequirePasswordCommand(this));
+	}
 
+	public void setJailLocation(World world, JailLocation location) {
+		jailLocations.put(world, location);
 
-        PluginManager pluginManager = getServer().getPluginManager();
-        pluginManager.registerEvent(Type.PLAYER_JOIN, playerListener, Priority.Normal, this);
-        pluginManager.registerEvent(Type.PLAYER_MOVE, playerListener, Priority.High, this);
-        pluginManager.registerEvent(Type.PLAYER_INTERACT, playerListener, Priority.High, this);
-        pluginManager.registerEvent(Type.PLAYER_DROP_ITEM, playerListener, Priority.High, this);
+		ArrayList<Double> data = new ArrayList<Double>();
+		data.add(location.getX());
+		data.add(location.getY());
+		data.add(location.getZ());
+		data.add(new Double(location.getYaw()));
+		data.add(new Double(location.getPitch()));
+		data.add(new Double(location.getRadius()));
 
-        pluginManager.registerEvent(Type.BLOCK_PLACE, blockListener, Priority.Normal, this);
-        pluginManager.registerEvent(Type.BLOCK_BREAK, blockListener, Priority.Normal, this);
+		String worldName = world.getName();
+		config.set(worldName + ".jailLocation", data);
+		config.options().copyDefaults(true);
+		saveConfig();
+	}
 
-        pluginManager.registerEvent(Type.PLAYER_COMMAND_PREPROCESS, playerListener, Priority.Monitor, this);
+	public JailLocation getJailLocation(Player player) {
+		World world = player.getWorld();
 
-        getCommand("password").setExecutor(new PasswordCommand(this));
-        getCommand("setpasswordjail").setExecutor(new SetJailCommand(this));
-        getCommand("setpassword").setExecutor(new SetPasswordCommand(this));
-        getCommand("opsrequirepassword").setExecutor(new OpsRequirePasswordCommand(this));
-    }
+		JailLocation jailLocation;
+		if (jailLocations.containsKey(world)) {
+			jailLocation = jailLocations.get(world);
+		} else {
+			jailLocation = loadJailLocation(world);
+			jailLocations.put(world, jailLocation);
+		}
 
-    public void onDisable() {}
-   
+		return jailLocation == null ? new JailLocation(world.getSpawnLocation(), 2) : jailLocation;
+	}
 
-    public void setJailLocation(World world, JailLocation location) {
-        jailLocations.put(world, location);
-
-        ArrayList<Double> data = new ArrayList<Double>();
-        data.add(location.getX());
-        data.add(location.getY());
-        data.add(location.getZ());
-        data.add(new Double(location.getYaw()));
-        data.add(new Double(location.getPitch()));
-        data.add(new Double(location.getRadius()));
-
-        String worldName = world.getName();
-        config.addDefault(worldName + ".jailLocation", data);
-        config.options().copyDefaults(true);
-       	saveConfig();
-    }
-
-    public JailLocation getJailLocation(Player player) {
-        World world = player.getWorld();
-
-        JailLocation jailLocation;
-        if (jailLocations.containsKey(world)) {
-            jailLocation = jailLocations.get(world);
-        } else {
-            jailLocation = loadJailLocation(world);
-            jailLocations.put(world, jailLocation);
-        }
-        
-        return jailLocation == null ? new JailLocation(world.getSpawnLocation(), 2) : jailLocation;
-    }
-
-    private JailLocation loadJailLocation(World world) {
-        String worldName = world.getName();
-        config.addDefault(worldName + ".jailLocation", null);
-        saveConfig();
-        @SuppressWarnings("unchecked")
+	private JailLocation loadJailLocation(World world) {
+		String worldName = world.getName();
+		config.addDefault(worldName + ".jailLocation", null);
+		saveConfig();
+		@SuppressWarnings("unchecked")
 		List<Double> data = config.getDoubleList(worldName + ".jailLocation");
-        
-        if (data == null || data.size() != 6) { // [x, y, z, yaw, pitch, radius]
-            return null;
-        }
 
-        Double x = data.get(0);
-        Double y = data.get(1);
-        Double z = data.get(2);
-        Float yaw = new Float(data.get(3));
-        Float pitch = new Float(data.get(4));
-        int radius = data.get(5).intValue();
-        
-        JailLocation jailLocation = new JailLocation(world, x, y, z, yaw, pitch, radius);
-        return jailLocation;
-    }
+		if (data == null || data.size() != 6) { // [x, y, z, yaw, pitch, radius]
+			return null;
+		}
 
-    public void setPassword(String password) {
-        this.password = password;
-        
-        config.addDefault("password", password);
-        config.options().copyDefaults(true);
-        saveConfig();
-    }
+		Double x = data.get(0);
+		Double y = data.get(1);
+		Double z = data.get(2);
+		Float yaw = new Float(data.get(3));
+		Float pitch = new Float(data.get(4));
+		int radius = data.get(5).intValue();
 
-    public String getPassword() {
-        if (password == null) {
-            password =config.getString("password", null);
-        }
-        
-        return password;
-    }
+		JailLocation jailLocation = new JailLocation(world, x, y, z, yaw, pitch, radius);
+		return jailLocation;
+	}
 
-    public void setRequireOpsPassword(boolean requireOpsPassword) {
-        this.requireOpsPassword = requireOpsPassword;
+	public void setPassword(String password) {
+		this.password = password;
 
-        config.addDefault("requireOpsPassword", requireOpsPassword);
-        config.options().copyDefaults(true);
-        saveConfig();
-    }
+		config.addDefault("password", password);
+		config.options().copyDefaults(true);
+		saveConfig();
+	}
 
-    public boolean getRequireOpsPassword() {
-        if (requireOpsPassword == null) {
-            requireOpsPassword = config.getBoolean("requireOpsPassword", false);
-        }
+	// Check for the password, return null or the pasword
+	public String getPassword() {
+		if (password == null) {
+			password = config.getString("password", null);
+		}
+		return password;
+	}
 
-        return requireOpsPassword;
-    }
+	public void setRequireOpsPassword(boolean requireOpsPassword) {
+		this.requireOpsPassword = requireOpsPassword;
+
+		config.addDefault("requireOpsPassword", requireOpsPassword);
+		config.options().copyDefaults(true);
+		saveConfig();
+	}
+
+	public boolean getRequireOpsPassword() {
+		if (requireOpsPassword == null) {
+			requireOpsPassword = config.getBoolean("requireOpsPassword", false);
+		}
+
+		return requireOpsPassword;
+	}
+
+
+	public boolean onCommand(CommandSender sender, Command command, String commandLabel, String[] args) {
+		PasswordProtectCommands cmd = new PasswordProtectCommands(this);
+		return cmd.PasswordProtectCommand(sender, command, commandLabel, args);
+	}
 }
