@@ -1,4 +1,4 @@
-package com.disabledhamster.bukkit.PasswordProtect;
+package de.xghostkillerx.passwordprotect;
 
 import org.bukkit.entity.Player;
 import org.bukkit.event.block.BlockBreakEvent;

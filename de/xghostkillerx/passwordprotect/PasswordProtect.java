@@ -1,24 +1,24 @@
-package com.disabledhamster.bukkit.PasswordProtect;
+package de.xghostkillerx.passwordprotect;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-import com.disabledhamster.bukkit.PasswordProtect.commands.*;
-
 import org.bukkit.World;
+import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event.Priority;
 import org.bukkit.event.Event.Type;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.plugin.PluginManager;
-import org.bukkit.util.config.Configuration;
 
 public class PasswordProtect extends JavaPlugin  {
     private final PPPlayerListener playerListener = new PPPlayerListener(this);
     private final PPBlockListener blockListener = new PPBlockListener(this);
 
-    private Configuration configuration;
+	public FileConfiguration config;
+	public File configFile;
 
     public ArrayList<Player> jailedPlayers = new ArrayList<Player>();
     private HashMap<World, JailLocation> jailLocations = new HashMap<World, JailLocation>();
@@ -26,10 +26,9 @@ public class PasswordProtect extends JavaPlugin  {
     private String password;
     private Boolean requireOpsPassword;
 
-    public Permissions permissions;
 
     public void onEnable() {
-        configuration = getConfiguration();
+		config = this.getConfig();
 
         System.out.println(getDescription().getName() + " " + getDescription().getVersion() + " enabled");
         String serverPassword = getPassword();
@@ -38,7 +37,6 @@ public class PasswordProtect extends JavaPlugin  {
         else
             System.out.println("Server password is not set. Use /setpassword <password>");
 
-        permissions = new Permissions(this);
 
         PluginManager pluginManager = getServer().getPluginManager();
         pluginManager.registerEvent(Type.PLAYER_JOIN, playerListener, Priority.Normal, this);
@@ -58,10 +56,7 @@ public class PasswordProtect extends JavaPlugin  {
     }
 
     public void onDisable() {}
-
-    public Configuration getConfig() {
-        return configuration;
-    }
+   
 
     public void setJailLocation(World world, JailLocation location) {
         jailLocations.put(world, location);
@@ -75,8 +70,9 @@ public class PasswordProtect extends JavaPlugin  {
         data.add(new Double(location.getRadius()));
 
         String worldName = world.getName();
-        configuration.setProperty(worldName + ".jailLocation", data);
-        configuration.save();
+        config.addDefault(worldName + ".jailLocation", data);
+        config.options().copyDefaults(true);
+       	saveConfig();
     }
 
     public JailLocation getJailLocation(Player player) {
@@ -95,7 +91,10 @@ public class PasswordProtect extends JavaPlugin  {
 
     private JailLocation loadJailLocation(World world) {
         String worldName = world.getName();
-        List<Double> data = configuration.getDoubleList(worldName + ".jailLocation", null);
+        config.addDefault(worldName + ".jailLocation", null);
+        saveConfig();
+        @SuppressWarnings("unchecked")
+		List<Double> data = config.getDoubleList(worldName + ".jailLocation");
         
         if (data == null || data.size() != 6) { // [x, y, z, yaw, pitch, radius]
             return null;
@@ -115,13 +114,14 @@ public class PasswordProtect extends JavaPlugin  {
     public void setPassword(String password) {
         this.password = password;
         
-        configuration.setProperty("password", password);
-        configuration.save();
+        config.addDefault("password", password);
+        config.options().copyDefaults(true);
+        saveConfig();
     }
 
     public String getPassword() {
         if (password == null) {
-            password = configuration.getString("password", null);
+            password =config.getString("password", null);
         }
         
         return password;
@@ -130,13 +130,14 @@ public class PasswordProtect extends JavaPlugin  {
     public void setRequireOpsPassword(boolean requireOpsPassword) {
         this.requireOpsPassword = requireOpsPassword;
 
-        configuration.setProperty("requireOpsPassword", requireOpsPassword);
-        configuration.save();
+        config.addDefault("requireOpsPassword", requireOpsPassword);
+        config.options().copyDefaults(true);
+        saveConfig();
     }
 
     public boolean getRequireOpsPassword() {
         if (requireOpsPassword == null) {
-            requireOpsPassword = configuration.getBoolean("requireOpsPassword", false);
+            requireOpsPassword = config.getBoolean("requireOpsPassword", false);
         }
 
         return requireOpsPassword;

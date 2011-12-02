@@ -1,6 +1,6 @@
-package com.disabledhamster.bukkit.PasswordProtect.commands;
+package de.xghostkillerx.passwordprotect;
 
-import com.disabledhamster.bukkit.PasswordProtect.PasswordProtect;
+
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.Command;
@@ -19,7 +19,7 @@ public class PasswordCommand implements CommandExecutor {
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (sender instanceof Player) {
             Player player = (Player)sender;
-            if (!plugin.permissions.canGetPassword(player)) {
+            if (!player.hasPermission("passwordprotect.getpassword")) {
                 sender.sendMessage(ChatColor.RED + "You don't have permission to use this command");
                 return true;
             }

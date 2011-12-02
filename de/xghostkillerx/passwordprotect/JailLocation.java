@@ -1,4 +1,4 @@
-package com.disabledhamster.bukkit.PasswordProtect;
+package de.xghostkillerx.passwordprotect;
 
 import org.bukkit.Location;
 import org.bukkit.World;

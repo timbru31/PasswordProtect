@@ -1,7 +1,6 @@
-package com.disabledhamster.bukkit.PasswordProtect.commands;
+package de.xghostkillerx.passwordprotect;
 
-import com.disabledhamster.bukkit.PasswordProtect.JailLocation;
-import com.disabledhamster.bukkit.PasswordProtect.PasswordProtect;
+
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.Command;
@@ -24,7 +23,7 @@ public class SetJailCommand implements CommandExecutor {
             return true;
         } else {
             Player player = (Player)sender;
-            if (!plugin.permissions.canSetJail(player)) {
+            if (!player.hasPermission("passwordprotect.setjailarea")) {
                 sender.sendMessage(ChatColor.RED + "You do not have permission to use this command");
                 return true;
             }

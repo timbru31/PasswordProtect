@@ -1,4 +1,4 @@
-package com.disabledhamster.bukkit.PasswordProtect;
+package de.xghostkillerx.passwordprotect;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
@@ -21,11 +21,11 @@ public class PPPlayerListener extends PlayerListener {
     public void onPlayerJoin(PlayerJoinEvent event) {
         Player player = event.getPlayer();
         if (plugin.getPassword() == null) {
-            if (plugin.permissions.canSetPassword(player)) {
+            if (player.hasPermission("passwordprotect.setpassword")) {
                 player.sendMessage(ChatColor.YELLOW + "PasswordProtect is enabled but no password has been set");
                 player.sendMessage(ChatColor.YELLOW + "Use " + ChatColor.GREEN + "/setpassword " + ChatColor.RED + "<password>" + ChatColor.YELLOW + " to set it");
             }
-        } else if (plugin.permissions.needsPassword(player)) {
+        } else if (!player.hasPermission("passwordprotect.nopassword")) {
             sendToJail(player);
             plugin.jailedPlayers.add(player);
         }

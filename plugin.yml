@@ -1,8 +1,9 @@
 name: PasswordProtect
-main: com.disabledhamster.bukkit.PasswordProtect.PasswordProtect
+main: de.xghostkillerx.passwordprotct.PasswordProtect
 description: Force non-ops to provide a password to play on the server
-version: 0.3
-
+version: 1.0
+author: xGhOsTkiLLeRx
+authors: [DisabledHamster]
 commands:
   password:
     description: Login using this server's password

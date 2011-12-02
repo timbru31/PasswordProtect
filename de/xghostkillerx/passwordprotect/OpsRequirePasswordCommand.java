@@ -1,6 +1,6 @@
-package com.disabledhamster.bukkit.PasswordProtect.commands;
+package de.xghostkillerx.passwordprotect;
 
-import com.disabledhamster.bukkit.PasswordProtect.PasswordProtect;
+
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.Command;
