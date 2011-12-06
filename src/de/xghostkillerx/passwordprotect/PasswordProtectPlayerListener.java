@@ -12,27 +12,26 @@ import org.bukkit.event.player.PlayerJoinEvent;
 
 public class PasswordProtectPlayerListener extends PlayerListener {
 	private PasswordProtect plugin;
-
 	public PasswordProtectPlayerListener(PasswordProtect plugin) {
 		this.plugin = plugin;
 	}
 
-	@Override
+	// When the player joins, force a password and check permissions
 	public void onPlayerJoin(PlayerJoinEvent event) {
 		Player player = event.getPlayer();
-		if (plugin.getPassword() == null) {
+		if (this.plugin.getPassword() == null) {
 			if (player.hasPermission("passwordprotect.setpassword")) {
 				player.sendMessage(ChatColor.YELLOW + "PasswordProtect is enabled but no password has been set");
 				player.sendMessage(ChatColor.YELLOW + "Use " + ChatColor.GREEN + "/setpassword " + ChatColor.RED + "<password>" + ChatColor.YELLOW + " to set it");
 			}
 		} else if (!player.hasPermission("passwordprotect.nopassword")) {
 			sendToJail(player);
-			plugin.jailedPlayers.add(player);
+			this.plugin.jailedPlayers.add(player);
 		}
 	}
 
 	public void stayInJail(Player player) {
-		JailLocation jailLocation = plugin.getJailLocation(player);
+		JailLocation jailLocation = this.plugin.getJailLocation(player);
 		Location playerLocation = player.getLocation();
 
 		int radius = jailLocation.getRadius();
@@ -48,7 +47,7 @@ public class PasswordProtectPlayerListener extends PlayerListener {
 	}
 
 	public void sendToJail(Player player) {
-		JailLocation jailLocation = plugin.getJailLocation(player);
+		JailLocation jailLocation = this.plugin.getJailLocation(player);
 		player.teleport(jailLocation);
 		sendPasswordRequiredMessage(player);
 	}
@@ -65,7 +64,7 @@ public class PasswordProtectPlayerListener extends PlayerListener {
 		}
 
 		Player player = event.getPlayer();
-		if (plugin.jailedPlayers.contains(player)) {
+		if (this.plugin.jailedPlayers.contains(player)) {
 			stayInJail(player);
 			event.setCancelled(true);
 		}
@@ -78,7 +77,7 @@ public class PasswordProtectPlayerListener extends PlayerListener {
 		}
 
 		Player player = event.getPlayer();
-		if (plugin.jailedPlayers.contains(player)) {
+		if (this.plugin.jailedPlayers.contains(player)) {
 			event.setCancelled(true);
 		}
 	}
@@ -90,7 +89,7 @@ public class PasswordProtectPlayerListener extends PlayerListener {
 		}
 
 		Player player = event.getPlayer();
-		if (plugin.jailedPlayers.contains(player)) {
+		if (this.plugin.jailedPlayers.contains(player)) {
 			event.setCancelled(true);
 		}
 	}
@@ -100,13 +99,13 @@ public class PasswordProtectPlayerListener extends PlayerListener {
 		Player player = event.getPlayer();
 		String message = event.getMessage();
 
-		if (plugin.jailedPlayers.contains(player)) {
+		if (this.plugin.jailedPlayers.contains(player)) {
 			if (message.startsWith("/password")) {
 				String password = message.replaceFirst("\\/password ", "");
 
-				if (password.equals(plugin.getPassword())) {
+				if (password.equals(this.plugin.getPassword())) {
 					player.sendMessage(ChatColor.GREEN + "Server password accepted, you can now play");
-					plugin.jailedPlayers.remove(player);
+					this.plugin.jailedPlayers.remove(player);
 				}
 				else {
 					player.sendMessage(ChatColor.RED + "Server password incorrect, try again");
