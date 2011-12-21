@@ -100,7 +100,6 @@ public class PasswordProtect extends JavaPlugin  {
 		String worldName = world.getName();
 		config.addDefault(worldName + ".jailLocation", null);
 		saveConfig();
-		@SuppressWarnings("unchecked")
 		List<Double> data = config.getDoubleList(worldName + ".jailLocation");
 
 		if (data == null || data.size() != 6) { // [x, y, z, yaw, pitch, radius]
@@ -120,13 +119,12 @@ public class PasswordProtect extends JavaPlugin  {
 
 	public void setPassword(String password) {
 		this.password = password;
-
 		config.addDefault("password", password);
 		config.options().copyDefaults(true);
 		saveConfig();
 	}
 
-	// Check for the password, return null or the pasword
+	// Check for the password, return null or the password
 	public String getPassword() {
 		if (password == null) {
 			password = config.getString("password", null);
