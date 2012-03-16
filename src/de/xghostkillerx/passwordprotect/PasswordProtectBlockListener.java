@@ -1,18 +1,21 @@
 package de.xghostkillerx.passwordprotect;
 
 import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
+import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
-import org.bukkit.event.block.BlockListener;
 import org.bukkit.event.block.BlockPlaceEvent;
 
-public class PasswordProtectBlockListener extends BlockListener {
+public class PasswordProtectBlockListener implements Listener {
     private PasswordProtect plugin;
     public PasswordProtectBlockListener(PasswordProtect plugin) {
         this.plugin = plugin;
     }
 
    // If a place is placed, cancel it
-    public void onBlockPlace(BlockPlaceEvent event) {
+    @EventHandler(priority = EventPriority.HIGHEST)
+    public void onBlockPlace(final BlockPlaceEvent event) {
         if (event.isCancelled()) {
             return;
         }
@@ -25,7 +28,8 @@ public class PasswordProtectBlockListener extends BlockListener {
     }
 
     // If a player is in jail, he can't break a block
-    public void onBlockBreak(BlockBreakEvent event) {
+    @EventHandler(priority = EventPriority.HIGHEST)
+    public void onBlockBreak(final BlockBreakEvent event) {
         if (event.isCancelled()) {
             return;
         }

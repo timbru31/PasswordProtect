@@ -2,7 +2,9 @@ package de.xghostkillerx.passwordprotect;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
-import org.bukkit.event.player.PlayerListener;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
+import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
@@ -10,14 +12,15 @@ import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 
-public class PasswordProtectPlayerListener extends PlayerListener {
-	private PasswordProtect plugin;
-	public PasswordProtectPlayerListener(PasswordProtect plugin) {
-		this.plugin = plugin;
+public class PasswordProtectPlayerListener implements Listener {
+	public PasswordProtect plugin;
+	public PasswordProtectPlayerListener(PasswordProtect instance) {
+		plugin = instance;
 	}
 
 	// When the player joins, force a password and check permissions
-	public void onPlayerJoin(PlayerJoinEvent event) {
+	@EventHandler(priority = EventPriority.HIGHEST)
+	public void onPlayerJoin(final PlayerJoinEvent event) {
 		Player player = event.getPlayer();
 		if (this.plugin.getPassword() == null) {
 			if (player.hasPermission("passwordprotect.setpassword")) {
@@ -26,12 +29,12 @@ public class PasswordProtectPlayerListener extends PlayerListener {
 			}
 		} else if (!player.hasPermission("passwordprotect.nopassword")) {
 			sendToJail(player);
-			this.plugin.jailedPlayers.add(player);
+			plugin.jailedPlayers.add(player);
 		}
 	}
 
 	public void stayInJail(Player player) {
-		JailLocation jailLocation = this.plugin.getJailLocation(player);
+		JailLocation jailLocation = plugin.getJailLocation(player);
 		Location playerLocation = player.getLocation();
 
 		int radius = jailLocation.getRadius();
@@ -47,7 +50,7 @@ public class PasswordProtectPlayerListener extends PlayerListener {
 	}
 
 	public void sendToJail(Player player) {
-		JailLocation jailLocation = this.plugin.getJailLocation(player);
+		JailLocation jailLocation = plugin.getJailLocation(player);
 		player.teleport(jailLocation);
 		sendPasswordRequiredMessage(player);
 	}
@@ -57,55 +60,55 @@ public class PasswordProtectPlayerListener extends PlayerListener {
 		player.sendMessage(ChatColor.YELLOW + "Enter the password with " + ChatColor.GREEN + "/password " + ChatColor.RED + " <password>" + ChatColor.YELLOW + " to play");
 	}
 
-	@Override
-	public void onPlayerMove(PlayerMoveEvent event) {
+	@EventHandler(priority = EventPriority.HIGHEST)
+	public void onPlayerMove(final PlayerMoveEvent event) {
 		if (event.isCancelled()) {
 			return;
 		}
 
 		Player player = event.getPlayer();
-		if (this.plugin.jailedPlayers.contains(player)) {
+		if (plugin.jailedPlayers.contains(player)) {
 			stayInJail(player);
-			event.setCancelled(true);
+			//event.setCancelled(true);
 		}
 	}
 
-	@Override
-	public void onPlayerInteract(PlayerInteractEvent event) {
+	@EventHandler(priority = EventPriority.HIGHEST)
+	public void onPlayerInteract(final PlayerInteractEvent event) {
 		if (event.isCancelled()) {
 			return;
 		}
 
 		Player player = event.getPlayer();
-		if (this.plugin.jailedPlayers.contains(player)) {
+		if (plugin.jailedPlayers.contains(player)) {
 			event.setCancelled(true);
 		}
 	}
 
-	@Override
-	public void onPlayerDropItem(PlayerDropItemEvent event) {
+	@EventHandler(priority = EventPriority.HIGHEST)
+	public void onPlayerDropItem(final PlayerDropItemEvent event) {
 		if (event.isCancelled()) {
 			return;
 		}
 
 		Player player = event.getPlayer();
-		if (this.plugin.jailedPlayers.contains(player)) {
+		if (plugin.jailedPlayers.contains(player)) {
 			event.setCancelled(true);
 		}
 	}
 
-	@Override
-	public void onPlayerCommandPreprocess(PlayerCommandPreprocessEvent event) {
+	@EventHandler(priority = EventPriority.HIGHEST)
+	public void onPlayerCommandPreprocess(final PlayerCommandPreprocessEvent event) {
 		Player player = event.getPlayer();
 		String message = event.getMessage();
 
-		if (this.plugin.jailedPlayers.contains(player)) {
+		if (plugin.jailedPlayers.contains(player)) {
 			if (message.startsWith("/password")) {
 				String password = message.replaceFirst("\\/password ", "");
 
-				if (password.equals(this.plugin.getPassword())) {
+				if (password.equals(plugin.getPassword())) {
 					player.sendMessage(ChatColor.GREEN + "Server password accepted, you can now play");
-					this.plugin.jailedPlayers.remove(player);
+					plugin.jailedPlayers.remove(player);
 				}
 				else {
 					player.sendMessage(ChatColor.RED + "Server password incorrect, try again");

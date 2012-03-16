@@ -10,8 +10,6 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
-import org.bukkit.event.Event.Priority;
-import org.bukkit.event.Event.Type;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.plugin.PluginDescriptionFile;
 import org.bukkit.plugin.PluginManager;
@@ -41,14 +39,9 @@ public class PasswordProtect extends JavaPlugin  {
 	// Start
 	public void onEnable() {
 		// Events
-		PluginManager pluginManager = getServer().getPluginManager();
-		pluginManager.registerEvent(Type.PLAYER_JOIN, playerListener, Priority.Normal, this);
-		pluginManager.registerEvent(Type.PLAYER_MOVE, playerListener, Priority.High, this);
-		pluginManager.registerEvent(Type.PLAYER_INTERACT, playerListener, Priority.High, this);
-		pluginManager.registerEvent(Type.PLAYER_DROP_ITEM, playerListener, Priority.High, this);
-		pluginManager.registerEvent(Type.BLOCK_PLACE, blockListener, Priority.Normal, this);
-		pluginManager.registerEvent(Type.BLOCK_BREAK, blockListener, Priority.Normal, this);
-		pluginManager.registerEvent(Type.PLAYER_COMMAND_PREPROCESS, playerListener, Priority.Monitor, this);
+		PluginManager pm = getServer().getPluginManager();
+		pm.registerEvents(blockListener, this);
+		pm.registerEvents(playerListener, this);
 		
 		// Config
 		config = this.getConfig();
@@ -78,7 +71,6 @@ public class PasswordProtect extends JavaPlugin  {
 
 		String worldName = world.getName();
 		config.set(worldName + ".jailLocation", data);
-		config.options().copyDefaults(true);
 		saveConfig();
 	}
 

@@ -44,30 +44,29 @@ public class PasswordProtectCommands {
 			if (!(sender instanceof Player)) {
 				sender.sendMessage(ChatColor.RED + "This command must be used in-game");
 				return true;
-			} else {
+			} else if (sender instanceof Player){
 				Player player = (Player)sender;
 				// if the player hasn't got the permission, cancel it
 				if (!player.hasPermission("passwordprotect.setjailarea")) {
 					sender.sendMessage(ChatColor.RED + "You do not have permission to use this command");
 					return true;
 				}
-			}
-			
-			// Gets the players location
-			Player player = (Player)sender;
-			World world = player.getWorld();
 
-			int radius = 0;
-			if (args.length >= 1) {
-				try {
-					radius = Integer.parseInt(args[0]);
-				} catch (NumberFormatException nfe) {}
-			}
+				// Gets the players location
+				World world = player.getWorld();
 
-			JailLocation loc = new JailLocation(player.getLocation(), radius);
-			plugin.setJailLocation(world, loc);
-			player.sendMessage(ChatColor.GREEN + "Jail location set");
-			return true;
+				int radius = 0;
+				if (args.length >= 1) {
+					try {
+						radius = Integer.parseInt(args[0]);
+					} catch (NumberFormatException nfe) {}
+				}
+
+				JailLocation loc = new JailLocation(player.getLocation(), radius);
+				plugin.setJailLocation(world, loc);
+				player.sendMessage(ChatColor.GREEN + "Jail location set");
+				return true;
+			}
 		}
 		// If someone tries to set a password
 		if (command.getName().equalsIgnoreCase("setpassword")) {
