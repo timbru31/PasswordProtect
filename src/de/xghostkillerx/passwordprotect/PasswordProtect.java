@@ -2,6 +2,7 @@ package de.xghostkillerx.passwordprotect;
 
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.security.MessageDigest;
@@ -11,6 +12,7 @@ import java.util.List;
 import java.util.logging.Logger;
 import org.bukkit.World;
 import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.plugin.PluginDescriptionFile;
@@ -26,7 +28,11 @@ public class PasswordProtect extends JavaPlugin  {
 	private final PasswordProtectInventoryListener inventoryListener = new PasswordProtectInventoryListener(this);
 	private PasswordProtectCommands executor;
 	public FileConfiguration config;
-	public File configFile;
+	public FileConfiguration jails;
+	public FileConfiguration localization;
+	private File configFile;
+	private File jailFile;
+	private File localizationFile;
 	public ArrayList<Player> jailedPlayers = new ArrayList<Player>();
 	private HashMap<World, JailLocation> jailLocations = new HashMap<World, JailLocation>();
 	private String password;
@@ -48,17 +54,50 @@ public class PasswordProtect extends JavaPlugin  {
 		pm.registerEvents(entityListener, this);
 		pm.registerEvents(inventoryListener, this);
 
+		// Clear lists
 		jailedPlayers.clear();
 		jailLocations.clear();
 		
+		// Jails config		
+		jailFile = new File(getDataFolder(), "jails.yml");
+		// Copy if the config doesn't exist
+		if (!jailFile.exists()) {
+			jailFile.getParentFile().mkdirs();
+			copy(getResource("jails.yml"), jailFile);
+		}
+		// Try to load
+		try {
+			jails = YamlConfiguration.loadConfiguration(jailFile);
+		}
+		// Log if failed
+		catch (Exception e) {
+			log.warning("PasswordProtect failed to load the jails.yml! Please report this!");
+		}
+
 		// Config
 		configFile = new File(getDataFolder(), "config.yml");
-		if(!configFile.exists()){
+		if (!configFile.exists()) {
 			configFile.getParentFile().mkdirs();
 			copy(getResource("config.yml"), configFile);
 		}
 		config = this.getConfig();
 		loadConfig();
+
+		// Localization
+		localizationFile = new File(getDataFolder(), "localization.yml");
+		if(!localizationFile.exists()){
+			localizationFile.getParentFile().mkdirs();
+			copy(getResource("localization.yml"), localizationFile);
+		}
+		// Try to load
+		try {
+			localization = YamlConfiguration.loadConfiguration(localizationFile);
+			loadLocalization();
+		}
+		// If it failed, tell it
+		catch (Exception e) {
+			log.warning("PasswordProtect failed to load the localization!");
+		}
 
 		// Check for the server password
 		if (config.getBoolean("printPasswordOnStart")) {
@@ -67,14 +106,66 @@ public class PasswordProtect extends JavaPlugin  {
 			else log.info("Server password is not set. Use /setpassword <password>");
 		}
 
-		// Message
-		PluginDescriptionFile pdfFile = this.getDescription();
-		log.info(pdfFile.getName() + " " + pdfFile.getVersion() + " is enabled!");
-
+		// Commands
 		executor = new PasswordProtectCommands(this);
 		getCommand("password").setExecutor(executor);
 		getCommand("setpassword").setExecutor(executor);
 		getCommand("setpasswordjail").setExecutor(executor);
+		
+		// Message
+		PluginDescriptionFile pdfFile = this.getDescription();
+		log.info(pdfFile.getName() + " " + pdfFile.getVersion() + " is enabled!");
+	}
+	
+	// Loads the config at start
+	private void loadConfig() {
+		config.options().header("For help please refer to");
+		config.options().copyDefaults(true);
+		saveConfig();
+	}
+	
+	// Loads the localization
+	private void loadLocalization() {
+		localization.options().header("The underscores are used for the different lines!");
+		localization.addDefault("permission_denied", "&4You don't have the permission to do this!");
+		localization.options().copyDefaults(true);
+		saveLocalization();
+	}
+	
+	// Try to save the players.yml
+	private void saveJails() {
+		try {
+			jails.save(jailFile);
+		} catch (Exception e) {
+			log.warning("PasswordProtect failed to save the jails.yml! Please report this!");
+		}
+	}
+
+	// Saves the localization
+	private void saveLocalization() {
+		try {
+			localization.save(localizationFile);
+		}
+		catch (IOException e) {
+			log.warning("PasswordProtect failed to save the localization.yml! Please report this!");
+		}
+	}
+
+	// If no config is found, copy the default one!
+	private void copy(InputStream in, File file) {
+		try {
+			OutputStream out = new FileOutputStream(file);
+			byte[] buf = new byte[1024];
+			int len;
+			while ((len=in.read(buf)) > 0) {
+				out.write(buf, 0, len);
+			}
+			out.close();
+			in.close();
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 
 	public void setJailLocation(World world, JailLocation location) {
@@ -90,8 +181,8 @@ public class PasswordProtect extends JavaPlugin  {
 		data.add(new Double(location.getRadius()));
 		// Write to the config
 		String worldName = world.getName();
-		config.set(worldName + ".jailLocation", data);
-		saveConfig();
+		jails.set(worldName + ".jailLocation", data);
+		saveJails();
 	}
 
 	public JailLocation getJailLocation(Player player) {
@@ -115,7 +206,7 @@ public class PasswordProtect extends JavaPlugin  {
 
 	private JailLocation loadJailLocation(World world) {
 		String worldName = world.getName();
-		List<Double> data = config.getDoubleList(worldName + ".jailLocation");
+		List<Double> data = jails.getDoubleList(worldName + ".jailLocation");
 		// If no data is stored, return null
 		if (data == null || data.size() != 6) { // [x, y, z, yaw, pitch, radius]
 			return null;
@@ -145,30 +236,6 @@ public class PasswordProtect extends JavaPlugin  {
 			password = config.getString("password", null);
 		}
 		return password;
-	}
-
-	// Loads the config at start
-	public void loadConfig() {
-		config.options().header("For help please refer to");
-		config.options().copyDefaults(true);
-		saveConfig();
-	}
-
-	// If no config is found, copy the default one!
-	private void copy(InputStream in, File file) {
-		try {
-			OutputStream out = new FileOutputStream(file);
-			byte[] buf = new byte[1024];
-			int len;
-			while ((len=in.read(buf)) > 0) {
-				out.write(buf, 0, len);
-			}
-			out.close();
-			in.close();
-		}
-		catch (Exception e) {
-			e.printStackTrace();
-		}
 	}
 
 	// SHA256 encryption. Stores only hex format
