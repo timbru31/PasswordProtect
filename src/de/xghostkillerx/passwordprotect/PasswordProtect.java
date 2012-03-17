@@ -16,11 +16,14 @@ import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.plugin.PluginDescriptionFile;
 import org.bukkit.plugin.PluginManager;
 
+import de.xghostkillerx.passwordprotect.JailLocation;
+
 public class PasswordProtect extends JavaPlugin  {
 	public static final Logger log = Logger.getLogger("Minecraft");
 	private final PasswordProtectPlayerListener playerListener = new PasswordProtectPlayerListener(this);
 	private final PasswordProtectBlockListener blockListener = new PasswordProtectBlockListener(this);
 	private final PasswordProtectEntityListener entityListener = new PasswordProtectEntityListener(this);
+	private final PasswordProtectInventoryListener inventoryListener = new PasswordProtectInventoryListener(this);
 	private PasswordProtectCommands executor;
 	public FileConfiguration config;
 	public File configFile;
@@ -30,6 +33,8 @@ public class PasswordProtect extends JavaPlugin  {
 
 	// Shutdown
 	public void onDisable() {
+		jailedPlayers.clear();
+		jailLocations.clear();
 		PluginDescriptionFile pdfFile = this.getDescription();
 		log.info(pdfFile.getName() + " " + pdfFile.getVersion()	+ " has been disabled!");
 	}
@@ -41,7 +46,11 @@ public class PasswordProtect extends JavaPlugin  {
 		pm.registerEvents(blockListener, this);
 		pm.registerEvents(playerListener, this);
 		pm.registerEvents(entityListener, this);
+		pm.registerEvents(inventoryListener, this);
 
+		jailedPlayers.clear();
+		jailLocations.clear();
+		
 		// Config
 		configFile = new File(getDataFolder(), "config.yml");
 		if(!configFile.exists()){
@@ -69,8 +78,9 @@ public class PasswordProtect extends JavaPlugin  {
 	}
 
 	public void setJailLocation(World world, JailLocation location) {
+		// Set it to the hashmap
 		jailLocations.put(world, location);
-
+		// Make data array
 		ArrayList<Double> data = new ArrayList<Double>();
 		data.add(location.getX());
 		data.add(location.getY());
@@ -78,7 +88,7 @@ public class PasswordProtect extends JavaPlugin  {
 		data.add(new Double(location.getYaw()));
 		data.add(new Double(location.getPitch()));
 		data.add(new Double(location.getRadius()));
-
+		// Write to the config
 		String worldName = world.getName();
 		config.set(worldName + ".jailLocation", data);
 		saveConfig();
@@ -86,35 +96,38 @@ public class PasswordProtect extends JavaPlugin  {
 
 	public JailLocation getJailLocation(Player player) {
 		World world = player.getWorld();
-
 		JailLocation jailLocation;
+		// If world is already on the list
 		if (jailLocations.containsKey(world)) {
 			jailLocation = jailLocations.get(world);
-		} else {
-			jailLocation = loadJailLocation(world);
-			jailLocations.put(world, jailLocation);
 		}
-
-		return jailLocation == null ? new JailLocation(world.getSpawnLocation(), 2) : jailLocation;
+		else {
+			// Try to load and add to the list
+			jailLocation = loadJailLocation(world);
+			if (jailLocation == null)  {
+				jailLocation = new JailLocation(world.getSpawnLocation(), 4);
+				jailLocations.put(world, jailLocation);
+			}
+		}
+		// Is the jailLocation null? Yes -> Make one at spawn, No -> return jailLocation
+		return jailLocation;
 	}
 
 	private JailLocation loadJailLocation(World world) {
 		String worldName = world.getName();
-		config.addDefault(worldName + ".jailLocation", null);
-		saveConfig();
 		List<Double> data = config.getDoubleList(worldName + ".jailLocation");
-
+		// If no data is stored, return null
 		if (data == null || data.size() != 6) { // [x, y, z, yaw, pitch, radius]
 			return null;
 		}
-
+		// Else load them
 		Double x = data.get(0);
 		Double y = data.get(1);
 		Double z = data.get(2);
 		Float yaw = new Float(data.get(3));
 		Float pitch = new Float(data.get(4));
 		int radius = data.get(5).intValue();
-
+		// Return location
 		JailLocation jailLocation = new JailLocation(world, x, y, z, yaw, pitch, radius);
 		return jailLocation;
 	}
@@ -126,6 +139,7 @@ public class PasswordProtect extends JavaPlugin  {
 	}
 
 	// Check for the password, return null or the password
+	// TODO
 	public String getPassword() {
 		if (password == null) {
 			password = config.getString("password", null);
@@ -157,15 +171,15 @@ public class PasswordProtect extends JavaPlugin  {
 		}
 	}
 
+	// SHA256 encryption. Stores only hex format
 	public String encrypt(String password) throws Exception {
-        MessageDigest md = MessageDigest.getInstance("SHA-256");
-        md.update(password.getBytes());
-        byte byteData[] = md.digest();
-        //convert the byte to hex format method 1
-        StringBuffer sb = new StringBuffer();
-        for (int i = 0; i < byteData.length; i++) {
-         sb.append(Integer.toString((byteData[i] & 0xff) + 0x100, 16).substring(1));
-        }
+		MessageDigest md = MessageDigest.getInstance("SHA-256");
+		md.update(password.getBytes());
+		byte byteData[] = md.digest();
+		StringBuffer sb = new StringBuffer();
+		for (int i = 0; i < byteData.length; i++) {
+			sb.append(Integer.toString((byteData[i] & 0xff) + 0x100, 16).substring(1));
+		}
 		return sb.toString();
 	}
 }

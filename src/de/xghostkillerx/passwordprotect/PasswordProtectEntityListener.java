@@ -28,7 +28,7 @@ public class PasswordProtectEntityListener implements Listener {
 	}
 	
 	@EventHandler(priority = EventPriority.HIGHEST)
-	public void onEntityDamageByEntity(final EntityDamageByEntityEvent  event) {
+	public void onEntityDamageByEntity(final EntityDamageByEntityEvent event) {
 		Entity damager = event.getDamager();
 		if (damager.getType() == EntityType.PLAYER) {
 			Player player = (Player) damager;

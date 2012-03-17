@@ -38,6 +38,7 @@ public class PasswordProtectPlayerListener implements Listener {
 		}
 	}
 	
+	// When quitting remove from list
 	@EventHandler(priority = EventPriority.HIGHEST)
 	public void onPlayerQuit(final PlayerQuitEvent event) {
 		Player player = event.getPlayer();
@@ -46,6 +47,7 @@ public class PasswordProtectPlayerListener implements Listener {
 		}
 	}
 	
+	// When kicked remove from list
 	@EventHandler(priority = EventPriority.HIGHEST)
 	public void onPlayerKick(final PlayerKickEvent event) {
 		Player player = event.getPlayer();
@@ -54,6 +56,7 @@ public class PasswordProtectPlayerListener implements Listener {
 		}
 	}
 
+	// Don't cancel movement, teleport back instead
 	@EventHandler(priority = EventPriority.HIGHEST)
 	public void onPlayerMove(final PlayerMoveEvent event) {
 		Player player = event.getPlayer();
@@ -62,6 +65,7 @@ public class PasswordProtectPlayerListener implements Listener {
 		}
 	}
 
+	// Don't let him interact
 	@EventHandler(priority = EventPriority.HIGHEST)
 	public void onPlayerInteract(final PlayerInteractEvent event) {
 		Player player = event.getPlayer();
@@ -70,6 +74,7 @@ public class PasswordProtectPlayerListener implements Listener {
 		}
 	}
 	
+	// Don't let him interact with mobs
 	@EventHandler(priority = EventPriority.HIGHEST)
 	public void onPlayerInteractEntity(final PlayerInteractEntityEvent event) {
 		Player player = event.getPlayer();
@@ -78,6 +83,7 @@ public class PasswordProtectPlayerListener implements Listener {
 		}
 	}
 
+	// Don't let him drop items
 	@EventHandler(priority = EventPriority.HIGHEST)
 	public void onPlayerDropItem(final PlayerDropItemEvent event) {
 		Player player = event.getPlayer();
@@ -86,6 +92,7 @@ public class PasswordProtectPlayerListener implements Listener {
 		}
 	}
 	
+	// Don't let him pickup stuff
 	@EventHandler(priority = EventPriority.HIGHEST)
 	public void onPlayerPickupItem(final PlayerPickupItemEvent event) {
 		Player player = event.getPlayer();
@@ -94,6 +101,7 @@ public class PasswordProtectPlayerListener implements Listener {
 		}
 	}
 	
+	// Sorry, no nether ;)
 	@EventHandler(priority = EventPriority.HIGHEST)
 	public void onPlayerPortal(final PlayerPortalEvent event) {
 		Player player = event.getPlayer();
