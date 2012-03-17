@@ -3,17 +3,18 @@ package de.xghostkillerx.passwordprotect;
 import org.bukkit.ChatColor;
 import org.bukkit.World;
 import org.bukkit.command.Command;
+import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 
-public class PasswordProtectCommands {
+public class PasswordProtectCommands implements CommandExecutor {
 	PasswordProtect plugin;
 	public PasswordProtectCommands(PasswordProtect instance) {
 		plugin = instance;
 	}
 
-	public boolean PasswordProtectCommand (CommandSender sender, Command command, String commandLabel, String[] args) {
+	public boolean onCommand (CommandSender sender, Command command, String commandLabel, String[] args) {
 		// Send the password back, if the sender is the console or got the permission
 		if (command.getName().equalsIgnoreCase("password")) {
 			// If a player send the command
@@ -83,7 +84,12 @@ public class PasswordProtectCommands {
 				}
 			}
 
-			plugin.setPassword(password);
+			try {
+				plugin.setPassword(password);
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 			sender.sendMessage(ChatColor.GREEN + "Server password set!");
 			sender.sendMessage(ChatColor.YELLOW + "You can set the jail area by going somewhere and using " + ChatColor.GREEN + "/setpasswordjail " + ChatColor.RED + "[radius]");
 			return true;

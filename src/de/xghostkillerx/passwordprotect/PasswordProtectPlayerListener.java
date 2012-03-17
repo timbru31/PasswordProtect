@@ -33,52 +33,16 @@ public class PasswordProtectPlayerListener implements Listener {
 		}
 	}
 
-	public void stayInJail(Player player) {
-		JailLocation jailLocation = plugin.getJailLocation(player);
-		Location playerLocation = player.getLocation();
-
-		int radius = jailLocation.getRadius();
-
-		// If player is within radius^2 blocks of jail location...
-		if (Math.abs(jailLocation.getBlockX() - playerLocation.getBlockX()) <= radius
-				&& Math.abs(jailLocation.getBlockY() - playerLocation.getBlockY()) <= radius
-				&& Math.abs(jailLocation.getBlockZ() - playerLocation.getBlockZ()) <= radius) {
-			return;
-		}
-
-		sendToJail(player);
-	}
-
-	public void sendToJail(Player player) {
-		JailLocation jailLocation = plugin.getJailLocation(player);
-		player.teleport(jailLocation);
-		sendPasswordRequiredMessage(player);
-	}
-
-	public void sendPasswordRequiredMessage(Player player) {
-		player.sendMessage(ChatColor.YELLOW + "This server is password-protected");
-		player.sendMessage(ChatColor.YELLOW + "Enter the password with " + ChatColor.GREEN + "/password " + ChatColor.RED + " <password>" + ChatColor.YELLOW + " to play");
-	}
-
 	@EventHandler(priority = EventPriority.HIGHEST)
 	public void onPlayerMove(final PlayerMoveEvent event) {
-		if (event.isCancelled()) {
-			return;
-		}
-
 		Player player = event.getPlayer();
 		if (plugin.jailedPlayers.contains(player)) {
 			stayInJail(player);
-			//event.setCancelled(true);
 		}
 	}
 
 	@EventHandler(priority = EventPriority.HIGHEST)
 	public void onPlayerInteract(final PlayerInteractEvent event) {
-		if (event.isCancelled()) {
-			return;
-		}
-
 		Player player = event.getPlayer();
 		if (plugin.jailedPlayers.contains(player)) {
 			event.setCancelled(true);
@@ -87,10 +51,6 @@ public class PasswordProtectPlayerListener implements Listener {
 
 	@EventHandler(priority = EventPriority.HIGHEST)
 	public void onPlayerDropItem(final PlayerDropItemEvent event) {
-		if (event.isCancelled()) {
-			return;
-		}
-
 		Player player = event.getPlayer();
 		if (plugin.jailedPlayers.contains(player)) {
 			event.setCancelled(true);
@@ -98,13 +58,14 @@ public class PasswordProtectPlayerListener implements Listener {
 	}
 
 	@EventHandler(priority = EventPriority.HIGHEST)
-	public void onPlayerCommandPreprocess(final PlayerCommandPreprocessEvent event) {
+	public void onPlayerCommandPreprocess(final PlayerCommandPreprocessEvent event) throws Exception {
 		Player player = event.getPlayer();
 		String message = event.getMessage();
 
 		if (plugin.jailedPlayers.contains(player)) {
 			if (message.startsWith("/password")) {
 				String password = message.replaceFirst("\\/password ", "");
+				password = plugin.encrypt(password);
 
 				if (password.equals(plugin.getPassword())) {
 					player.sendMessage(ChatColor.GREEN + "Server password accepted, you can now play");
@@ -115,7 +76,7 @@ public class PasswordProtectPlayerListener implements Listener {
 				}
 			}
 			else if (message.startsWith("/rules") || message.startsWith("/help")) {
-				
+				return;
 			}
 			else {
 				sendPasswordRequiredMessage(player);
@@ -123,4 +84,29 @@ public class PasswordProtectPlayerListener implements Listener {
 			event.setCancelled(true);
 		}
 	}
+
+	private void stayInJail(Player player) {
+		JailLocation jailLocation = plugin.getJailLocation(player);
+		Location playerLocation = player.getLocation();
+		int radius = jailLocation.getRadius();
+		// If player is within radius^2 blocks of jail location...
+		if (Math.abs(jailLocation.getBlockX() - playerLocation.getBlockX()) <= radius
+				&& Math.abs(jailLocation.getBlockY() - playerLocation.getBlockY()) <= radius
+				&& Math.abs(jailLocation.getBlockZ() - playerLocation.getBlockZ()) <= radius) {
+			return;
+		}
+		sendToJail(player);
+	}
+
+	private void sendToJail(Player player) {
+		JailLocation jailLocation = plugin.getJailLocation(player);
+		player.teleport(jailLocation);
+		sendPasswordRequiredMessage(player);
+	}
+
+	private void sendPasswordRequiredMessage(Player player) {
+		player.sendMessage(ChatColor.YELLOW + "This server is password-protected");
+		player.sendMessage(ChatColor.YELLOW + "Enter the password with " + ChatColor.GREEN + "/password " + ChatColor.RED + " <password>" + ChatColor.YELLOW + " to play");
+	}
+
 }
