@@ -14,3 +14,7 @@ commands:
   setpassword:
     description: Set the password required for non-ops to play on this server
     usage: /<command> password
+permissions:
+  passwordprotect.nopassword:
+    description: Allows you to see the help
+    default: false

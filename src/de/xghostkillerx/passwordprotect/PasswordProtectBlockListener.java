@@ -8,9 +8,9 @@ import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
 
 public class PasswordProtectBlockListener implements Listener {
-    private PasswordProtect plugin;
-    public PasswordProtectBlockListener(PasswordProtect plugin) {
-        this.plugin = plugin;
+    public PasswordProtect plugin;
+    public PasswordProtectBlockListener(PasswordProtect instance) {
+        plugin = instance;
     }
 
    // If a place is placed, cancel it

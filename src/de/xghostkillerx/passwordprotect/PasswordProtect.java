@@ -20,6 +20,7 @@ public class PasswordProtect extends JavaPlugin  {
 	public static final Logger log = Logger.getLogger("Minecraft");
 	private final PasswordProtectPlayerListener playerListener = new PasswordProtectPlayerListener(this);
 	private final PasswordProtectBlockListener blockListener = new PasswordProtectBlockListener(this);
+	private final PasswordProtectEntityListener entityListener = new PasswordProtectEntityListener(this);
 	private PasswordProtectCommands executor;
 	public FileConfiguration config;
 	public File configFile;
@@ -39,6 +40,7 @@ public class PasswordProtect extends JavaPlugin  {
 		PluginManager pm = getServer().getPluginManager();
 		pm.registerEvents(blockListener, this);
 		pm.registerEvents(playerListener, this);
+		pm.registerEvents(entityListener, this);
 
 		// Config
 		configFile = new File(getDataFolder(), "config.yml");

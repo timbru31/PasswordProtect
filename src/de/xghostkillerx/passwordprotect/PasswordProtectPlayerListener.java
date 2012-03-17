@@ -9,8 +9,13 @@ import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import org.bukkit.event.player.PlayerDropItemEvent;
+import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.event.player.PlayerKickEvent;
+import org.bukkit.event.player.PlayerPickupItemEvent;
+import org.bukkit.event.player.PlayerPortalEvent;
+import org.bukkit.event.player.PlayerQuitEvent;
 
 public class PasswordProtectPlayerListener implements Listener {
 	public PasswordProtect plugin;
@@ -32,6 +37,22 @@ public class PasswordProtectPlayerListener implements Listener {
 			plugin.jailedPlayers.add(player);
 		}
 	}
+	
+	@EventHandler(priority = EventPriority.HIGHEST)
+	public void onPlayerQuit(final PlayerQuitEvent event) {
+		Player player = event.getPlayer();
+		if (plugin.jailedPlayers.contains(player)) {
+			plugin.jailedPlayers.remove(player);
+		}
+	}
+	
+	@EventHandler(priority = EventPriority.HIGHEST)
+	public void onPlayerKick(final PlayerKickEvent event) {
+		Player player = event.getPlayer();
+		if (plugin.jailedPlayers.contains(player)) {
+			plugin.jailedPlayers.remove(player);
+		}
+	}
 
 	@EventHandler(priority = EventPriority.HIGHEST)
 	public void onPlayerMove(final PlayerMoveEvent event) {
@@ -48,9 +69,33 @@ public class PasswordProtectPlayerListener implements Listener {
 			event.setCancelled(true);
 		}
 	}
+	
+	@EventHandler(priority = EventPriority.HIGHEST)
+	public void onPlayerInteractEntity(final PlayerInteractEntityEvent event) {
+		Player player = event.getPlayer();
+		if (plugin.jailedPlayers.contains(player)) {
+			event.setCancelled(true);
+		}
+	}
 
 	@EventHandler(priority = EventPriority.HIGHEST)
 	public void onPlayerDropItem(final PlayerDropItemEvent event) {
+		Player player = event.getPlayer();
+		if (plugin.jailedPlayers.contains(player)) {
+			event.setCancelled(true);
+		}
+	}
+	
+	@EventHandler(priority = EventPriority.HIGHEST)
+	public void onPlayerPickupItem(final PlayerPickupItemEvent event) {
+		Player player = event.getPlayer();
+		if (plugin.jailedPlayers.contains(player)) {
+			event.setCancelled(true);
+		}
+	}
+	
+	@EventHandler(priority = EventPriority.HIGHEST)
+	public void onPlayerPortal(final PlayerPortalEvent event) {
 		Player player = event.getPlayer();
 		if (plugin.jailedPlayers.contains(player)) {
 			event.setCancelled(true);
