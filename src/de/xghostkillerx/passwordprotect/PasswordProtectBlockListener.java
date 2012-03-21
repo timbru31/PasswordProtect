@@ -8,35 +8,33 @@ import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
 
 public class PasswordProtectBlockListener implements Listener {
-    public PasswordProtect plugin;
-    public PasswordProtectBlockListener(PasswordProtect instance) {
-        plugin = instance;
-    }
+	public PasswordProtect plugin;
+	public PasswordProtectBlockListener(PasswordProtect instance) {
+		plugin = instance;
+	}
 
-   // If a place is placed, cancel it
-    @EventHandler(priority = EventPriority.HIGHEST)
-    public void onBlockPlace(final BlockPlaceEvent event) {
-        if (event.isCancelled()) {
-            return;
-        }
-        // If the player is in "jail", cancel it
-        Player player = event.getPlayer();
-        if (plugin.jailedPlayers.contains(player)) {
-            event.setBuild(false);
-            event.setCancelled(true);
-        }
-    }
+	// If a place is placed, cancel it
+	@EventHandler(priority = EventPriority.HIGHEST)
+	public void onBlockPlace(BlockPlaceEvent event) {
+		if (plugin.config.getBoolean("prevent.BlockPlace")) {
+			// If the player is in "jail", cancel it
+			Player player = event.getPlayer();
+			if (plugin.jailedPlayers.containsKey(player)) {
+				event.setBuild(false);
+				event.setCancelled(true);
+			}
+		}
+	}
 
-    // If a player is in jail, he can't break a block
-    @EventHandler(priority = EventPriority.HIGHEST)
-    public void onBlockBreak(final BlockBreakEvent event) {
-        if (event.isCancelled()) {
-            return;
-        }
-        Player player = event.getPlayer();
-        if (plugin.jailedPlayers.contains(player)) {
-            event.setCancelled(true);
-        }
-    }
+	// If a player is in jail, he can't break a block
+	@EventHandler(priority = EventPriority.HIGHEST)
+	public void onBlockBreak(BlockBreakEvent event) {
+		if (plugin.config.getBoolean("prevent.BlockBreak")) {
+			Player player = event.getPlayer();
+			if (plugin.jailedPlayers.containsKey(player)) {
+				event.setCancelled(true);
+			}
+		}
+	}
 
 }

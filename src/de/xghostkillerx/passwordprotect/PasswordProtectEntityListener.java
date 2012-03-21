@@ -18,37 +18,43 @@ public class PasswordProtectEntityListener implements Listener {
 
 	// Cancel triggering of jailed player
 	@EventHandler(priority = EventPriority.HIGHEST)
-	public void onEntityTarget(final EntityTargetEvent event) {
-		Entity target = event.getTarget();
-		if (target == null) return;
-		if (target.getType().equals(EntityType.PLAYER)) {
-			Player player = (Player) target;
-			if (plugin.jailedPlayers.contains(player)) {
-				event.setCancelled(true);
+	public void onEntityTarget(EntityTargetEvent event) {
+		if (plugin.config.getBoolean("prevent.Triggering")) {
+			Entity target = event.getTarget();
+			if (target == null) return;
+			if (target.getType().equals(EntityType.PLAYER)) {
+				Player player = (Player) target;
+				if (plugin.jailedPlayers.containsKey(player)) {
+					event.setCancelled(true);
+				}
 			}
 		}
 	}
-	
+
 	// Cancel hitting mobs
 	@EventHandler(priority = EventPriority.HIGHEST)
-	public void onEntityDamageByEntity(final EntityDamageByEntityEvent event) {
-		Entity damager = event.getDamager();
-		if (damager.getType() == EntityType.PLAYER) {
-			Player player = (Player) damager;
-			if (plugin.jailedPlayers.contains(player)) {
-				event.setCancelled(true);
+	public void onEntityDamageByEntity(EntityDamageByEntityEvent event) {
+		if (plugin.config.getBoolean("prevent.Attacks")) {
+			Entity damager = event.getDamager();
+			if (damager.getType() == EntityType.PLAYER) {
+				Player player = (Player) damager;
+				if (plugin.jailedPlayers.containsKey(player)) {
+					event.setCancelled(true);
+				}
 			}
 		}
 	}
-	
+
 	// Cancel incoming damage
 	@EventHandler(priority = EventPriority.HIGHEST)
-	public void onEntityDamage(final EntityDamageEvent event) {
-		Entity entity = event.getEntity();
-		if (entity.getType() == EntityType.PLAYER) {
-			Player player = (Player) entity;
-			if (plugin.jailedPlayers.contains(player)) {
-				event.setCancelled(true);
+	public void onEntityDamage(EntityDamageEvent event) {
+		if (plugin.config.getBoolean("prevent.Damage")) {
+			Entity entity = event.getEntity();
+			if (entity.getType() == EntityType.PLAYER) {
+				Player player = (Player) entity;
+				if (plugin.jailedPlayers.containsKey(player)) {
+					event.setCancelled(true);
+				}
 			}
 		}
 	}

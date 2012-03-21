@@ -7,6 +7,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.security.MessageDigest;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.logging.Logger;
@@ -25,7 +26,6 @@ public class PasswordProtect extends JavaPlugin  {
 	private final PasswordProtectPlayerListener playerListener = new PasswordProtectPlayerListener(this);
 	private final PasswordProtectBlockListener blockListener = new PasswordProtectBlockListener(this);
 	private final PasswordProtectEntityListener entityListener = new PasswordProtectEntityListener(this);
-	private final PasswordProtectInventoryListener inventoryListener = new PasswordProtectInventoryListener(this);
 	private PasswordProtectCommands executor;
 	public FileConfiguration config;
 	public FileConfiguration jails;
@@ -33,9 +33,10 @@ public class PasswordProtect extends JavaPlugin  {
 	private File configFile;
 	private File jailFile;
 	private File localizationFile;
-	public ArrayList<Player> jailedPlayers = new ArrayList<Player>();
+	public HashMap<Player, Integer> jailedPlayers = new HashMap<Player, Integer>();
 	private HashMap<World, JailLocation> jailLocations = new HashMap<World, JailLocation>();
-	private String password;
+	public List<String> commandList = new ArrayList<String>();
+	private String[] commands = {"help", "rules", "motd",};
 
 	// Shutdown
 	public void onDisable() {
@@ -52,12 +53,11 @@ public class PasswordProtect extends JavaPlugin  {
 		pm.registerEvents(blockListener, this);
 		pm.registerEvents(playerListener, this);
 		pm.registerEvents(entityListener, this);
-		pm.registerEvents(inventoryListener, this);
 
 		// Clear lists
 		jailedPlayers.clear();
 		jailLocations.clear();
-		
+
 		// Jails config		
 		jailFile = new File(getDataFolder(), "jails.yml");
 		// Copy if the config doesn't exist
@@ -99,31 +99,45 @@ public class PasswordProtect extends JavaPlugin  {
 			log.warning("PasswordProtect failed to load the localization!");
 		}
 
-		// Check for the server password
-		if (config.getBoolean("printPasswordOnStart")) {
-			String serverPassword = getPassword();
-			if (serverPassword != null) log.info("Server password is " + getPassword());
-			else log.info("Server password is not set. Use /setpassword <password>");
-		}
-
 		// Commands
 		executor = new PasswordProtectCommands(this);
 		getCommand("password").setExecutor(executor);
 		getCommand("setpassword").setExecutor(executor);
 		getCommand("setpasswordjail").setExecutor(executor);
-		
+
 		// Message
 		PluginDescriptionFile pdfFile = this.getDescription();
 		log.info(pdfFile.getName() + " " + pdfFile.getVersion() + " is enabled!");
 	}
-	
+
 	// Loads the config at start
 	private void loadConfig() {
 		config.options().header("For help please refer to");
+		config.addDefault("cleanPassword", false);
+		config.addDefault("password", "");
+		config.addDefault("passwordClean", "");
+		config.addDefault("prevent.Movement", true);
+		config.addDefault("prevent.Interaction", true);
+		config.addDefault("prevent.InteractionMobs", true);
+		config.addDefault("prevent.ItemPickup", true);
+		config.addDefault("prevent.ItemDrops", true);
+		config.addDefault("prevent.Portal", true);
+		config.addDefault("prevent.BlockPlace", true);
+		config.addDefault("prevent.BlockBreak", true);
+		config.addDefault("prevent.Triggering", true);
+		config.addDefault("prevent.Attacks", true);
+		config.addDefault("prevent.Damage", true);
+		config.addDefault("prevent.Chat", true);
+		config.addDefault("wrongAttempts.kick", 3);
+		config.addDefault("wrongAttempts.ban", 5);
+		config.addDefault("darkness", true);
+		config.addDefault("slowness", true);
+		config.addDefault("commands", Arrays.asList(commands));
+		commandList = config.getStringList("commands");
 		config.options().copyDefaults(true);
 		saveConfig();
 	}
-	
+
 	// Loads the localization
 	private void loadLocalization() {
 		localization.options().header("The underscores are used for the different lines!");
@@ -131,7 +145,7 @@ public class PasswordProtect extends JavaPlugin  {
 		localization.options().copyDefaults(true);
 		saveLocalization();
 	}
-	
+
 	// Try to save the players.yml
 	private void saveJails() {
 		try {
@@ -224,18 +238,30 @@ public class PasswordProtect extends JavaPlugin  {
 	}
 
 	public void setPassword(String password) throws Exception {
-		password = encrypt(password);
-		config.set("password", password);
+		String encryptedPassword = encrypt(password);
+		config.set("password", encryptedPassword);
+		if (config.getBoolean("cleanPassword")) {
+			config.set("passwordClean", password);
+		}
 		saveConfig();
 	}
 
 	// Check for the password, return null or the password
-	// TODO
-	public String getPassword() {
-		if (password == null) {
-			password = config.getString("password", null);
+	public String getPasswordClean() {
+		if (config.getBoolean("cleanPassword")) {
+			return config.getString("passwordClean");
 		}
-		return password;
+		return null;
+	}
+
+	// Check for the password, return null or the password
+	public String getPassword() {
+		return config.getString("password");
+	}
+
+	// Is the password set?
+	public boolean passwordSet() {
+		return config.getString("password").trim().length() > 1 ? true : false;
 	}
 
 	// SHA256 encryption. Stores only hex format

@@ -4,7 +4,7 @@ import org.bukkit.Location;
 import org.bukkit.World;
 
 public class JailLocation extends Location {
-    public int radius;
+    private int radius;
 
     public JailLocation(World world, double x, double y, double z, float yaw, float pitch, int radius) {
         super(world, x, y, z, yaw, pitch);
