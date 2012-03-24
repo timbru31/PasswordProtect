@@ -5,7 +5,7 @@ version: 1.0
 author: xGhOsTkiLLeRx
 authors: [DisabledHamster]
 commands:
-  password:
+  login:
     description: Login using this server's password
     usage: /<command> password
   setpasswordjail:

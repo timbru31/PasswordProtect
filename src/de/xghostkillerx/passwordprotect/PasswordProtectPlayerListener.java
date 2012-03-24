@@ -140,8 +140,8 @@ public class PasswordProtectPlayerListener implements Listener {
 			if (plugin.commandList.contains(command)) {
 				return;
 			}
-			else if (message.startsWith("/password")) {
-				String password = message.replaceFirst("/password ", "");
+			else if (message.startsWith("/login")) {
+				String password = message.replaceFirst("/login ", "");
 				password = plugin.encrypt(password);
 				if (password.equals(plugin.getPassword())) {
 					String messageLocalization = plugin.localization.getString("password_accepted");
@@ -152,7 +152,7 @@ public class PasswordProtectPlayerListener implements Listener {
 					if (player.hasPotionEffect(PotionEffectType.SLOW)) 
 						player.addPotionEffect(new PotionEffect(PotionEffectType.SLOW, 0, 0), true);
 				}
-				else {
+				else if (message.length() > 7){
 					int attempts = plugin.jailedPlayers.get(player);
 					int kickAfter = plugin.config.getInt("wrongAttempts.kick");
 					int banAfter = plugin.config.getInt("wrongAttempts.ban");
@@ -182,6 +182,9 @@ public class PasswordProtectPlayerListener implements Listener {
 						attempts++;
 						plugin.jailedPlayers.put(player, attempts);
 					}
+				}
+				else {
+					plugin.sendPasswordRequiredMessage(player);
 				}
 			}
 			else {

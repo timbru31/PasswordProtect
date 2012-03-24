@@ -120,7 +120,7 @@ public class PasswordProtect extends JavaPlugin  {
 
 		// Commands
 		executor = new PasswordProtectCommands(this);
-		getCommand("password").setExecutor(executor);
+		getCommand("login").setExecutor(executor);
 		getCommand("setpassword").setExecutor(executor);
 		getCommand("setpasswordjail").setExecutor(executor);
 
@@ -164,7 +164,7 @@ public class PasswordProtect extends JavaPlugin  {
 		localization.options().header("The underscores are used for the different lines!");
 		localization.addDefault("permission_denied", "&4You don't have the permission to do this!");
 		localization.addDefault("enter_password_1", "&eThis server is password-protected");
-		localization.addDefault("enter_password_2", "&eEnter the password with &a/password &4<password> &eto play");
+		localization.addDefault("enter_password_2", "&eEnter the password with &a/login &4<password> &eto play");
 		localization.addDefault("set_password_1", "&ePasswordProtect is enabled but no password has been set");
 		localization.addDefault("set_password_2", "&eUse &a/setpassword &4<password> &eto set it");
 		localization.addDefault("password_accepted", "&aServer password accepted, you can now play");

@@ -1,7 +1,7 @@
 # The underscores are used for the different lines!
 permission_denied: '&4You don''t have the permission to do this!'
 enter_password_1: '&eThis server is password-protected'
-enter_password_2: '&eEnter the password with &a/password &4<password> &eto play'
+enter_password_2: '&eEnter the password with &a/login &4<password> &eto play'
 set_password_1: '&ePasswordProtect is enabled but no password has been set'
 set_password_2: '&eUse &a/setpassword &4<password> &eto set it'
 password_accepted: '&aServer password accepted, you can now play'
