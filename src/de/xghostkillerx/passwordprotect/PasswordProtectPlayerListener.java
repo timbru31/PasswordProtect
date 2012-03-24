@@ -1,7 +1,5 @@
 package de.xghostkillerx.passwordprotect;
 
-import org.bukkit.ChatColor;
-import org.bukkit.Location;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -18,6 +16,21 @@ import org.bukkit.event.player.PlayerPortalEvent;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
+/**
+ * PasswordProtect for CraftBukkit/Bukkit
+ * Handles player activities.
+ * 
+ * 
+ * Refer to the forum thread:
+ * http://bit.ly/ppbukkit
+ * Refer to the dev.bukkit.org page:
+ * http://bit.ly/ppbukktidev
+ *
+ * @author xGhOsTkiLLeRx
+ * @thanks to brianewing alias DisabledHamster for the original plugin!
+ * 
+ */
+
 public class PasswordProtectPlayerListener implements Listener {
 	public PasswordProtect plugin;
 	public PasswordProtectPlayerListener(PasswordProtect instance) {
@@ -28,18 +41,7 @@ public class PasswordProtectPlayerListener implements Listener {
 	@EventHandler(priority = EventPriority.HIGHEST)
 	public void onPlayerJoin(PlayerJoinEvent event) {
 		Player player = event.getPlayer();
-		if (!plugin.passwordSet()) {
-			if (player.hasPermission("passwordprotect.setpassword")) {
-				player.sendMessage(ChatColor.YELLOW + "PasswordProtect is enabled but no password has been set");
-				player.sendMessage(ChatColor.YELLOW + "Use " + ChatColor.GREEN + "/setpassword " + ChatColor.RED + "<password>" + ChatColor.YELLOW + " to set it");
-			}
-		}
-		else if (!player.hasPermission("passwordprotect.nopassword")) {
-			sendToJail(player);
-			if (!plugin.jailedPlayers.containsKey(player)) plugin.jailedPlayers.put(player, 1);
-			if (plugin.config.getBoolean("darkness")) player.addPotionEffect(new PotionEffect(PotionEffectType.BLINDNESS, 20 * 86400, 15));
-			if (plugin.config.getBoolean("slowness")) player.addPotionEffect(new PotionEffect(PotionEffectType.SLOW, 20 * 86400, 5));
-		}
+		plugin.check(player);
 	}
 
 	// Don't cancel movement, teleport back instead
@@ -54,7 +56,7 @@ public class PasswordProtectPlayerListener implements Listener {
 				if (!player.hasPotionEffect(PotionEffectType.SLOW)) {
 					if (plugin.config.getBoolean("slowness")) player.addPotionEffect(new PotionEffect(PotionEffectType.SLOW, 20 * 86400, 15));
 				}
-				stayInJail(player);
+				plugin.stayInJail(player);
 			}
 		}
 	}
@@ -139,10 +141,11 @@ public class PasswordProtectPlayerListener implements Listener {
 				return;
 			}
 			else if (message.startsWith("/password")) {
-				String password = message.replaceFirst("\\/password ", "");
+				String password = message.replaceFirst("/password ", "");
 				password = plugin.encrypt(password);
 				if (password.equals(plugin.getPassword())) {
-					player.sendMessage(ChatColor.GREEN + "Server password accepted, you can now play");
+					String messageLocalization = plugin.localization.getString("password_accepted");
+					plugin.message(null, player, messageLocalization, null);
 					plugin.jailedPlayers.remove(player);
 					if (player.hasPotionEffect(PotionEffectType.BLINDNESS)) 
 						player.addPotionEffect(new PotionEffect(PotionEffectType.BLINDNESS, 0, 0), true);
@@ -151,61 +154,40 @@ public class PasswordProtectPlayerListener implements Listener {
 				}
 				else {
 					int attempts = plugin.jailedPlayers.get(player);
-					System.out.println(attempts);
 					int kickAfter = plugin.config.getInt("wrongAttempts.kick");
 					int banAfter = plugin.config.getInt("wrongAttempts.ban");
 					int attemptsLeftKick = kickAfter - attempts;
 					int attemptsLeftBan = banAfter - attempts;
-
-					if (attemptsLeftKick == 0 || attemptsLeftBan == 0) {
-						if (attemptsLeftBan == 0) {
-							player.sendMessage(ChatColor.RED + "Server password incorrect! You're will be banned by now...");
-							player.kickPlayer("Banned by PasswordProtect for too many wrong attempts...");
+					if (attemptsLeftKick <= 0 || attemptsLeftBan <= 0) {
+						if (attemptsLeftBan <= 0) {
+							String ip = player.getAddress().getAddress().toString().replaceAll("/", "");
+							String messageLocalization = plugin.localization.getString("ban_message");
+							player.kickPlayer(messageLocalization.replaceAll("&([0-9a-fk])", "\u00A7$1"));
 							player.setBanned(true);
+							if (plugin.config.getBoolean("wrongAttempts.banIP")) plugin.getServer().banIP(ip);
 							return;
 						}
 						else if(attemptsLeftKick == 0) {
-							player.kickPlayer("Kicked by PasswordProtect for too many wrong attempts...");
+							String messageLocalization = plugin.localization.getString("kick_message");
+							player.kickPlayer(messageLocalization.replaceAll("&([0-9a-fk])", "\u00A7$1"));
 						}
 					}
 					if (attemptsLeftKick > 0 || attemptsLeftBan > 0) {
 						if (attemptsLeftKick > 0) {
-							player.sendMessage(ChatColor.RED + "Server password incorrect! " + attemptsLeftKick + " attempts left until kick...");
+							String messageLocalization = plugin.localization.getString("attempts_left_kick");
+							plugin.message(null, player, messageLocalization, Integer.toString(attemptsLeftKick));
 						}
-						player.sendMessage(ChatColor.RED + "Server password incorrect! " + attemptsLeftBan + " attempts left until ban...");
+						String messageLocalization = plugin.localization.getString("attempts_left_ban");
+						plugin.message(null, player, messageLocalization, Integer.toString(attemptsLeftBan));
 						attempts++;
 						plugin.jailedPlayers.put(player, attempts);
 					}
 				}
 			}
 			else {
-				sendPasswordRequiredMessage(player);
+				plugin.sendPasswordRequiredMessage(player);
 			}
 			event.setCancelled(true);
 		}
-	}
-
-	private void stayInJail(Player player) {
-		JailLocation jailLocation = plugin.getJailLocation(player);
-		Location playerLocation = player.getLocation();
-		int radius = jailLocation.getRadius();
-		// If player is within radius^2 blocks of jail location...
-		if (Math.abs(jailLocation.getBlockX() - playerLocation.getBlockX()) <= radius
-				&& Math.abs(jailLocation.getBlockY() - playerLocation.getBlockY()) <= radius
-				&& Math.abs(jailLocation.getBlockZ() - playerLocation.getBlockZ()) <= radius) {
-			return;
-		}
-		sendToJail(player);
-	}
-
-	private void sendToJail(Player player) {
-		JailLocation jailLocation = plugin.getJailLocation(player);
-		player.teleport(jailLocation);
-		sendPasswordRequiredMessage(player);
-	}
-
-	private void sendPasswordRequiredMessage(Player player) {
-		player.sendMessage(ChatColor.YELLOW + "This server is password-protected");
-		player.sendMessage(ChatColor.YELLOW + "Enter the password with " + ChatColor.GREEN + "/password " + ChatColor.RED + " <password>" + ChatColor.YELLOW + " to play");
 	}
 }

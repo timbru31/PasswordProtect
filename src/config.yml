@@ -1,0 +1,28 @@
+# For help please refer to http://bit.ly/ppbukkit or http://bit.ly/ppbukkitdev
+OpsRequirePassword: true
+cleanPassword: false
+password: ''
+passwordClean: ''
+prevent:
+  Movement: true
+  Interaction: true
+  InteractionMobs: true
+  ItemPickup: true
+  ItemDrops: true
+  Portal: true
+  BlockPlace: true
+  BlockBreak: true
+  Triggering: true
+  Attacks: true
+  Damage: true
+  Chat: true
+wrongAttempts:
+  kick: 3
+  ban: 5
+  banIP: true
+darkness: true
+slowness: true
+allowedCommands:
+- help
+- rules
+- motd
