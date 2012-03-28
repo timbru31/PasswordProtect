@@ -148,6 +148,8 @@ public class PasswordProtect extends JavaPlugin  {
 		config.addDefault("prevent.Attacks", true);
 		config.addDefault("prevent.Damage", true);
 		config.addDefault("prevent.Chat", true);
+		config.addDefault("prevent.DeathDrops", true);
+		config.addDefault("prevent.Flying", true);
 		config.addDefault("wrongAttempts.kick", 3);
 		config.addDefault("wrongAttempts.ban", 5);
 		config.addDefault("wrongAttempts.banIP", true);
@@ -226,7 +228,7 @@ public class PasswordProtect extends JavaPlugin  {
 		PluginDescriptionFile pdfFile = this.getDescription();
 		if (message != null) {
 			message = message
-					.replaceAll("&([0-9a-fk])", "\u00A7$1")
+					.replaceAll("&([0-9a-fk-or])", "\u00A7$1")
 					.replaceAll("%attempts", value)
 					.replaceAll("%password", value)
 					.replaceAll("%version", pdfFile.getVersion());
@@ -260,6 +262,7 @@ public class PasswordProtect extends JavaPlugin  {
 		else if (!player.hasPermission("passwordprotect.nopassword")) {
 			sendToJail(player);
 			if (!jailedPlayers.containsKey(player)) jailedPlayers.put(player, 1);
+			if (config.getBoolean("prevent.Movement")) player.setAllowFlight(false);
 			if (config.getBoolean("darkness")) player.addPotionEffect(new PotionEffect(PotionEffectType.BLINDNESS, 20 * 86400, 15));
 			if (config.getBoolean("slowness")) player.addPotionEffect(new PotionEffect(PotionEffectType.SLOW, 20 * 86400, 5));
 		}

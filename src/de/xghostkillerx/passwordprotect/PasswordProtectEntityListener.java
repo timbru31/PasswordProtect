@@ -8,6 +8,7 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
+import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.event.entity.EntityTargetEvent;
 
 /**
@@ -68,7 +69,25 @@ public class PasswordProtectEntityListener implements Listener {
 			if (entity.getType() == EntityType.PLAYER) {
 				Player player = (Player) entity;
 				if (plugin.jailedPlayers.containsKey(player)) {
+					player.setFoodLevel(20);
+					player.setFireTicks(0);
+					player.setRemainingAir(player.getMaximumAir());
 					event.setCancelled(true);
+				}
+			}
+		}
+	}
+	
+	// Cancel item drops on death
+	@EventHandler(priority = EventPriority.HIGHEST)
+	public void onEntityDeath(EntityDeathEvent event) {
+		if (plugin.config.getBoolean("prevent.DeathDrops")) {
+			Entity entity = event.getEntity();
+			if (entity.getType() == EntityType.PLAYER) {
+				Player player = (Player) entity;
+				if (plugin.jailedPlayers.containsKey(player)) {
+					event.setDroppedExp(0);
+					event.getDrops().clear();
 				}
 			}
 		}
