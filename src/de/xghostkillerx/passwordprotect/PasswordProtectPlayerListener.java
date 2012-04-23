@@ -151,6 +151,9 @@ public class PasswordProtectPlayerListener implements Listener {
 						player.addPotionEffect(new PotionEffect(PotionEffectType.BLINDNESS, 0, 0), true);
 					if (player.hasPotionEffect(PotionEffectType.SLOW)) 
 						player.addPotionEffect(new PotionEffect(PotionEffectType.SLOW, 0, 0), true);
+					if (player.getAllowFlight() == false) {
+						player.setAllowFlight(true);
+					}
 				}
 				else if (message.length() > 7){
 					int attempts = plugin.jailedPlayers.get(player);

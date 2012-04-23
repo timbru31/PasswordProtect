@@ -14,7 +14,25 @@ commands:
   setpassword:
     description: Set the password required for non-ops to play on this server
     usage: /<command> password
+  password:
+    description: Get the password
+    usage: /<command>
 permissions:
+  passwordprotect.*:
+    description: Gives access to all PasswordProtect permissions
+    children:
+      passwordprotect.getpassword: true
+      passwordprotect.setpassword: true
+      passwordprotect.setjailarea: true
   passwordprotect.nopassword:
-    description: Allows you to see the help
+    description: Allows you to bypass login
     default: false
+  passwordprotect.getpassword:
+    description: Allows you to get the password
+    default: op
+  passwordprotect.setpassword:
+    description: Allows you to set the password
+    default: op
+  passwordprotect.setjailarea:
+    description: Allows you to set the jail area
+    default: op

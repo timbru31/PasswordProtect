@@ -121,6 +121,7 @@ public class PasswordProtect extends JavaPlugin  {
 		// Commands
 		executor = new PasswordProtectCommands(this);
 		getCommand("login").setExecutor(executor);
+		getCommand("password").setExecutor(executor);
 		getCommand("setpassword").setExecutor(executor);
 		getCommand("setpasswordjail").setExecutor(executor);
 
@@ -222,7 +223,7 @@ public class PasswordProtect extends JavaPlugin  {
 			e.printStackTrace();
 		}
 	}
-	
+
 	// Message sender
 	public void message(CommandSender sender, Player player, String message, String value) {
 		PluginDescriptionFile pdfFile = this.getDescription();
@@ -249,10 +250,10 @@ public class PasswordProtect extends JavaPlugin  {
 			}
 		}
 	}
-	
+
 	public void check(Player player) {
 		if (!passwordSet()) {
-			if ((player.hasPermission("passwordprotect.setpassword")) | (!config.getBoolean("OpsRequirePassword") && player.isOp())) {
+			if (player.hasPermission("passwordprotect.setpassword")) {
 				for (int i = 1; i < 3 ; i++) {
 					String messageLocalization = localization.getString("set_password_" + i);
 					message(null, player, messageLocalization, null);
@@ -260,14 +261,16 @@ public class PasswordProtect extends JavaPlugin  {
 			}
 		}
 		else if (!player.hasPermission("passwordprotect.nopassword")) {
-			sendToJail(player);
-			if (!jailedPlayers.containsKey(player)) jailedPlayers.put(player, 1);
-			if (config.getBoolean("prevent.Movement")) player.setAllowFlight(false);
-			if (config.getBoolean("darkness")) player.addPotionEffect(new PotionEffect(PotionEffectType.BLINDNESS, 20 * 86400, 15));
-			if (config.getBoolean("slowness")) player.addPotionEffect(new PotionEffect(PotionEffectType.SLOW, 20 * 86400, 5));
+			if ((player.isOp() && config.getBoolean("OpsRequirePassword")) || !player.isOp()) {
+				sendToJail(player);
+				if (!jailedPlayers.containsKey(player)) jailedPlayers.put(player, 1);
+				if (config.getBoolean("prevent.Flying")) player.setAllowFlight(false);
+				if (config.getBoolean("darkness")) player.addPotionEffect(new PotionEffect(PotionEffectType.BLINDNESS, 20 * 86400, 15));
+				if (config.getBoolean("slowness")) player.addPotionEffect(new PotionEffect(PotionEffectType.SLOW, 20 * 86400, 5));
+			}
 		}
 	}
-	
+
 	public void stayInJail(Player player) {
 		JailLocation jailLocation = getJailLocation(player);
 		Location playerLocation = player.getLocation();
