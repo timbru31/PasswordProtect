@@ -1,5 +1,6 @@
 package de.xghostkillerx.passwordprotect;
 
+import org.bukkit.GameMode;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -148,10 +149,10 @@ public class PasswordProtectPlayerListener implements Listener {
 					plugin.message(null, player, messageLocalization, null);
 					plugin.jailedPlayers.remove(player);
 					if (player.hasPotionEffect(PotionEffectType.BLINDNESS)) 
-						player.addPotionEffect(new PotionEffect(PotionEffectType.BLINDNESS, 0, 0), true);
+						player.removePotionEffect(PotionEffectType.BLINDNESS);
 					if (player.hasPotionEffect(PotionEffectType.SLOW)) 
-						player.addPotionEffect(new PotionEffect(PotionEffectType.SLOW, 0, 0), true);
-					if (player.getAllowFlight() == false) {
+						player.removePotionEffect(PotionEffectType.SLOW);
+					if (player.getGameMode().equals(GameMode.CREATIVE)) {
 						player.setAllowFlight(true);
 					}
 				}
@@ -167,12 +168,20 @@ public class PasswordProtectPlayerListener implements Listener {
 							String messageLocalization = plugin.localization.getString("ban_message");
 							player.kickPlayer(messageLocalization.replaceAll("&([0-9a-fk])", "\u00A7$1"));
 							player.setBanned(true);
+							if (plugin.config.getBoolean("broadcast.ban")) {
+								messageLocalization = plugin.localization.getString("ban_broadcast");
+								plugin.getServer().broadcastMessage(messageLocalization.replaceAll("&([0-9a-fk])", "\u00A7$1").replaceAll("%player", player.getName()));
+							}
 							if (plugin.config.getBoolean("wrongAttempts.banIP")) plugin.getServer().banIP(ip);
 							return;
 						}
 						else if(attemptsLeftKick == 0) {
 							String messageLocalization = plugin.localization.getString("kick_message");
 							player.kickPlayer(messageLocalization.replaceAll("&([0-9a-fk])", "\u00A7$1"));
+							if (plugin.config.getBoolean("broadcast.kick")) {
+								messageLocalization = plugin.localization.getString("kick_broadcast");
+								plugin.getServer().broadcastMessage(messageLocalization.replaceAll("&([0-9a-fk])", "\u00A7$1").replaceAll("%player", player.getName()));
+							}
 						}
 					}
 					if (attemptsLeftKick > 0 || attemptsLeftBan > 0) {

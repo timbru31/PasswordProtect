@@ -8,7 +8,7 @@ prevent:
   Interaction: true
   InteractionMobs: true
   ItemPickup: true
-  ItemDrops: true
+  ItemDrop: true
   Portal: true
   BlockPlace: true
   BlockBreak: true
@@ -20,6 +20,9 @@ wrongAttempts:
   kick: 3
   ban: 5
   banIP: true
+broadcast:
+  kick: true
+  ban: true
 darkness: true
 slowness: true
 allowedCommands:

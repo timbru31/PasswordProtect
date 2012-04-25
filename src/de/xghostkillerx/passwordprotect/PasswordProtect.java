@@ -141,7 +141,7 @@ public class PasswordProtect extends JavaPlugin  {
 		config.addDefault("prevent.Interaction", true);
 		config.addDefault("prevent.InteractionMobs", true);
 		config.addDefault("prevent.ItemPickup", true);
-		config.addDefault("prevent.ItemDrops", true);
+		config.addDefault("prevent.ItemDrop", true);
 		config.addDefault("prevent.Portal", true);
 		config.addDefault("prevent.BlockPlace", true);
 		config.addDefault("prevent.BlockBreak", true);
@@ -154,6 +154,8 @@ public class PasswordProtect extends JavaPlugin  {
 		config.addDefault("wrongAttempts.kick", 3);
 		config.addDefault("wrongAttempts.ban", 5);
 		config.addDefault("wrongAttempts.banIP", true);
+		config.addDefault("broadcast.kick", true);
+		config.addDefault("broadcast.ban", true);
 		config.addDefault("darkness", true);
 		config.addDefault("slowness", true);
 		config.addDefault("allowedCommands", Arrays.asList(commands));
@@ -175,6 +177,8 @@ public class PasswordProtect extends JavaPlugin  {
 		localization.addDefault("attempts_left_ban", "&4Server password incorrect! &e%attempts &4attempts left until ban...");
 		localization.addDefault("kick_message", "&4Kicked by &ePasswordProtect &4for too many wrong attempts...");
 		localization.addDefault("ban_message", "&4Banned by &ePasswordProtect &4for too many wrong attempts...");
+		localization.addDefault("kick_broadcast", "&e%player &4kicked by &ePasswordProtect &4for too many wrong attempts...");
+		localization.addDefault("ban_broadcast", "&e%player &4banned by &ePasswordProtect &4for too many wrong attempts...");
 		localization.addDefault("radius_not_number", "&4The radius was not a number! Using standard (4) instead!");
 		localization.addDefault("jail_set", "&aJail location set");
 		localization.addDefault("password_set", "&aServer password set!");
@@ -325,7 +329,7 @@ public class PasswordProtect extends JavaPlugin  {
 			// Try to load and add to the list
 			jailLocation = loadJailLocation(world);
 			if (jailLocation == null)  {
-				jailLocation = new JailLocation(world.getSpawnLocation(), 4);
+				jailLocation = new JailLocation(world.getSpawnLocation(), 4, true);
 				jailLocations.put(world, jailLocation);
 				setJailLocation(world, jailLocation);
 			}

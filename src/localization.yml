@@ -11,6 +11,8 @@ attempts_left_ban: '&4Server password incorrect! &e%attempts &4attempts left unt
   ban...'
 kick_message: '&4Kicked by &ePasswordProtect &4for too many wrong attempts...'
 ban_message: '&4Banned by &ePasswordProtect &4for too many wrong attempts...'
+kick_broadcast: '&e%player &4kicked by &ePasswordProtect &4for too many wrong attempts...'
+ban_broadcast: '&e%player &4banned by &ePasswordProtect &4for too many wrong attempts...'
 radius_not_number: '&4The radius was not a number! Using standard (4) instead!'
 jail_set: '&aJail location set'
 password_set: '&aServer password set!'
