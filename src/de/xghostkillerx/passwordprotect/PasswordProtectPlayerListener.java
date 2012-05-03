@@ -152,11 +152,17 @@ public class PasswordProtectPlayerListener implements Listener {
 						player.removePotionEffect(PotionEffectType.BLINDNESS);
 					if (player.hasPotionEffect(PotionEffectType.SLOW)) 
 						player.removePotionEffect(PotionEffectType.SLOW);
-					if (player.getGameMode().equals(GameMode.CREATIVE)) {
+					if (player.getGameMode().equals(GameMode.CREATIVE))
 						player.setAllowFlight(true);
+					if (plugin.config.getBoolean("teleportBack")) {
+						if (plugin.playerLocations.containsKey(player)) {
+							player.teleport(plugin.playerLocations.get(player));
+							plugin.playerLocations.remove(player);
+						}
 					}
 				}
-				else if (message.length() > 7){
+				// Don't count only /login
+				else if (message.length() > 7) {
 					int attempts = plugin.jailedPlayers.get(player);
 					int kickAfter = plugin.config.getInt("wrongAttempts.kick");
 					int banAfter = plugin.config.getInt("wrongAttempts.ban");
@@ -202,6 +208,11 @@ public class PasswordProtectPlayerListener implements Listener {
 			else {
 				plugin.sendPasswordRequiredMessage(player);
 			}
+			event.setCancelled(true);
+		}
+		else {
+			String messageLocalization = plugin.localization.getString("already_logged_in");
+			plugin.message(null, player, messageLocalization, null);
 			event.setCancelled(true);
 		}
 	}

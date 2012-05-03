@@ -27,15 +27,12 @@ public class JailLocation extends Location {
     }
 
     public JailLocation(Location location, int radius) {
-    	// location.getWorld().getHighestBlockYAt(location.getBlockX(), location.getBlockZ()) + 1 = Highest block for Y at location (x,z), because spawn can be like 65. +1 for head
-        super(location.getWorld(), location.getX(), location.getY(), location.getZ(), location.getYaw(), location.getPitch());
-        this.radius = radius;
+    	super(location.getWorld(), location.getX(), location.getY(), location.getZ(), location.getYaw(), location.getPitch());
+    	this.radius = radius;
     }
 
-    public JailLocation(Location spawnLocation, int radius, boolean b) {
-    	// location.getWorld().getHighestBlockYAt(location.getBlockX(), location.getBlockZ()) + 1 = Highest block for Y at location (x,z), because spawn can be like 65. +1 for head
-    	super(spawnLocation.getWorld(), spawnLocation.getX(), spawnLocation.getWorld().getHighestBlockYAt(spawnLocation.getBlockX(), spawnLocation.getBlockZ()) + 1, spawnLocation.getZ(), spawnLocation.getYaw(), spawnLocation.getPitch());
-    	this.radius = radius;
+    public static JailLocation SpawnJailLocation(Location spawnLocation, int radius) {
+    	return new JailLocation(spawnLocation.getWorld(), spawnLocation.getX(), spawnLocation.getWorld().getHighestBlockYAt(spawnLocation.getBlockX(), spawnLocation.getBlockZ()) + 1, spawnLocation.getZ(), spawnLocation.getYaw(), spawnLocation.getPitch(), radius);
 	}
 
 	public int getRadius() {

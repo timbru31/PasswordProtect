@@ -52,15 +52,21 @@ public class PasswordProtect extends JavaPlugin  {
 	private File configFile;
 	private File jailFile;
 	private File localizationFile;
+	// Integer = attempts to login!
 	public HashMap<Player, Integer> jailedPlayers = new HashMap<Player, Integer>();
 	private HashMap<World, JailLocation> jailLocations = new HashMap<World, JailLocation>();
+	public HashMap<Player, Location> playerLocations = new HashMap<Player, Location>();
 	public List<String> commandList = new ArrayList<String>();
 	private String[] commands = {"help", "rules", "motd",};
 
 	// Shutdown
 	public void onDisable() {
+		// Clear lists
 		jailedPlayers.clear();
 		jailLocations.clear();
+		playerLocations.clear();
+		
+		// Log
 		PluginDescriptionFile pdfFile = this.getDescription();
 		log.info(pdfFile.getName() + " " + pdfFile.getVersion()	+ " has been disabled!");
 	}
@@ -76,6 +82,7 @@ public class PasswordProtect extends JavaPlugin  {
 		// Clear lists
 		jailedPlayers.clear();
 		jailLocations.clear();
+		playerLocations.clear();
 
 		// Jails config		
 		jailFile = new File(getDataFolder(), "jails.yml");
@@ -158,6 +165,7 @@ public class PasswordProtect extends JavaPlugin  {
 		config.addDefault("broadcast.ban", true);
 		config.addDefault("darkness", true);
 		config.addDefault("slowness", true);
+		config.addDefault("teleportBack", true);
 		config.addDefault("allowedCommands", Arrays.asList(commands));
 		commandList = config.getStringList("allowedCommands");
 		config.options().copyDefaults(true);
@@ -188,6 +196,7 @@ public class PasswordProtect extends JavaPlugin  {
 		localization.addDefault("password_not_set", "&eServer password is not set. Use /setpassword <password>");
 		localization.addDefault("password", "&eServer password is &4%password");
 		localization.addDefault("set_jail_area", "&eYou can set the jail area by going somewhere and using &a/setpasswordjail &4[radius]");
+		localization.addDefault("already_logged_in", "&eYou are already logged in!");
 		localization.options().copyDefaults(true);
 		saveLocalization();
 	}
@@ -266,6 +275,9 @@ public class PasswordProtect extends JavaPlugin  {
 		}
 		else if (!player.hasPermission("passwordprotect.nopassword")) {
 			if ((player.isOp() && config.getBoolean("OpsRequirePassword")) || !player.isOp()) {
+				if (config.getBoolean("teleportBack")) {
+					if (!playerLocations.containsKey(player)) playerLocations.put(player, player.getLocation());
+				}
 				sendToJail(player);
 				if (!jailedPlayers.containsKey(player)) jailedPlayers.put(player, 1);
 				if (config.getBoolean("prevent.Flying")) player.setAllowFlight(false);
@@ -329,7 +341,7 @@ public class PasswordProtect extends JavaPlugin  {
 			// Try to load and add to the list
 			jailLocation = loadJailLocation(world);
 			if (jailLocation == null)  {
-				jailLocation = new JailLocation(world.getSpawnLocation(), 4, true);
+				jailLocation = JailLocation.SpawnJailLocation(world.getSpawnLocation(), 4);
 				jailLocations.put(world, jailLocation);
 				setJailLocation(world, jailLocation);
 			}

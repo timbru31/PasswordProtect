@@ -24,3 +24,4 @@ password_not_set: '&eServer password is not set. Use /setpassword <password>'
 password: '&eServer password is &4%password'
 set_jail_area: '&eYou can set the jail area by going somewhere and using &a/setpasswordjail
   &4[radius]'
+already_logged_in: '&eYou are already logged in!'
