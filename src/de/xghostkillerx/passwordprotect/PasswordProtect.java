@@ -191,7 +191,7 @@ public class PasswordProtect extends JavaPlugin  {
 		localization.addDefault("jail_set", "&aJail location set");
 		localization.addDefault("password_set", "&aServer password set!");
 		localization.addDefault("only_ingame", "&4The command can only be used ingame!");
-		localization.addDefault("config_invalid", "&4It seems like this is server config invalid. Please re-set the password!");
+		localization.addDefault("config_invalid", "&4It seems like this server config invalid. Please re-set the password!");
 		localization.addDefault("only_encypted", "&4Server password is only stored encrypted...");
 		localization.addDefault("password_not_set", "&eServer password is not set. Use /setpassword <password>");
 		localization.addDefault("password", "&eServer password is &4%password");
