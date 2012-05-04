@@ -136,69 +136,70 @@ public class PasswordProtectPlayerListener implements Listener {
 		String command = message.replaceFirst("/", "");
 		if (command.contains(" "))
 			command = command.substring(0, command.indexOf(' '));
-
 		if (plugin.jailedPlayers.containsKey(player)) {
 			if (plugin.commandList.contains(command)) {
 				return;
 			}
-			else if (message.startsWith("/login")) {
-				String password = message.replaceFirst("/login ", "");
-				password = plugin.encrypt(password);
-				if (password.equals(plugin.getPassword())) {
-					String messageLocalization = plugin.localization.getString("password_accepted");
-					plugin.message(null, player, messageLocalization, null);
-					plugin.jailedPlayers.remove(player);
-					if (player.hasPotionEffect(PotionEffectType.BLINDNESS)) 
-						player.removePotionEffect(PotionEffectType.BLINDNESS);
-					if (player.hasPotionEffect(PotionEffectType.SLOW)) 
-						player.removePotionEffect(PotionEffectType.SLOW);
-					if (player.getGameMode().equals(GameMode.CREATIVE))
-						player.setAllowFlight(true);
-					if (plugin.config.getBoolean("teleportBack")) {
-						if (plugin.playerLocations.containsKey(player)) {
-							player.teleport(plugin.playerLocations.get(player));
-							plugin.playerLocations.remove(player);
-						}
-					}
-				}
+			else if (command.equalsIgnoreCase("login")) {
 				// Don't count only /login
-				else if (message.length() > 7) {
-					int attempts = plugin.jailedPlayers.get(player);
-					int kickAfter = plugin.config.getInt("wrongAttempts.kick");
-					int banAfter = plugin.config.getInt("wrongAttempts.ban");
-					int attemptsLeftKick = kickAfter - attempts;
-					int attemptsLeftBan = banAfter - attempts;
-					if (attemptsLeftKick <= 0 || attemptsLeftBan <= 0) {
-						if (attemptsLeftBan <= 0) {
-							String ip = player.getAddress().getAddress().toString().replaceAll("/", "");
-							String messageLocalization = plugin.localization.getString("ban_message");
-							player.kickPlayer(messageLocalization.replaceAll("&([0-9a-fk])", "\u00A7$1"));
-							player.setBanned(true);
-							if (plugin.config.getBoolean("broadcast.ban")) {
-								messageLocalization = plugin.localization.getString("ban_broadcast");
-								plugin.getServer().broadcastMessage(messageLocalization.replaceAll("&([0-9a-fk])", "\u00A7$1").replaceAll("%player", player.getName()));
-							}
-							if (plugin.config.getBoolean("wrongAttempts.banIP")) plugin.getServer().banIP(ip);
-							return;
-						}
-						else if(attemptsLeftKick == 0) {
-							String messageLocalization = plugin.localization.getString("kick_message");
-							player.kickPlayer(messageLocalization.replaceAll("&([0-9a-fk])", "\u00A7$1"));
-							if (plugin.config.getBoolean("broadcast.kick")) {
-								messageLocalization = plugin.localization.getString("kick_broadcast");
-								plugin.getServer().broadcastMessage(messageLocalization.replaceAll("&([0-9a-fk])", "\u00A7$1").replaceAll("%player", player.getName()));
+				if (message.length() > 7) {
+					String password = message.substring(7, message.length());
+					password = plugin.encrypt(password);
+					if (password.equals(plugin.getPassword())) {
+						String messageLocalization = plugin.localization.getString("password_accepted");
+						plugin.message(null, player, messageLocalization, null);
+						plugin.jailedPlayers.remove(player);
+						if (player.hasPotionEffect(PotionEffectType.BLINDNESS)) 
+							player.removePotionEffect(PotionEffectType.BLINDNESS);
+						if (player.hasPotionEffect(PotionEffectType.SLOW)) 
+							player.removePotionEffect(PotionEffectType.SLOW);
+						if (player.getGameMode().equals(GameMode.CREATIVE))
+							player.setAllowFlight(true);
+						if (plugin.config.getBoolean("teleportBack")) {
+							if (plugin.playerLocations.containsKey(player)) {
+								player.teleport(plugin.playerLocations.get(player));
+								plugin.playerLocations.remove(player);
 							}
 						}
 					}
-					if (attemptsLeftKick > 0 || attemptsLeftBan > 0) {
-						if (attemptsLeftKick > 0) {
-							String messageLocalization = plugin.localization.getString("attempts_left_kick");
-							plugin.message(null, player, messageLocalization, Integer.toString(attemptsLeftKick));
+					else {
+						int attempts = plugin.jailedPlayers.get(player);
+						int kickAfter = plugin.config.getInt("wrongAttempts.kick");
+						int banAfter = plugin.config.getInt("wrongAttempts.ban");
+						int attemptsLeftKick = kickAfter - attempts;
+						int attemptsLeftBan = banAfter - attempts;
+						if (attemptsLeftKick <= 0 || attemptsLeftBan <= 0) {
+							if (attemptsLeftBan <= 0) {
+								String ip = player.getAddress().getAddress().toString().replaceAll("/", "");
+								String messageLocalization = plugin.localization.getString("ban_message");
+								player.kickPlayer(messageLocalization.replaceAll("&([0-9a-fk])", "\u00A7$1"));
+								player.setBanned(true);
+								if (plugin.config.getBoolean("broadcast.ban")) {
+									messageLocalization = plugin.localization.getString("ban_broadcast");
+									plugin.getServer().broadcastMessage(messageLocalization.replaceAll("&([0-9a-fk])", "\u00A7$1").replaceAll("%player", player.getName()));
+								}
+								if (plugin.config.getBoolean("wrongAttempts.banIP")) plugin.getServer().banIP(ip);
+								return;
+							}
+							else if(attemptsLeftKick == 0) {
+								String messageLocalization = plugin.localization.getString("kick_message");
+								player.kickPlayer(messageLocalization.replaceAll("&([0-9a-fk])", "\u00A7$1"));
+								if (plugin.config.getBoolean("broadcast.kick")) {
+									messageLocalization = plugin.localization.getString("kick_broadcast");
+									plugin.getServer().broadcastMessage(messageLocalization.replaceAll("&([0-9a-fk])", "\u00A7$1").replaceAll("%player", player.getName()));
+								}
+							}
 						}
-						String messageLocalization = plugin.localization.getString("attempts_left_ban");
-						plugin.message(null, player, messageLocalization, Integer.toString(attemptsLeftBan));
-						attempts++;
-						plugin.jailedPlayers.put(player, attempts);
+						if (attemptsLeftKick > 0 || attemptsLeftBan > 0) {
+							if (attemptsLeftKick > 0) {
+								String messageLocalization = plugin.localization.getString("attempts_left_kick");
+								plugin.message(null, player, messageLocalization, Integer.toString(attemptsLeftKick));
+							}
+							String messageLocalization = plugin.localization.getString("attempts_left_ban");
+							plugin.message(null, player, messageLocalization, Integer.toString(attemptsLeftBan));
+							attempts++;
+							plugin.jailedPlayers.put(player, attempts);
+						}
 					}
 				}
 				else {
@@ -210,7 +211,7 @@ public class PasswordProtectPlayerListener implements Listener {
 			}
 			event.setCancelled(true);
 		}
-		else {
+		else if (message.toLowerCase().startsWith("/login")) {
 			String messageLocalization = plugin.localization.getString("already_logged_in");
 			plugin.message(null, player, messageLocalization, null);
 			event.setCancelled(true);

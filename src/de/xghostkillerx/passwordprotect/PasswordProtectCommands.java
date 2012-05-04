@@ -96,7 +96,7 @@ public class PasswordProtectCommands implements CommandExecutor {
 					try {
 						radius = Integer.valueOf(args[0]);
 					}
-					catch (Exception nfe) {
+					catch (Exception e) {
 						String messageLocalization = plugin.localization.getString("radius_not_number");
 						plugin.message(null, player, messageLocalization, null);
 					}
