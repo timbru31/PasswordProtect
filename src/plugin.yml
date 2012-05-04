@@ -10,7 +10,7 @@ commands:
     usage: /<command> password
   setjaillocation:
     description: Set the password jail to your current location
-    aliases: [setjail, setjailarea]
+    aliases: [setjail, setjailarea, setpasswordjail]
     usage: /<command>
   setpassword:
     description: Set the password required for non-ops to play on this server
