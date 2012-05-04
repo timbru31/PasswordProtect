@@ -130,7 +130,7 @@ public class PasswordProtect extends JavaPlugin  {
 		getCommand("login").setExecutor(executor);
 		getCommand("password").setExecutor(executor);
 		getCommand("setpassword").setExecutor(executor);
-		getCommand("setpasswordjail").setExecutor(executor);
+		getCommand("setjaillocation").setExecutor(executor);
 
 		// Message
 		PluginDescriptionFile pdfFile = this.getDescription();
@@ -195,7 +195,7 @@ public class PasswordProtect extends JavaPlugin  {
 		localization.addDefault("only_encypted", "&4Server password is only stored encrypted...");
 		localization.addDefault("password_not_set", "&eServer password is not set. Use /setpassword <password>");
 		localization.addDefault("password", "&eServer password is &4%password");
-		localization.addDefault("set_jail_area", "&eYou can set the jail area by going somewhere and using &a/setpasswordjail &4[radius]");
+		localization.addDefault("set_jail_area", "&eYou can set the jail area by going somewhere and using &a/setjaillocation &4[radius]");
 		localization.addDefault("already_logged_in", "&eYou are already logged in!");
 		localization.addDefault("no_login_console", "&eThe console can't login into the server!");
 		localization.options().copyDefaults(true);
@@ -254,7 +254,7 @@ public class PasswordProtect extends JavaPlugin  {
 				sender.sendMessage(message);
 			}
 		}
-		// If message is null
+		// If message is null. Should NOT occur.
 		else {
 			if (player != null) {
 				player.sendMessage(ChatColor.DARK_RED + "Somehow this message is not defined. Please check your localization.yml");
@@ -266,7 +266,9 @@ public class PasswordProtect extends JavaPlugin  {
 	}
 
 	public void check(Player player) {
+		// Password not set
 		if (!passwordSet()) {
+			// Message player to set the password.
 			if (player.hasPermission("passwordprotect.setpassword")) {
 				for (int i = 1; i < 3 ; i++) {
 					String messageLocalization = localization.getString("set_password_" + i);
@@ -274,12 +276,17 @@ public class PasswordProtect extends JavaPlugin  {
 				}
 			}
 		}
+		// If he has not the permission to bypass
 		else if (!player.hasPermission("passwordprotect.nopassword")) {
+			// If he isn't an OP or OPs are required, too
 			if ((player.isOp() && config.getBoolean("OpsRequirePassword")) || !player.isOp()) {
+				// Remember position?
 				if (config.getBoolean("teleportBack")) {
 					if (!playerLocations.containsKey(player)) playerLocations.put(player, player.getLocation());
 				}
+				// Jail!
 				sendToJail(player);
+				// Add him & do bad stuff
 				if (!jailedPlayers.containsKey(player)) jailedPlayers.put(player, 1);
 				if (config.getBoolean("prevent.Flying")) player.setAllowFlight(false);
 				if (config.getBoolean("darkness")) player.addPotionEffect(new PotionEffect(PotionEffectType.BLINDNESS, 20 * 86400, 15));
@@ -288,6 +295,7 @@ public class PasswordProtect extends JavaPlugin  {
 		}
 	}
 
+	// Teleport back to the middle if player leaves area
 	public void stayInJail(Player player) {
 		JailLocation jailLocation = getJailLocation(player);
 		Location playerLocation = player.getLocation();
@@ -301,12 +309,14 @@ public class PasswordProtect extends JavaPlugin  {
 		sendToJail(player);
 	}
 
+	// Jail the player. Teleport and message
 	public void sendToJail(Player player) {
 		JailLocation jailLocation = getJailLocation(player);
 		player.teleport(jailLocation);
 		sendPasswordRequiredMessage(player);
 	}
 
+	// Message
 	public void sendPasswordRequiredMessage(Player player) {
 		for (int i = 1; i < 3 ; i++) {
 			String messageLocalization = localization.getString("enter_password_" + i);
@@ -371,8 +381,10 @@ public class PasswordProtect extends JavaPlugin  {
 	}
 
 	public void setPassword(String password) throws Exception {
+		// Encrypt
 		String encryptedPassword = encrypt(password);
 		config.set("password", encryptedPassword);
+		// Additionally store "clean"
 		if (config.getBoolean("cleanPassword")) {
 			config.set("passwordClean", password);
 		}

@@ -29,7 +29,7 @@ public class PasswordProtectCommands implements CommandExecutor {
 	}
 
 	public boolean onCommand (CommandSender sender, Command command, String commandLabel, String[] args) {
-		// Send the password back, if the sender is the console or got the permission
+		// Send the password back, if the sender is the console or if the player has got the permission
 		if (command.getName().equalsIgnoreCase("password")) {
 			// If a player send the command
 			if (sender instanceof Player) {
@@ -73,8 +73,8 @@ public class PasswordProtectCommands implements CommandExecutor {
 				return true;
 			}
 		}
-		// Sets the jail radius
-		if (command.getName().equalsIgnoreCase(/* TODO Change this ugly command */"setpasswordjail")) {
+		// Sets the jail location
+		if (command.getName().equalsIgnoreCase("setjaillocation")) {
 			// If the console send this -> Not possible
 			if (!(sender instanceof Player)) {
 				String messageLocalization = plugin.localization.getString("only_ingame");
@@ -91,16 +91,19 @@ public class PasswordProtectCommands implements CommandExecutor {
 
 				// Gets the players location
 				World world = player.getWorld();
+				// Default radius of four
 				int radius = 4;
 				if (args.length >= 1) {
 					try {
 						radius = Integer.valueOf(args[0]);
 					}
+					// Radius not a number? Use default!
 					catch (Exception e) {
 						String messageLocalization = plugin.localization.getString("radius_not_number");
 						plugin.message(null, player, messageLocalization, null);
 					}
 				}
+				// Make a new jail location and store it
 				JailLocation loc = new JailLocation(player.getLocation(), radius);
 				plugin.setJailLocation(world, loc);
 				String messageLocalization = plugin.localization.getString("jail_set");
@@ -120,18 +123,21 @@ public class PasswordProtectCommands implements CommandExecutor {
 				plugin.message(sender, null, messageLocalization, null);
 				return true;
 			}
+			// Set password
 			try {
 				plugin.setPassword(password);
 			} 
 			catch (Exception e) {}
 			String messageLocalization = plugin.localization.getString("password_set");
 			plugin.message(sender, null, messageLocalization, null);
+			// Reminder for the jail area
 			if (sender instanceof Player) {
 				messageLocalization = plugin.localization.getString("set_jail_area");
 				plugin.message(sender, null, messageLocalization, null);
 			}
 			return true;
 		}
+		// Console tries to login -> Deny
 		if (command.getName().equalsIgnoreCase("login")) {
 			if (!(sender instanceof Player)) {
 				String messageLocalization = plugin.localization.getString("no_login_console");

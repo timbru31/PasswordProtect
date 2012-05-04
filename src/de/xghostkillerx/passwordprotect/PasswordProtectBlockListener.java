@@ -28,11 +28,10 @@ public class PasswordProtectBlockListener implements Listener {
 		plugin = instance;
 	}
 
-	// If a place is placed, cancel it
+	// If a block is placed, cancel it
 	@EventHandler(priority = EventPriority.HIGHEST)
 	public void onBlockPlace(BlockPlaceEvent event) {
 		if (plugin.config.getBoolean("prevent.BlockPlace")) {
-			// If the player is in "jail", cancel it
 			Player player = event.getPlayer();
 			if (plugin.jailedPlayers.containsKey(player)) {
 				event.setBuild(false);

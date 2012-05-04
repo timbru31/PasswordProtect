@@ -18,24 +18,34 @@ import org.bukkit.World;
  * 
  */
 
+/*
+ * 
+ * The JailLocation is a square around a specific location
+ * provided by the exact location or coordinates.
+ * The radius is the value after which the player
+ * should be teleported back into the middle of the
+ * JailLocation
+ * 
+ */
+
 public class JailLocation extends Location {
-    private int radius;
+	private int radius;
 
-    public JailLocation(World world, double x, double y, double z, float yaw, float pitch, int radius) {
-        super(world, x, y, z, yaw, pitch);
-        this.radius = radius;
-    }
+	public JailLocation(World world, double x, double y, double z, float yaw, float pitch, int radius) {
+		super(world, x, y, z, yaw, pitch);
+		this.radius = radius;
+	}
 
-    public JailLocation(Location location, int radius) {
-    	super(location.getWorld(), location.getX(), location.getY(), location.getZ(), location.getYaw(), location.getPitch());
-    	this.radius = radius;
-    }
+	public JailLocation(Location location, int radius) {
+		super(location.getWorld(), location.getX(), location.getY(), location.getZ(), location.getYaw(), location.getPitch());
+		this.radius = radius;
+	}
 
-    public static JailLocation SpawnJailLocation(Location spawnLocation, int radius) {
-    	return new JailLocation(spawnLocation.getWorld(), spawnLocation.getX(), spawnLocation.getWorld().getHighestBlockYAt(spawnLocation.getBlockX(), spawnLocation.getBlockZ()) + 1, spawnLocation.getZ(), spawnLocation.getYaw(), spawnLocation.getPitch(), radius);
+	public static JailLocation SpawnJailLocation(Location spawnLocation, int radius) {
+		return new JailLocation(spawnLocation.getWorld(), spawnLocation.getX(), spawnLocation.getWorld().getHighestBlockYAt(spawnLocation.getBlockX(), spawnLocation.getBlockZ()) + 1, spawnLocation.getZ(), spawnLocation.getYaw(), spawnLocation.getPitch(), radius);
 	}
 
 	public int getRadius() {
-        return radius;
-    }
+		return radius;
+	}
 }

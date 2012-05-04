@@ -69,6 +69,7 @@ public class PasswordProtectEntityListener implements Listener {
 			if (entity.getType() == EntityType.PLAYER) {
 				Player player = (Player) entity;
 				if (plugin.jailedPlayers.containsKey(player)) {
+					// Restore food and air. Remove fire
 					player.setFoodLevel(20);
 					player.setFireTicks(0);
 					player.setRemainingAir(player.getMaximumAir());
@@ -86,6 +87,7 @@ public class PasswordProtectEntityListener implements Listener {
 			if (entity.getType() == EntityType.PLAYER) {
 				Player player = (Player) entity;
 				if (plugin.jailedPlayers.containsKey(player)) {
+					// Exp and items
 					event.setDroppedExp(0);
 					event.getDrops().clear();
 				}

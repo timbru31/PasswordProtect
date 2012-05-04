@@ -8,8 +8,9 @@ commands:
   login:
     description: Login using this server's password
     usage: /<command> password
-  setpasswordjail:
+  setjaillocation:
     description: Set the password jail to your current location
+    aliases: [setjail, setjailarea]
     usage: /<command>
   setpassword:
     description: Set the password required for non-ops to play on this server
