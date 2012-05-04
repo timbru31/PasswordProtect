@@ -197,6 +197,7 @@ public class PasswordProtect extends JavaPlugin  {
 		localization.addDefault("password", "&eServer password is &4%password");
 		localization.addDefault("set_jail_area", "&eYou can set the jail area by going somewhere and using &a/setpasswordjail &4[radius]");
 		localization.addDefault("already_logged_in", "&eYou are already logged in!");
+		localization.addDefault("no_login_console", "&eThe console can't login into the server!");
 		localization.options().copyDefaults(true);
 		saveLocalization();
 	}

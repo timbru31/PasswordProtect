@@ -25,3 +25,4 @@ password: '&eServer password is &4%password'
 set_jail_area: '&eYou can set the jail area by going somewhere and using &a/setpasswordjail
   &4[radius]'
 already_logged_in: '&eYou are already logged in!'
+no_login_console: '&eThe console can''t login into the server!'

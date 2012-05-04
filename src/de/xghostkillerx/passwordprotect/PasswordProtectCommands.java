@@ -132,6 +132,13 @@ public class PasswordProtectCommands implements CommandExecutor {
 			}
 			return true;
 		}
+		if (command.getName().equalsIgnoreCase("login")) {
+			if (!(sender instanceof Player)) {
+				String messageLocalization = plugin.localization.getString("no_login_console");
+				plugin.message(sender, null, messageLocalization, null);
+				return true;
+			}
+		}
 		return false;
 	}
 }
