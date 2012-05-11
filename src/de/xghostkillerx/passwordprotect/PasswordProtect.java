@@ -135,6 +135,13 @@ public class PasswordProtect extends JavaPlugin  {
 		// Message
 		PluginDescriptionFile pdfFile = this.getDescription();
 		log.info(pdfFile.getName() + " " + pdfFile.getVersion() + " is enabled!");
+		
+		// Stats
+		try {
+			Metrics metrics = new Metrics(this);
+			metrics.start();
+		}
+		catch (IOException e) {}
 	}
 
 	// Loads the config at start
