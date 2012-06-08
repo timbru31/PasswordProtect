@@ -62,6 +62,13 @@ public class PasswordProtect extends JavaPlugin  {
 
 	// Shutdown
 	public void onDisable() {
+		// Remove potion effect
+		for (Player player : jailedPlayers.keySet()) {
+			if (player.hasPotionEffect(PotionEffectType.BLINDNESS)) 
+				player.removePotionEffect(PotionEffectType.BLINDNESS);
+			if (player.hasPotionEffect(PotionEffectType.SLOW)) 
+				player.removePotionEffect(PotionEffectType.SLOW);
+		}
 		// Clear lists
 		jailedPlayers.clear();
 		jailLocations.clear();
