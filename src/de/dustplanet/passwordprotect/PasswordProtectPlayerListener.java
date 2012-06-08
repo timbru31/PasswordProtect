@@ -1,4 +1,4 @@
-package de.xghostkillerx.passwordprotect;
+package de.dustplanet.passwordprotect;
 
 import org.bukkit.GameMode;
 import org.bukkit.event.EventHandler;

@@ -1,4 +1,4 @@
-package de.xghostkillerx.passwordprotect;
+package de.dustplanet.passwordprotect;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -23,7 +23,8 @@ import org.bukkit.plugin.PluginDescriptionFile;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
-import de.xghostkillerx.passwordprotect.JailLocation;
+
+import de.dustplanet.passwordprotect.JailLocation;
 
 /**
  * PasswordProtect for CraftBukkit/Bukkit

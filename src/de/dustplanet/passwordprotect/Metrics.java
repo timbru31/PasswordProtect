@@ -1,4 +1,4 @@
-package de.xghostkillerx.passwordprotect;
+package de.dustplanet.passwordprotect;
 
 /*
  * Copyright 2011 Tyler Blair. All rights reserved.
