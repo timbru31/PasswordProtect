@@ -32,21 +32,18 @@ import org.bukkit.potion.PotionEffectType;
 import de.dustplanet.passwordprotect.JailLocation;
 
 /**
- * PasswordProtect for CraftBukkit/Bukkit
- * Handles some general stuff.
+ * PasswordProtect for CraftBukkit/Bukkit Handles some general stuff.
  * 
  * 
- * Refer to the forum thread:
- * http://bit.ly/ppbukkit
- * Refer to the dev.bukkit.org page:
- * http://bit.ly/ppbukktidev
- *
+ * Refer to the forum thread: http://bit.ly/ppbukkit Refer to the dev.bukkit.org
+ * page: http://bit.ly/ppbukktidev
+ * 
  * @author xGhOsTkiLLeRx
  * @thanks to brianewing alias DisabledHamster for the original plugin!
  * 
  */
 
-public class PasswordProtect extends JavaPlugin  {
+public class PasswordProtect extends JavaPlugin {
 	public static final Logger log = Logger.getLogger("Minecraft");
 	private final PasswordProtectPlayerListener playerListener = new PasswordProtectPlayerListener(this);
 	private final PasswordProtectBlockListener blockListener = new PasswordProtectBlockListener(this);
@@ -63,7 +60,7 @@ public class PasswordProtect extends JavaPlugin  {
 	private HashMap<World, JailLocation> jailLocations = new HashMap<World, JailLocation>();
 	public HashMap<String, Location> playerLocations = new HashMap<String, Location>();
 	public List<String> commandList = new ArrayList<String>();
-	private String[] commands = {"help", "rules", "motd",};
+	private String[] commands = { "help", "rules", "motd", };
 	private String encryption = "SHA-256";
 	private File jailedPlayersFile;
 
@@ -73,23 +70,22 @@ public class PasswordProtect extends JavaPlugin  {
 		for (String playerName : jailedPlayers.keySet()) {
 			Player player = getServer().getPlayerExact(playerName);
 			if (player != null) {
-				if (player.hasPotionEffect(PotionEffectType.BLINDNESS)) 
+				if (player.hasPotionEffect(PotionEffectType.BLINDNESS))
 					player.removePotionEffect(PotionEffectType.BLINDNESS);
-				if (player.hasPotionEffect(PotionEffectType.SLOW)) 
+				if (player.hasPotionEffect(PotionEffectType.SLOW))
 					player.removePotionEffect(PotionEffectType.SLOW);
 			}
 		}
+		// Save the HashMap of the jailedPlayers
 		try {
-            ObjectOutputStream obj = new ObjectOutputStream(new FileOutputStream("jailedPlayers.dat"));
-            obj.writeObject(jailedPlayers);
-            obj.close();
-        } catch (FileNotFoundException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        } catch (IOException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
+			ObjectOutputStream obj = new ObjectOutputStream(new FileOutputStream("jailedPlayers.dat"));
+			obj.writeObject(jailedPlayers);
+			obj.close();
+		} catch (FileNotFoundException e) {
+			log.info("PasswordProtect couldn't find the 'jailedPlayers.dat' file!");
+		} catch (IOException e) {
+			log.info("PasswordProtect couldn't save the 'jailedPlayers.dat' (I/O Exception)!");
+		}
 		// Clear lists
 		jailedPlayers.clear();
 		jailLocations.clear();
@@ -97,7 +93,8 @@ public class PasswordProtect extends JavaPlugin  {
 
 		// Log
 		PluginDescriptionFile pdfFile = this.getDescription();
-		log.info(pdfFile.getName() + " " + pdfFile.getVersion()	+ " has been disabled!");
+		log.info(pdfFile.getName() + " " + pdfFile.getVersion()
+				+ " has been disabled!");
 	}
 
 	// Start
@@ -114,7 +111,7 @@ public class PasswordProtect extends JavaPlugin  {
 		jailLocations.clear();
 		playerLocations.clear();
 
-		// Jails config		
+		// Jails config
 		jailFile = new File(getDataFolder(), "jails.yml");
 		// Copy if the config doesn't exist
 		if (!jailFile.exists()) {
@@ -122,13 +119,7 @@ public class PasswordProtect extends JavaPlugin  {
 			copy(getResource("jails.yml"), jailFile);
 		}
 		// Try to load
-		try {
-			jails = YamlConfiguration.loadConfiguration(jailFile);
-		}
-		// Log if failed
-		catch (Exception e) {
-			log.warning("PasswordProtect failed to load the jails.yml! Please report this!");
-		}
+		jails = YamlConfiguration.loadConfiguration(jailFile);
 
 		// Config
 		configFile = new File(getDataFolder(), "config.yml");
@@ -141,44 +132,34 @@ public class PasswordProtect extends JavaPlugin  {
 
 		// Localization
 		localizationFile = new File(getDataFolder(), "localization.yml");
-		if(!localizationFile.exists()){
+		if (!localizationFile.exists()) {
 			localizationFile.getParentFile().mkdirs();
 			copy(getResource("localization.yml"), localizationFile);
 		}
-		// Try to load
-		try {
-			localization = YamlConfiguration.loadConfiguration(localizationFile);
-			loadLocalization();
-		}
-		// If it failed, tell it
-		catch (Exception e) {
-			log.warning("PasswordProtect failed to load the localization!");
-		}
-		
+		localization = YamlConfiguration.loadConfiguration(localizationFile);
+		loadLocalization();
 
+		// Read the jailedPlayersFile
 		jailedPlayersFile = new File(getDataFolder(), "jailedPlayers.dat");
 		if (!jailedPlayersFile.exists()) {
 			try {
 				jailedPlayersFile.createNewFile();
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				log.info("PasswordProtect couldn't create the 'jailedPlayers.dat' file! (I/O Exception)");
 			}
 			jailedPlayersFile.getParentFile().mkdirs();
 		}
-
+		// Read into Memory
 		try {
-			ObjectInputStream obj = new ObjectInputStream(new FileInputStream("jailedPlayers.dat"));
+			ObjectInputStream obj = new ObjectInputStream(new FileInputStream(
+					"jailedPlayers.dat"));
 			jailedPlayers = (HashMap<String, Integer>) obj.readObject();
 		} catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			log.info("PasswordProtect couldn't find the 'jailedPlayers.dat' file!");
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			log.info("PasswordProtect couldn't read the 'jailedPlayers.dat' file! (I/O Exception)");
 		} catch (ClassNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			log.info("PasswordProtect couldn't read the 'jailedPlayers.dat' file! (Class not found Exception)");
 		}
 
 		// Commands
@@ -190,14 +171,14 @@ public class PasswordProtect extends JavaPlugin  {
 
 		// Message
 		PluginDescriptionFile pdfFile = this.getDescription();
-		log.info(pdfFile.getName() + " " + pdfFile.getVersion() + " is enabled!");
+		log.info(pdfFile.getName() + " " + pdfFile.getVersion()
+				+ " is enabled!");
 
 		// Stats
 		try {
 			Metrics metrics = new Metrics(this);
 			metrics.start();
-		}
-		catch (IOException e) {}
+		} catch (IOException e) {}
 	}
 
 	// Loads the config at start
@@ -234,11 +215,10 @@ public class PasswordProtect extends JavaPlugin  {
 		commandList = config.getStringList("allowedCommands");
 		encryption = config.getString("encryption");
 		// Lets see if the encryption is valid, if not fallback!
-		try  {
+		try {
 			@SuppressWarnings("unused")
 			MessageDigest md = MessageDigest.getInstance(encryption);
-		}
-		catch (NoSuchAlgorithmException e) {
+		} catch (NoSuchAlgorithmException e) {
 			getServer().getConsoleSender().sendMessage(ChatColor.RED + "PasswordProtect can't use this encryption! FATAL!");
 			getServer().getConsoleSender().sendMessage(ChatColor.RED + "Falling back to SHA-256!");
 			getServer().getConsoleSender().sendMessage(ChatColor.RED + "Report this IMMEDIATELY!");
@@ -283,7 +263,7 @@ public class PasswordProtect extends JavaPlugin  {
 	private void saveJails() {
 		try {
 			jails.save(jailFile);
-		} catch (Exception e) {
+		} catch (IOException e) {
 			log.warning("PasswordProtect failed to save the jails.yml! Please report this!");
 		}
 	}
@@ -292,8 +272,7 @@ public class PasswordProtect extends JavaPlugin  {
 	private void saveLocalization() {
 		try {
 			localization.save(localizationFile);
-		}
-		catch (IOException e) {
+		} catch (IOException e) {
 			log.warning("PasswordProtect failed to save the localization.yml! Please report this!");
 		}
 	}
@@ -304,30 +283,28 @@ public class PasswordProtect extends JavaPlugin  {
 			OutputStream out = new FileOutputStream(file);
 			byte[] buf = new byte[1024];
 			int len;
-			while ((len=in.read(buf)) > 0) {
+			while ((len = in.read(buf)) > 0) {
 				out.write(buf, 0, len);
 			}
 			out.close();
 			in.close();
-		}
-		catch (Exception e) {
+		} catch (IOException e) {
 			e.printStackTrace();
 		}
 	}
 
 	// Message sender
-	public void message(CommandSender sender, Player player, String message, String value) {
+	public void message(CommandSender sender, Player player, String message,
+			String value) {
 		PluginDescriptionFile pdfFile = this.getDescription();
 		if (message != null) {
-			message = message
-					.replaceAll("&([0-9a-fk-or])", "\u00A7$1")
+			message = message.replaceAll("&([0-9a-fk-or])", "\u00A7$1")
 					.replaceAll("%attempts", value)
 					.replaceAll("%password", value)
 					.replaceAll("%version", pdfFile.getVersion());
 			if (player != null) {
 				player.sendMessage(message);
-			}
-			else if (sender != null) {
+			} else if (sender != null) {
 				sender.sendMessage(message);
 			}
 		}
@@ -335,8 +312,7 @@ public class PasswordProtect extends JavaPlugin  {
 		else {
 			if (player != null) {
 				player.sendMessage(ChatColor.DARK_RED + "Somehow this message is not defined. Please check your localization.yml");
-			}
-			else if (sender != null) {
+			} else if (sender != null) {
 				sender.sendMessage(ChatColor.DARK_RED + "Somehow this message is not defined. Please check your localization.yml");
 			}
 		}
@@ -347,7 +323,7 @@ public class PasswordProtect extends JavaPlugin  {
 		if (!passwordSet()) {
 			// Message player to set the password.
 			if (player.hasPermission("passwordprotect.setpassword")) {
-				for (int i = 1; i < 3 ; i++) {
+				for (int i = 1; i < 3; i++) {
 					String messageLocalization = localization.getString("set_password_" + i);
 					message(null, player, messageLocalization, null);
 				}
@@ -356,18 +332,22 @@ public class PasswordProtect extends JavaPlugin  {
 		// If he has not the permission to bypass
 		else if (!player.hasPermission("passwordprotect.nopassword")) {
 			// If he isn't an OP or OPs are required, too
-			if ((player.isOp() && config.getBoolean("OpsRequirePassword")) || !player.isOp()) {
+			if ((player.isOp() && config.getBoolean("OpsRequirePassword"))
+					|| !player.isOp()) {
 				// Remember position?
 				if (config.getBoolean("teleportBack")) {
-					if (!playerLocations.containsKey(player.getName())) playerLocations.put(player.getName(), player.getLocation());
+					if (!playerLocations.containsKey(player.getName()))
+						playerLocations.put(player.getName(), player.getLocation());
 				}
 				// Jail!
 				sendToJail(player);
 				// Add him & do bad stuff
 				if (!jailedPlayers.containsKey(player.getName())) jailedPlayers.put(player.getName(), 1);
 				if (config.getBoolean("prevent.Flying")) player.setAllowFlight(false);
-				if (config.getBoolean("darkness")) player.addPotionEffect(new PotionEffect(PotionEffectType.BLINDNESS, 20 * 86400, 15));
-				if (config.getBoolean("slowness")) player.addPotionEffect(new PotionEffect(PotionEffectType.SLOW, 20 * 86400, 5));
+				if (config.getBoolean("darkness"))
+					player.addPotionEffect(new PotionEffect(PotionEffectType.BLINDNESS, 20 * 86400, 15));
+				if (config.getBoolean("slowness"))
+					player.addPotionEffect(new PotionEffect(PotionEffectType.SLOW, 20 * 86400, 5));
 			}
 		}
 	}
@@ -379,8 +359,10 @@ public class PasswordProtect extends JavaPlugin  {
 		int radius = jailLocation.getRadius();
 		// If player is within radius^2 blocks of jail location...
 		if (Math.abs(jailLocation.getBlockX() - playerLocation.getBlockX()) <= radius
-				&& Math.abs(jailLocation.getBlockY() - playerLocation.getBlockY()) <= radius
-				&& Math.abs(jailLocation.getBlockZ() - playerLocation.getBlockZ()) <= radius) {
+				&& Math.abs(jailLocation.getBlockY()
+						- playerLocation.getBlockY()) <= radius
+				&& Math.abs(jailLocation.getBlockZ()
+						- playerLocation.getBlockZ()) <= radius) {
 			return;
 		}
 		sendToJail(player);
@@ -395,7 +377,7 @@ public class PasswordProtect extends JavaPlugin  {
 
 	// Message
 	public void sendPasswordRequiredMessage(Player player) {
-		for (int i = 1; i < 3 ; i++) {
+		for (int i = 1; i < 3; i++) {
 			String messageLocalization = localization.getString("enter_password_" + i);
 			message(null, player, messageLocalization, null);
 		}
@@ -424,17 +406,17 @@ public class PasswordProtect extends JavaPlugin  {
 		// If world is already on the list
 		if (jailLocations.containsKey(world)) {
 			jailLocation = jailLocations.get(world);
-		}
-		else {
+		} else {
 			// Try to load and add to the list
 			jailLocation = loadJailLocation(world);
-			if (jailLocation == null)  {
+			if (jailLocation == null) {
 				jailLocation = JailLocation.SpawnJailLocation(world.getSpawnLocation(), 4);
 				jailLocations.put(world, jailLocation);
 				setJailLocation(world, jailLocation);
 			}
 		}
-		// Is the jailLocation null? Yes -> Make one at spawn, No -> return jailLocation
+		// Is the jailLocation null? Yes -> Make one at spawn, No -> return
+		// jailLocation
 		return jailLocation;
 	}
 
@@ -462,17 +444,13 @@ public class PasswordProtect extends JavaPlugin  {
 		String encryptedPassword = encrypt(password);
 		config.set("password", encryptedPassword);
 		// Additionally store "clean"
-		if (config.getBoolean("cleanPassword")) {
-			config.set("passwordClean", password);
-		}
+		if (config.getBoolean("cleanPassword")) config.set("passwordClean", password);
 		saveConfig();
 	}
 
 	// Check for the password, return null or the password
 	public String getPasswordClean() {
-		if (config.getBoolean("cleanPassword")) {
-			return config.getString("passwordClean");
-		}
+		if (config.getBoolean("cleanPassword")) return config.getString("passwordClean");
 		return null;
 	}
 
@@ -493,8 +471,7 @@ public class PasswordProtect extends JavaPlugin  {
 			md.update(password.getBytes());
 			byte byteData[] = md.digest();
 			return String.format("%0" + (byteData.length << 1) + "x", new BigInteger(1, byteData));
-		}
-		catch (NoSuchAlgorithmException e) {
+		} catch (NoSuchAlgorithmException e) {
 			return null;
 		}
 	}
