@@ -1,11 +1,17 @@
 package de.dustplanet.passwordprotect;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.io.OutputStream;
+import java.math.BigInteger;
 import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -23,7 +29,6 @@ import org.bukkit.plugin.PluginDescriptionFile;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
-
 import de.dustplanet.passwordprotect.JailLocation;
 
 /**
@@ -54,32 +59,49 @@ public class PasswordProtect extends JavaPlugin  {
 	private File jailFile;
 	private File localizationFile;
 	// Integer = attempts to login!
-	public HashMap<Player, Integer> jailedPlayers = new HashMap<Player, Integer>();
+	public HashMap<String, Integer> jailedPlayers = new HashMap<String, Integer>();
 	private HashMap<World, JailLocation> jailLocations = new HashMap<World, JailLocation>();
-	public HashMap<Player, Location> playerLocations = new HashMap<Player, Location>();
+	public HashMap<String, Location> playerLocations = new HashMap<String, Location>();
 	public List<String> commandList = new ArrayList<String>();
 	private String[] commands = {"help", "rules", "motd",};
+	private String encryption = "SHA-256";
+	private File jailedPlayersFile;
 
 	// Shutdown
 	public void onDisable() {
 		// Remove potion effect
-		for (Player player : jailedPlayers.keySet()) {
-			if (player.hasPotionEffect(PotionEffectType.BLINDNESS)) 
-				player.removePotionEffect(PotionEffectType.BLINDNESS);
-			if (player.hasPotionEffect(PotionEffectType.SLOW)) 
-				player.removePotionEffect(PotionEffectType.SLOW);
+		for (String playerName : jailedPlayers.keySet()) {
+			Player player = getServer().getPlayerExact(playerName);
+			if (player != null) {
+				if (player.hasPotionEffect(PotionEffectType.BLINDNESS)) 
+					player.removePotionEffect(PotionEffectType.BLINDNESS);
+				if (player.hasPotionEffect(PotionEffectType.SLOW)) 
+					player.removePotionEffect(PotionEffectType.SLOW);
+			}
 		}
+		try {
+            ObjectOutputStream obj = new ObjectOutputStream(new FileOutputStream("jailedPlayers.dat"));
+            obj.writeObject(jailedPlayers);
+            obj.close();
+        } catch (FileNotFoundException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        } catch (IOException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
 		// Clear lists
 		jailedPlayers.clear();
 		jailLocations.clear();
 		playerLocations.clear();
-		
+
 		// Log
 		PluginDescriptionFile pdfFile = this.getDescription();
 		log.info(pdfFile.getName() + " " + pdfFile.getVersion()	+ " has been disabled!");
 	}
 
 	// Start
+	@SuppressWarnings("unchecked")
 	public void onEnable() {
 		// Events
 		PluginManager pm = getServer().getPluginManager();
@@ -132,6 +154,32 @@ public class PasswordProtect extends JavaPlugin  {
 		catch (Exception e) {
 			log.warning("PasswordProtect failed to load the localization!");
 		}
+		
+
+		jailedPlayersFile = new File(getDataFolder(), "jailedPlayers.dat");
+		if (!jailedPlayersFile.exists()) {
+			try {
+				jailedPlayersFile.createNewFile();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			jailedPlayersFile.getParentFile().mkdirs();
+		}
+
+		try {
+			ObjectInputStream obj = new ObjectInputStream(new FileInputStream("jailedPlayers.dat"));
+			jailedPlayers = (HashMap<String, Integer>) obj.readObject();
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (ClassNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 
 		// Commands
 		executor = new PasswordProtectCommands(this);
@@ -143,7 +191,7 @@ public class PasswordProtect extends JavaPlugin  {
 		// Message
 		PluginDescriptionFile pdfFile = this.getDescription();
 		log.info(pdfFile.getName() + " " + pdfFile.getVersion() + " is enabled!");
-		
+
 		// Stats
 		try {
 			Metrics metrics = new Metrics(this);
@@ -155,6 +203,7 @@ public class PasswordProtect extends JavaPlugin  {
 	// Loads the config at start
 	private void loadConfig() {
 		config.options().header("For help please refer to");
+		config.addDefault("encryption", "SHA-256");
 		config.addDefault("OpsRequirePassword", true);
 		config.addDefault("cleanPassword", false);
 		config.addDefault("password", "");
@@ -183,6 +232,19 @@ public class PasswordProtect extends JavaPlugin  {
 		config.addDefault("teleportBack", true);
 		config.addDefault("allowedCommands", Arrays.asList(commands));
 		commandList = config.getStringList("allowedCommands");
+		encryption = config.getString("encryption");
+		// Lets see if the encryption is valid, if not fallback!
+		try  {
+			@SuppressWarnings("unused")
+			MessageDigest md = MessageDigest.getInstance(encryption);
+		}
+		catch (NoSuchAlgorithmException e) {
+			getServer().getConsoleSender().sendMessage(ChatColor.RED + "PasswordProtect can't use this encryption! FATAL!");
+			getServer().getConsoleSender().sendMessage(ChatColor.RED + "Falling back to SHA-256!");
+			getServer().getConsoleSender().sendMessage(ChatColor.RED + "Report this IMMEDIATELY!");
+			encryption = "SHA-256";
+			config.set("encryption", "SHA-256");
+		}
 		config.options().copyDefaults(true);
 		saveConfig();
 	}
@@ -297,12 +359,12 @@ public class PasswordProtect extends JavaPlugin  {
 			if ((player.isOp() && config.getBoolean("OpsRequirePassword")) || !player.isOp()) {
 				// Remember position?
 				if (config.getBoolean("teleportBack")) {
-					if (!playerLocations.containsKey(player)) playerLocations.put(player, player.getLocation());
+					if (!playerLocations.containsKey(player.getName())) playerLocations.put(player.getName(), player.getLocation());
 				}
 				// Jail!
 				sendToJail(player);
 				// Add him & do bad stuff
-				if (!jailedPlayers.containsKey(player)) jailedPlayers.put(player, 1);
+				if (!jailedPlayers.containsKey(player.getName())) jailedPlayers.put(player.getName(), 1);
 				if (config.getBoolean("prevent.Flying")) player.setAllowFlight(false);
 				if (config.getBoolean("darkness")) player.addPotionEffect(new PotionEffect(PotionEffectType.BLINDNESS, 20 * 86400, 15));
 				if (config.getBoolean("slowness")) player.addPotionEffect(new PotionEffect(PotionEffectType.SLOW, 20 * 86400, 5));
@@ -424,15 +486,16 @@ public class PasswordProtect extends JavaPlugin  {
 		return config.getString("password").trim().length() > 1 ? true : false;
 	}
 
-	// SHA256 encryption. Stores only hex format
+	// Encryption. Stores only hex format
 	public String encrypt(String password) throws Exception {
-		MessageDigest md = MessageDigest.getInstance("SHA-256");
-		md.update(password.getBytes());
-		byte byteData[] = md.digest();
-		StringBuffer sb = new StringBuffer();
-		for (int i = 0; i < byteData.length; i++) {
-			sb.append(Integer.toString((byteData[i] & 0xff) + 0x100, 16).substring(1));
+		try {
+			MessageDigest md = MessageDigest.getInstance(encryption);
+			md.update(password.getBytes());
+			byte byteData[] = md.digest();
+			return String.format("%0" + (byteData.length << 1) + "x", new BigInteger(1, byteData));
 		}
-		return sb.toString();
+		catch (NoSuchAlgorithmException e) {
+			return null;
+		}
 	}
 }

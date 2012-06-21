@@ -25,6 +25,7 @@ This plugin is released under the Creative Commons Attribution-NonCommercial-Sha
 
 Standard config:
 # For help please refer to http://bit.ly/ppbukkit or http://bit.ly/ppbukkitdev
+encryption: SHA-256
 OpsRequirePassword: true
 cleanPassword: false
 password: ''

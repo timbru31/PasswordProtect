@@ -113,8 +113,7 @@ public class PasswordProtectCommands implements CommandExecutor {
 		}
 		// If someone tries to set a password
 		if (command.getName().equalsIgnoreCase("setpassword")) {
-			if (args.length != 1)
-				return false;
+			if (args.length != 1) return false;
 			// The password is the first argument
 			String password = args[0];
 			// If the player hasn't got the permission, cancel it
@@ -126,7 +125,7 @@ public class PasswordProtectCommands implements CommandExecutor {
 			// Set password
 			try {
 				plugin.setPassword(password);
-			} 
+			}
 			catch (Exception e) {}
 			String messageLocalization = plugin.localization.getString("password_set");
 			plugin.message(sender, null, messageLocalization, null);

@@ -39,8 +39,8 @@ public class PasswordProtectEntityListener implements Listener {
 			Entity target = event.getTarget();
 			if (target == null) return;
 			if (target.getType().equals(EntityType.PLAYER)) {
-				Player player = (Player) target;
-				if (plugin.jailedPlayers.containsKey(player)) {
+				String playerName = ((Player) target).getName();
+				if (plugin.jailedPlayers.containsKey(playerName)) {
 					event.setCancelled(true);
 				}
 			}
@@ -53,8 +53,8 @@ public class PasswordProtectEntityListener implements Listener {
 		if (plugin.config.getBoolean("prevent.Attacks")) {
 			Entity damager = event.getDamager();
 			if (damager.getType() == EntityType.PLAYER) {
-				Player player = (Player) damager;
-				if (plugin.jailedPlayers.containsKey(player)) {
+				String playerName = ((Player) damager).getName();
+				if (plugin.jailedPlayers.containsKey(playerName)) {
 					event.setCancelled(true);
 				}
 			}
@@ -67,8 +67,9 @@ public class PasswordProtectEntityListener implements Listener {
 		if (plugin.config.getBoolean("prevent.Damage")) {
 			Entity entity = event.getEntity();
 			if (entity.getType() == EntityType.PLAYER) {
+				String playerName = ((Player) entity).getName();
 				Player player = (Player) entity;
-				if (plugin.jailedPlayers.containsKey(player)) {
+				if (plugin.jailedPlayers.containsKey(playerName)) {
 					// Restore food and air. Remove fire
 					player.setFoodLevel(20);
 					player.setFireTicks(0);
@@ -85,8 +86,8 @@ public class PasswordProtectEntityListener implements Listener {
 		if (plugin.config.getBoolean("prevent.DeathDrops")) {
 			Entity entity = event.getEntity();
 			if (entity.getType() == EntityType.PLAYER) {
-				Player player = (Player) entity;
-				if (plugin.jailedPlayers.containsKey(player)) {
+				String playerName = ((Player) entity).getName();
+				if (plugin.jailedPlayers.containsKey(playerName)) {
 					// Exp and items
 					event.setDroppedExp(0);
 					event.getDrops().clear();
