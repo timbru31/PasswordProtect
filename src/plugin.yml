@@ -1,7 +1,7 @@
 name: PasswordProtect
 main: de.dustplanet.passwordprotect.PasswordProtect
 description: Force a password to play on the server
-version: 1.1
+version: 1.1.1
 author: xGhOsTkiLLeRx
 authors: [DisabledHamster]
 commands:

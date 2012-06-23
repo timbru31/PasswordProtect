@@ -78,7 +78,7 @@ public class PasswordProtect extends JavaPlugin {
 		}
 		// Save the HashMap of the jailedPlayers
 		try {
-			ObjectOutputStream obj = new ObjectOutputStream(new FileOutputStream("jailedPlayers.dat"));
+			ObjectOutputStream obj = new ObjectOutputStream(new FileOutputStream(jailedPlayersFile));
 			obj.writeObject(jailedPlayers);
 			obj.close();
 		} catch (FileNotFoundException e) {
@@ -151,9 +151,9 @@ public class PasswordProtect extends JavaPlugin {
 		}
 		// Read into Memory
 		try {
-			ObjectInputStream obj = new ObjectInputStream(new FileInputStream(
-					"jailedPlayers.dat"));
+			ObjectInputStream obj = new ObjectInputStream(new FileInputStream(jailedPlayersFile));
 			jailedPlayers = (HashMap<String, Integer>) obj.readObject();
+			obj.close();
 		} catch (FileNotFoundException e) {
 			log.info("PasswordProtect couldn't find the 'jailedPlayers.dat' file!");
 		} catch (IOException e) {

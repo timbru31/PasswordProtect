@@ -98,7 +98,7 @@ public class PasswordProtectCommands implements CommandExecutor {
 						radius = Integer.valueOf(args[0]);
 					}
 					// Radius not a number? Use default!
-					catch (Exception e) {
+					catch (NumberFormatException e) {
 						String messageLocalization = plugin.localization.getString("radius_not_number");
 						plugin.message(null, player, messageLocalization, null);
 					}
