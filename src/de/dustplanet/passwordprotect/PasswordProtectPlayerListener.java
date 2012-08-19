@@ -34,7 +34,7 @@ import org.bukkit.potion.PotionEffectType;
  */
 
 public class PasswordProtectPlayerListener implements Listener {
-	public PasswordProtect plugin;
+	private PasswordProtect plugin;
 	public PasswordProtectPlayerListener(PasswordProtect instance) {
 		plugin = instance;
 	}

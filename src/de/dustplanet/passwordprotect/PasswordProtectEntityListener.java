@@ -27,7 +27,7 @@ import org.bukkit.event.entity.EntityTargetEvent;
  */
 
 public class PasswordProtectEntityListener implements Listener {
-	public PasswordProtect plugin;
+	private PasswordProtect plugin;
 	public PasswordProtectEntityListener(PasswordProtect instance) {
 		plugin = instance;
 	}

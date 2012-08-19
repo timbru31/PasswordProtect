@@ -22,7 +22,7 @@ import org.bukkit.event.block.BlockPlaceEvent;
  */
 
 public class PasswordProtectBlockListener implements Listener {
-	public PasswordProtect plugin;
+	private PasswordProtect plugin;
 	public PasswordProtectBlockListener(PasswordProtect instance) {
 		plugin = instance;
 	}

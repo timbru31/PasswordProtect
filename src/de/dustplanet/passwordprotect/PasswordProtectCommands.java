@@ -23,7 +23,7 @@ import org.bukkit.entity.Player;
  */
 
 public class PasswordProtectCommands implements CommandExecutor {
-	PasswordProtect plugin;
+	private PasswordProtect plugin;
 	public PasswordProtectCommands(PasswordProtect instance) {
 		plugin = instance;
 	}
