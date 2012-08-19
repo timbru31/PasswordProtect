@@ -44,7 +44,7 @@ import de.dustplanet.passwordprotect.JailLocation;
  */
 
 public class PasswordProtect extends JavaPlugin {
-	public static final Logger log = Logger.getLogger("Minecraft");
+	private Logger log = Logger.getLogger("Minecraft");
 	private final PasswordProtectPlayerListener playerListener = new PasswordProtectPlayerListener(this);
 	private final PasswordProtectBlockListener blockListener = new PasswordProtectBlockListener(this);
 	private final PasswordProtectEntityListener entityListener = new PasswordProtectEntityListener(this);
@@ -293,19 +293,15 @@ public class PasswordProtect extends JavaPlugin {
 	}
 
 	// Message sender
-	public void message(CommandSender sender, Player player, String message,
-			String value) {
+	public void message(CommandSender sender, Player player, String message, String value) {
 		PluginDescriptionFile pdfFile = this.getDescription();
 		if (message != null) {
 			message = message.replaceAll("&([0-9a-fk-or])", "\u00A7$1")
 					.replaceAll("%attempts", value)
 					.replaceAll("%password", value)
 					.replaceAll("%version", pdfFile.getVersion());
-			if (player != null) {
-				player.sendMessage(message);
-			} else if (sender != null) {
-				sender.sendMessage(message);
-			}
+			if (player != null)	player.sendMessage(message);
+			else if (sender != null) sender.sendMessage(message);
 		}
 		// If message is null. Should NOT occur.
 		else {
@@ -331,8 +327,7 @@ public class PasswordProtect extends JavaPlugin {
 		// If he has not the permission to bypass
 		else if (!player.hasPermission("passwordprotect.nopassword")) {
 			// If he isn't an OP or OPs are required, too
-			if ((player.isOp() && config.getBoolean("OpsRequirePassword"))
-					|| !player.isOp()) {
+			if ((player.isOp() && config.getBoolean("OpsRequirePassword")) || !player.isOp()) {
 				// Remember position?
 				if (config.getBoolean("teleportBack")) {
 					if (!playerLocations.containsKey(player.getName()))
@@ -343,10 +338,8 @@ public class PasswordProtect extends JavaPlugin {
 				// Add him & do bad stuff
 				if (!jailedPlayers.containsKey(player.getName())) jailedPlayers.put(player.getName(), 1);
 				if (config.getBoolean("prevent.Flying")) player.setAllowFlight(false);
-				if (config.getBoolean("darkness"))
-					player.addPotionEffect(new PotionEffect(PotionEffectType.BLINDNESS, 20 * 86400, 15));
-				if (config.getBoolean("slowness"))
-					player.addPotionEffect(new PotionEffect(PotionEffectType.SLOW, 20 * 86400, 5));
+				if (config.getBoolean("darkness")) player.addPotionEffect(new PotionEffect(PotionEffectType.BLINDNESS, 20 * 86400, 15));
+				if (config.getBoolean("slowness")) player.addPotionEffect(new PotionEffect(PotionEffectType.SLOW, 20 * 86400, 5));
 			}
 		}
 	}
@@ -357,18 +350,15 @@ public class PasswordProtect extends JavaPlugin {
 		Location playerLocation = player.getLocation();
 		int radius = jailLocation.getRadius();
 		// If player is within radius^2 blocks of jail location...
-		if (Math.abs(jailLocation.getBlockX() - playerLocation.getBlockX()) <= radius
-				&& Math.abs(jailLocation.getBlockY()
-						- playerLocation.getBlockY()) <= radius
-						&& Math.abs(jailLocation.getBlockZ()
-								- playerLocation.getBlockZ()) <= radius) {
+		if (Math.abs(jailLocation.getBlockX() - playerLocation.getBlockX()) <= radius && Math.abs(jailLocation.getBlockY() - playerLocation.getBlockY()) <= radius
+						&& Math.abs(jailLocation.getBlockZ() - playerLocation.getBlockZ()) <= radius) {
 			return;
 		}
 		sendToJail(player);
 	}
 
 	// Jail the player. Teleport and message
-	public void sendToJail(Player player) {
+	private void sendToJail(Player player) {
 		JailLocation jailLocation = getJailLocation(player);
 		player.teleport(jailLocation);
 		sendPasswordRequiredMessage(player);
@@ -407,17 +397,18 @@ public class PasswordProtect extends JavaPlugin {
 		// If world is already on the list
 		if (jailLocations.containsKey(world)) {
 			jailLocation = jailLocations.get(world);
-		} else {
+		}
+		// Is the jailLocation null? Yes -> Make one at spawn, No -> return
+		else {
 			// Try to load and add to the list
 			jailLocation = loadJailLocation(world);
+			Location spawnLocation = world.getSpawnLocation();
 			if (jailLocation == null) {
-				jailLocation = JailLocation.SpawnJailLocation(world.getSpawnLocation(), 4);
+				jailLocation = new JailLocation(world, spawnLocation.getX(), spawnLocation.getWorld().getHighestBlockYAt(spawnLocation.getBlockX(), spawnLocation.getBlockZ()) + 1, spawnLocation.getZ(), spawnLocation.getYaw(), spawnLocation.getPitch(), 4);
 				jailLocations.put(world, jailLocation);
 				setJailLocation(world, jailLocation);
 			}
 		}
-		// Is the jailLocation null? Yes -> Make one at spawn, No -> return
-		// jailLocation
 		return jailLocation;
 	}
 
@@ -462,7 +453,7 @@ public class PasswordProtect extends JavaPlugin {
 
 	// Is the password set?
 	public boolean passwordSet() {
-		return config.getString("password").trim().length() > 1 ? true : false;
+		return !config.getString("password").isEmpty();
 	}
 
 	// Encryption. Stores only hex format

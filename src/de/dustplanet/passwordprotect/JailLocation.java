@@ -41,10 +41,6 @@ public class JailLocation extends Location {
 		this.radius = radius;
 	}
 
-	public static JailLocation SpawnJailLocation(Location spawnLocation, int radius) {
-		return new JailLocation(spawnLocation.getWorld(), spawnLocation.getX(), spawnLocation.getWorld().getHighestBlockYAt(spawnLocation.getBlockX(), spawnLocation.getBlockZ()) + 1, spawnLocation.getZ(), spawnLocation.getYaw(), spawnLocation.getPitch(), radius);
-	}
-
 	public int getRadius() {
 		return radius;
 	}
