@@ -93,8 +93,7 @@ public class PasswordProtect extends JavaPlugin {
 
 		// Log
 		PluginDescriptionFile pdfFile = this.getDescription();
-		log.info(pdfFile.getName() + " " + pdfFile.getVersion()
-				+ " has been disabled!");
+		log.info(pdfFile.getName() + " " + pdfFile.getVersion() + " has been disabled!");
 	}
 
 	// Start
@@ -171,8 +170,7 @@ public class PasswordProtect extends JavaPlugin {
 
 		// Message
 		PluginDescriptionFile pdfFile = this.getDescription();
-		log.info(pdfFile.getName() + " " + pdfFile.getVersion()
-				+ " is enabled!");
+		log.info(pdfFile.getName() + " " + pdfFile.getVersion() + " is enabled!");
 
 		// Stats
 		try {
@@ -362,8 +360,8 @@ public class PasswordProtect extends JavaPlugin {
 		if (Math.abs(jailLocation.getBlockX() - playerLocation.getBlockX()) <= radius
 				&& Math.abs(jailLocation.getBlockY()
 						- playerLocation.getBlockY()) <= radius
-				&& Math.abs(jailLocation.getBlockZ()
-						- playerLocation.getBlockZ()) <= radius) {
+						&& Math.abs(jailLocation.getBlockZ()
+								- playerLocation.getBlockZ()) <= radius) {
 			return;
 		}
 		sendToJail(player);
@@ -378,8 +376,8 @@ public class PasswordProtect extends JavaPlugin {
 
 	// Message
 	public void sendPasswordRequiredMessage(Player player) {
-		for (int i = 1; i < 3; i++) {
-			if (config.getBoolean("loginMessage")) {
+		if (config.getBoolean("loginMessage")) {
+			for (int i = 1; i < 3; i++) {
 				String messageLocalization = localization.getString("enter_password_" + i);
 				message(null, player, messageLocalization, null);
 			}
