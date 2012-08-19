@@ -211,6 +211,7 @@ public class PasswordProtect extends JavaPlugin {
 		config.addDefault("darkness", true);
 		config.addDefault("slowness", true);
 		config.addDefault("teleportBack", true);
+		config.addDefault("loginMessage", true);		
 		config.addDefault("allowedCommands", Arrays.asList(commands));
 		commandList = config.getStringList("allowedCommands");
 		encryption = config.getString("encryption");
@@ -378,8 +379,10 @@ public class PasswordProtect extends JavaPlugin {
 	// Message
 	public void sendPasswordRequiredMessage(Player player) {
 		for (int i = 1; i < 3; i++) {
-			String messageLocalization = localization.getString("enter_password_" + i);
-			message(null, player, messageLocalization, null);
+			if (config.getBoolean("loginMessage")) {
+				String messageLocalization = localization.getString("enter_password_" + i);
+				message(null, player, messageLocalization, null);
+			}
 		}
 	}
 
