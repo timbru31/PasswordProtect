@@ -31,3 +31,4 @@ allowedCommands:
 - rules
 - motd
 teleportBack: true
+loginMessage: true
