@@ -25,11 +25,15 @@ This plugin is released under the Creative Commons Attribution-NonCommercial-Sha
 
 Standard config:
 # For help please refer to http://bit.ly/ppbukkit or http://bit.ly/ppbukkitdev
+# Which encryption should be used? Example: MD5 or SHA-256
 encryption: SHA-256
+# Are ops forced, to enter the password, too?
 OpsRequirePassword: true
+# Should the password be stored in clean (plain) text?
 cleanPassword: false
 password: ''
 passwordClean: ''
+# What events should be prevented?
 prevent:
   Movement: true
   Interaction: true
@@ -39,21 +43,27 @@ prevent:
   Portal: true
   BlockPlace: true
   BlockBreak: true
+  # Players won't be triggered by mobs anymore
   Triggering: true
   Attacks: true
   Damage: true
   Chat: true
+# After how many attempts should a player be kicked or banned
 wrongAttempts:
   kick: 3
   ban: 5
   banIP: true
+# Make the players slow and add darkness effects?
 darkness: true
 slowness: true
+# These commands are available, even without logging in
 allowedCommands:
 - help
 - rules
 - motd
+# Teleport back to the location they left?
 teleportBack: true
+# Show the message that a password is required
 loginMessage: true
 
 Commands & Permissions (if no permissions system is detected, only OPs are able to use the commands!)
