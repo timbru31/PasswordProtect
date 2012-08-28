@@ -90,10 +90,6 @@ public class PasswordProtect extends JavaPlugin {
 		jailedPlayers.clear();
 		jailLocations.clear();
 		playerLocations.clear();
-
-		// Log
-		PluginDescriptionFile pdfFile = this.getDescription();
-		log.info(pdfFile.getName() + " " + pdfFile.getVersion() + " has been disabled!");
 	}
 
 	// Start
@@ -167,10 +163,6 @@ public class PasswordProtect extends JavaPlugin {
 		getCommand("password").setExecutor(executor);
 		getCommand("setpassword").setExecutor(executor);
 		getCommand("setjaillocation").setExecutor(executor);
-
-		// Message
-		PluginDescriptionFile pdfFile = this.getDescription();
-		log.info(pdfFile.getName() + " " + pdfFile.getVersion() + " is enabled!");
 
 		// Stats
 		try {
