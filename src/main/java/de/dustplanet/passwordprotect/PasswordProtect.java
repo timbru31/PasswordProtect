@@ -166,7 +166,7 @@ public class PasswordProtect extends JavaPlugin {
 
 		// Stats
 		try {
-			Metrics metrics = new Metrics(this);
+			BukkitMetrics metrics = new BukkitMetrics(this);
 			metrics.start();
 		} catch (IOException e) {}
 	}
