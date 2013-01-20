@@ -123,10 +123,7 @@ public class PasswordProtectCommands implements CommandExecutor {
 				return true;
 			}
 			// Set password
-			try {
-				plugin.setPassword(password);
-			}
-			catch (Exception e) {}
+			plugin.setPassword(password);
 			String messageLocalization = plugin.localization.getString("password_set");
 			plugin.message(sender, null, messageLocalization, null);
 			// Reminder for the jail area

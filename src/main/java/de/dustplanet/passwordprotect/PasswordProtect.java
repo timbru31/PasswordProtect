@@ -423,7 +423,7 @@ public class PasswordProtect extends JavaPlugin {
 		return jailLocation;
 	}
 
-	public void setPassword(String password) throws Exception {
+	public void setPassword(String password) {
 		// Encrypt
 		String encryptedPassword = encrypt(password);
 		config.set("password", encryptedPassword);
@@ -449,13 +449,14 @@ public class PasswordProtect extends JavaPlugin {
 	}
 
 	// Encryption. Stores only hex format
-	public String encrypt(String password) throws Exception {
+	public String encrypt(String password) {
 		try {
 			MessageDigest md = MessageDigest.getInstance(encryption);
 			md.update(password.getBytes());
 			byte byteData[] = md.digest();
 			return String.format("%0" + (byteData.length << 1) + "x", new BigInteger(1, byteData));
 		} catch (NoSuchAlgorithmException e) {
+			getServer().getLogger().severe("The alrogirthm is NOT known: " + encryption);
 			return null;
 		}
 	}
