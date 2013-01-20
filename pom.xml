@@ -7,6 +7,9 @@
 	<name>PasswordProtect</name>
 	<description>Protect your server with a password</description>
 	<url>http://dev.bukkit.org/server-mods/passwordprotect/</url>
+	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+	</properties>
 	<repositories>
 		<repository>
 			<id>bukkit-repo</id>
@@ -14,7 +17,7 @@
 		</repository>
 	</repositories>
 	<build>
-		<defaultGoal>install</defaultGoal>
+		<defaultGoal>clean compile package</defaultGoal>
 		<sourceDirectory>${basedir}/src/main/java</sourceDirectory>
 		<plugins>
 			<plugin>
