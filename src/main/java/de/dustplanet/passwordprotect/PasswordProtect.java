@@ -29,6 +29,8 @@ import org.bukkit.plugin.PluginDescriptionFile;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
+import org.mcstats.Metrics;
+
 import de.dustplanet.passwordprotect.JailLocation;
 
 /**
@@ -166,7 +168,7 @@ public class PasswordProtect extends JavaPlugin {
 
 		// Stats
 		try {
-			BukkitMetrics metrics = new BukkitMetrics(this);
+			Metrics metrics = new Metrics(this);
 			metrics.start();
 		} catch (IOException e) {}
 	}
