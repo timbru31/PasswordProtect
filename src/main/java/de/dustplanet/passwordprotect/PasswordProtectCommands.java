@@ -80,9 +80,10 @@ public class PasswordProtectCommands implements CommandExecutor {
 				String messageLocalization = plugin.localization.getString("only_ingame");
 				plugin.message(sender, null, messageLocalization, null);
 				return true;
-			} else if (sender instanceof Player){
-				Player player = (Player)sender;
-				// if the player hasn't got the permission, cancel it
+			}
+			else {
+				Player player = (Player) sender;
+				// If the player hasn't got the permission, cancel it
 				if (!player.hasPermission("passwordprotect.setjailarea")) {
 					String messageLocalization = plugin.localization.getString("permission_denied");
 					plugin.message(null, player, messageLocalization, null);

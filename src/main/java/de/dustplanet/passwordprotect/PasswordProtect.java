@@ -10,6 +10,7 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.OutputStream;
 import java.math.BigInteger;
+import java.nio.charset.Charset;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
@@ -112,8 +113,7 @@ public class PasswordProtect extends JavaPlugin {
 		jailFile = new File(getDataFolder(), "jails.yml");
 		// Copy if the config doesn't exist
 		if (!jailFile.exists()) {
-			jailFile.getParentFile().mkdirs();
-			copy(getResource("jails.yml"), jailFile);
+			if (jailFile.getParentFile().mkdirs()) copy(getResource("jails.yml"), jailFile);
 		}
 		// Try to load
 		jails = YamlConfiguration.loadConfiguration(jailFile);
@@ -170,7 +170,9 @@ public class PasswordProtect extends JavaPlugin {
 		try {
 			Metrics metrics = new Metrics(this);
 			metrics.start();
-		} catch (IOException e) {}
+		} catch (IOException e) {
+			getLogger().warning("Could not start Metrics!");
+		}
 	}
 
 	// Loads the config at start
@@ -209,8 +211,7 @@ public class PasswordProtect extends JavaPlugin {
 		encryption = config.getString("encryption");
 		// Lets see if the encryption is valid, if not fallback!
 		try {
-			@SuppressWarnings("unused")
-			MessageDigest md = MessageDigest.getInstance(encryption);
+			MessageDigest.getInstance(encryption);
 		} catch (NoSuchAlgorithmException e) {
 			getServer().getConsoleSender().sendMessage(ChatColor.RED + "PasswordProtect can't use this encryption! FATAL!");
 			getServer().getConsoleSender().sendMessage(ChatColor.RED + "Falling back to SHA-256!");
@@ -281,8 +282,10 @@ public class PasswordProtect extends JavaPlugin {
 			}
 			out.close();
 			in.close();
+		}catch (FileNotFoundException e) {
+			getLogger().warning("Failed to copy the default config! (FileNotFound)");
 		} catch (IOException e) {
-			e.printStackTrace();
+			getLogger().warning("Failed to copy the default config! (I/O)");
 		}
 	}
 
@@ -454,7 +457,7 @@ public class PasswordProtect extends JavaPlugin {
 	public String encrypt(String password) {
 		try {
 			MessageDigest md = MessageDigest.getInstance(encryption);
-			md.update(password.getBytes());
+			md.update(password.getBytes(Charset.defaultCharset()));
 			byte byteData[] = md.digest();
 			return String.format("%0" + (byteData.length << 1) + "x", new BigInteger(1, byteData));
 		} catch (NoSuchAlgorithmException e) {
