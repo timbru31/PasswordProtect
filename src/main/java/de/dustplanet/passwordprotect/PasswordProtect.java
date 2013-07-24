@@ -108,11 +108,22 @@ public class PasswordProtect extends JavaPlugin {
 	jailLocations.clear();
 	playerLocations.clear();
 
+	// Check if the folder exists
+	if (!getDataFolder().exists()) {
+	    // Break if no folder can be created!
+	    if (!getDataFolder().mkdirs()) {
+		getLogger().severe("The config folder could NOT be created, make sure it's writable!");
+		getLogger().severe("Disabling now!");
+		setEnabled(false);
+		return;
+	    }
+	}
+
 	// Jails config
 	jailFile = new File(getDataFolder(), "jails.yml");
 	// Copy if the config doesn't exist
 	if (!jailFile.exists()) {
-	    if (jailFile.getParentFile().mkdirs()) copy(getResource("jails.yml"), jailFile);
+	    copy(getResource("jails.yml"), jailFile);
 	}
 	// Try to load
 	jails = YamlConfiguration.loadConfiguration(jailFile);
@@ -120,7 +131,6 @@ public class PasswordProtect extends JavaPlugin {
 	// Config
 	configFile = new File(getDataFolder(), "config.yml");
 	if (!configFile.exists()) {
-	    configFile.getParentFile().mkdirs();
 	    copy(getResource("config.yml"), configFile);
 	}
 	config = this.getConfig();
@@ -129,7 +139,6 @@ public class PasswordProtect extends JavaPlugin {
 	// Localization
 	localizationFile = new File(getDataFolder(), "localization.yml");
 	if (!localizationFile.exists()) {
-	    localizationFile.getParentFile().mkdirs();
 	    copy(getResource("localization.yml"), localizationFile);
 	}
 	localization = YamlConfiguration.loadConfiguration(localizationFile);
@@ -143,7 +152,6 @@ public class PasswordProtect extends JavaPlugin {
 	    } catch (IOException e) {
 		log.info("PasswordProtect couldn't create the 'jailedPlayers.dat' file! (I/O Exception)");
 	    }
-	    jailedPlayersFile.getParentFile().mkdirs();
 	}
 	// Read into Memory
 	try {
