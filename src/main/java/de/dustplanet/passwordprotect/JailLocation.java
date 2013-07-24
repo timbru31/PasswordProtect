@@ -41,9 +41,19 @@ public class JailLocation extends Location {
     public int getRadius() {
 	return radius;
     }
-    
+
     @Override
     public boolean equals(Object obj) {
 	return super.equals(super.clone());
+    }
+
+    @Override
+    public String toString() {
+	return super.toString() + "; Radius{radius = " + this.radius + "}";
+    }
+
+    @Override
+    public int hashCode() {
+	return super.hashCode();
     }
 }
