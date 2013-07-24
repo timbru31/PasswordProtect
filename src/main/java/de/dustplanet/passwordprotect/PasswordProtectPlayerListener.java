@@ -1,5 +1,6 @@
 package de.dustplanet.passwordprotect;
 
+import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -54,10 +55,12 @@ public class PasswordProtectPlayerListener implements Listener {
 	String playerName = event.getPlayer().getName();
 	Player player = event.getPlayer();
 	if (plugin.jailedPlayers.containsKey(playerName)) {
-	    if (player.hasPotionEffect(PotionEffectType.BLINDNESS)) 
+	    if (player.hasPotionEffect(PotionEffectType.BLINDNESS)) {
 		player.removePotionEffect(PotionEffectType.BLINDNESS);
-	    if (player.hasPotionEffect(PotionEffectType.SLOW)) 
+	    }
+	    if (player.hasPotionEffect(PotionEffectType.SLOW)) {
 		player.removePotionEffect(PotionEffectType.SLOW);
+	    }
 	}
     }
 
@@ -69,10 +72,14 @@ public class PasswordProtectPlayerListener implements Listener {
 	    String playerName = event.getPlayer().getName();
 	    if (plugin.jailedPlayers.containsKey(playerName)) {
 		if (!player.hasPotionEffect(PotionEffectType.BLINDNESS)) {
-		    if (plugin.config.getBoolean("darkness")) player.addPotionEffect(new PotionEffect(PotionEffectType.BLINDNESS, 20 * 86400, 15));
+		    if (plugin.config.getBoolean("darkness")) {
+			player.addPotionEffect(new PotionEffect(PotionEffectType.BLINDNESS, 20 * 86400, 15));
+		    }
 		}
 		if (!player.hasPotionEffect(PotionEffectType.SLOW)) {
-		    if (plugin.config.getBoolean("slowness")) player.addPotionEffect(new PotionEffect(PotionEffectType.SLOW, 20 * 86400, 15));
+		    if (plugin.config.getBoolean("slowness")) {
+			player.addPotionEffect(new PotionEffect(PotionEffectType.SLOW, 20 * 86400, 15));
+		    }
 		}
 		plugin.stayInJail(player);
 	    }
@@ -153,15 +160,15 @@ public class PasswordProtectPlayerListener implements Listener {
 	String message = event.getMessage();
 	// Separate commands from the message
 	String command = message.replaceFirst("/", "");
-	if (command.contains(" "))
+	if (command.contains(" ")) {
 	    command = command.substring(0, command.indexOf(' '));
+	}
 	// If jailed
 	if (plugin.jailedPlayers.containsKey(playerName)) {
 	    // Command on the list? Stop here
 	    if (plugin.commandList.contains(command)) {
 		return;
-	    }
-	    else if (command.equalsIgnoreCase("login")) {
+	    } else if (command.equalsIgnoreCase("login")) {
 		// Don't count only /login -> 7 characters
 		if (message.length() > 7) {
 		    // Get the password
@@ -173,12 +180,15 @@ public class PasswordProtectPlayerListener implements Listener {
 			plugin.message(null, player, messageLocalization, null);
 			// Remove from jail & remove effects
 			plugin.jailedPlayers.remove(playerName);
-			if (player.hasPotionEffect(PotionEffectType.BLINDNESS)) 
+			if (player.hasPotionEffect(PotionEffectType.BLINDNESS)) {
 			    player.removePotionEffect(PotionEffectType.BLINDNESS);
-			if (player.hasPotionEffect(PotionEffectType.SLOW)) 
+			}
+			if (player.hasPotionEffect(PotionEffectType.SLOW)) {
 			    player.removePotionEffect(PotionEffectType.SLOW);
-			if (player.getGameMode().equals(GameMode.CREATIVE))
+			}
+			if (player.getGameMode().equals(GameMode.CREATIVE)) {
 			    player.setAllowFlight(true);
+			}
 			// Teleport back to logout location? (really: teleport back to login location before jailing ;) )
 			if (plugin.config.getBoolean("teleportBack")) {
 			    if (plugin.playerLocations.containsKey(playerName)) {
@@ -201,34 +211,40 @@ public class PasswordProtectPlayerListener implements Listener {
 			if (attemptsLeftKick <= 0 || attemptsLeftBan <= 0) {
 			    // Ban
 			    if (attemptsLeftBan <= 0) {
-				String ip = player.getAddress().getAddress().toString().replaceAll("/", "");
-				String messageLocalization = plugin.localization.getString("ban_message");
-				player.kickPlayer(messageLocalization.replaceAll("&([0-9a-fk])", "\u00A7$1"));
+				String ip = player.getAddress().getAddress().toString().replace("/", "");
+				String messageLocalization = ChatColor.translateAlternateColorCodes('&', plugin.localization.getString("ban_message"));
+				player.kickPlayer(messageLocalization);
 				player.setBanned(true);
 				// Broadcast message
 				if (plugin.config.getBoolean("broadcast.ban")) {
-				    messageLocalization = plugin.localization.getString("ban_broadcast");
-				    plugin.getServer().broadcastMessage(messageLocalization.replaceAll("&([0-9a-fk])", "\u00A7$1").replaceAll("%player", player.getName()));
+				    messageLocalization = ChatColor.translateAlternateColorCodes('&', plugin.localization.getString("ban_broadcast"));
+				    plugin.getServer().broadcastMessage(messageLocalization.replace("%player", player.getName()));
 				}
 				// Ban IP
-				if (plugin.config.getBoolean("wrongAttempts.banIP")) plugin.getServer().banIP(ip);
+				if (plugin.config.getBoolean("wrongAttempts.banIP")) {
+				    plugin.getServer().banIP(ip);
+				}
 				// Remove from all lists!
 				plugin.jailedPlayers.remove(playerName);
-				if (plugin.playerLocations.containsKey(playerName)) plugin.playerLocations.remove(playerName);
+				if (plugin.playerLocations.containsKey(playerName)) {
+				    plugin.playerLocations.remove(playerName);
+				}
 				return;
 			    }
 			    // Kick
 			    else if(attemptsLeftKick == 0) {
-				String messageLocalization = plugin.localization.getString("kick_message");
-				player.kickPlayer(messageLocalization.replaceAll("&([0-9a-fk])", "\u00A7$1"));
-				if (player.hasPotionEffect(PotionEffectType.BLINDNESS)) 
+				String messageLocalization = ChatColor.translateAlternateColorCodes('&', plugin.localization.getString("kick_message"));
+				player.kickPlayer(messageLocalization);
+				if (player.hasPotionEffect(PotionEffectType.BLINDNESS)) {
 				    player.removePotionEffect(PotionEffectType.BLINDNESS);
-				if (player.hasPotionEffect(PotionEffectType.SLOW)) 
+				}
+				if (player.hasPotionEffect(PotionEffectType.SLOW)) {
 				    player.removePotionEffect(PotionEffectType.SLOW);
+				}
 				// Broadcast message
 				if (plugin.config.getBoolean("broadcast.kick")) {
-				    messageLocalization = plugin.localization.getString("kick_broadcast");
-				    plugin.getServer().broadcastMessage(messageLocalization.replaceAll("&([0-9a-fk])", "\u00A7$1").replaceAll("%player", player.getName()));
+				    messageLocalization = ChatColor.translateAlternateColorCodes('&', plugin.localization.getString("kick_broadcast"));
+				    plugin.getServer().broadcastMessage(messageLocalization.replace("%player", player.getName()));
 				}
 			    }
 			}
@@ -248,10 +264,14 @@ public class PasswordProtectPlayerListener implements Listener {
 		    }
 		}
 		// You need a password
-		else plugin.sendPasswordRequiredMessage(player);
+		else {
+		    plugin.sendPasswordRequiredMessage(player);
+		}
 	    }
 	    // You need a password
-	    else plugin.sendPasswordRequiredMessage(player);
+	    else {
+		plugin.sendPasswordRequiredMessage(player);
+	    }
 	    // Cancel event anyway, no commands
 	    event.setCancelled(true);
 	}

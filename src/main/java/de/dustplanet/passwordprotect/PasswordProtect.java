@@ -17,7 +17,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
-import java.util.logging.Logger;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.World;
@@ -46,7 +45,6 @@ import org.mcstats.Metrics;
  */
 
 public class PasswordProtect extends JavaPlugin {
-    private Logger log = Logger.getLogger("Minecraft");
     private final PasswordProtectPlayerListener playerListener = new PasswordProtectPlayerListener(this);
     private final PasswordProtectBlockListener blockListener = new PasswordProtectBlockListener(this);
     private final PasswordProtectEntityListener entityListener = new PasswordProtectEntityListener(this);
@@ -72,10 +70,12 @@ public class PasswordProtect extends JavaPlugin {
 	for (String playerName : jailedPlayers.keySet()) {
 	    Player player = getServer().getPlayerExact(playerName);
 	    if (player != null) {
-		if (player.hasPotionEffect(PotionEffectType.BLINDNESS))
+		if (player.hasPotionEffect(PotionEffectType.BLINDNESS)) {
 		    player.removePotionEffect(PotionEffectType.BLINDNESS);
-		if (player.hasPotionEffect(PotionEffectType.SLOW))
+		}
+		if (player.hasPotionEffect(PotionEffectType.SLOW)) {
 		    player.removePotionEffect(PotionEffectType.SLOW);
+		}
 	    }
 	}
 	// Save the HashMap of the jailedPlayers
@@ -84,14 +84,15 @@ public class PasswordProtect extends JavaPlugin {
 	    obj.writeObject(jailedPlayers);
 	    obj.close();
 	} catch (FileNotFoundException e) {
-	    log.info("PasswordProtect couldn't find the 'jailedPlayers.dat' file!");
+	    getLogger().info("Couldn't find the 'jailedPlayers.dat' file!");
 	} catch (IOException e) {
-	    log.info("PasswordProtect couldn't save the 'jailedPlayers.dat' (I/O Exception)!");
+	    getLogger().info("Couldn't save the 'jailedPlayers.dat' (I/O Exception)!");
 	}
 	// Clear lists
 	jailedPlayers.clear();
 	jailLocations.clear();
 	playerLocations.clear();
+	commandList.clear();
     }
 
     // Start
@@ -150,7 +151,7 @@ public class PasswordProtect extends JavaPlugin {
 	    try {
 		jailedPlayersFile.createNewFile();
 	    } catch (IOException e) {
-		log.info("PasswordProtect couldn't create the 'jailedPlayers.dat' file! (I/O Exception)");
+		getLogger().info("Couldn't create the 'jailedPlayers.dat' file! (I/O Exception)");
 	    }
 	}
 	// Read into Memory
@@ -159,16 +160,16 @@ public class PasswordProtect extends JavaPlugin {
 	    jailedPlayers = (HashMap<String, Integer>) obj.readObject();
 	    obj.close();
 	} catch (FileNotFoundException e) {
-	    log.info("PasswordProtect couldn't find the 'jailedPlayers.dat' file!");
+	    getLogger().info("Couldn't find the 'jailedPlayers.dat' file!");
 	} catch (IOException e) {
-	    log.info("PasswordProtect couldn't read the 'jailedPlayers.dat' file! (I/O Exception)");
+	    getLogger().info("Couldn't read the 'jailedPlayers.dat' file! (I/O Exception)");
 	} catch (ClassNotFoundException e) {
-	    log.info("PasswordProtect couldn't read the 'jailedPlayers.dat' file! (Class not found Exception)");
+	    getLogger().info("Couldn't read the 'jailedPlayers.dat' file! (Class not found Exception)");
 	}
 
 	// Commands
 	executor = new PasswordProtectCommands(this);
-	getCommand("login").setExecutor(executor);
+	getCommand("getLogger()in").setExecutor(executor);
 	getCommand("password").setExecutor(executor);
 	getCommand("setpassword").setExecutor(executor);
 	getCommand("setjaillocation").setExecutor(executor);
@@ -265,7 +266,7 @@ public class PasswordProtect extends JavaPlugin {
 	try {
 	    jails.save(jailFile);
 	} catch (IOException e) {
-	    log.warning("PasswordProtect failed to save the jails.yml! Please report this!");
+	    getLogger().warning("Failed to save the jails.yml! Please report this!");
 	}
     }
 
@@ -274,7 +275,7 @@ public class PasswordProtect extends JavaPlugin {
 	try {
 	    localization.save(localizationFile);
 	} catch (IOException e) {
-	    log.warning("PasswordProtect failed to save the localization.yml! Please report this!");
+	    getLogger().warning("Failed to save the localization.yml! Please report this!");
 	}
     }
 
@@ -315,12 +316,16 @@ public class PasswordProtect extends JavaPlugin {
     public void message(CommandSender sender, Player player, String message, String value) {
 	PluginDescriptionFile pdfFile = this.getDescription();
 	if (message != null) {
-	    message = message.replaceAll("&([0-9a-fk-or])", "\u00A7$1")
-		    .replaceAll("%attempts", value)
-		    .replaceAll("%password", value)
-		    .replaceAll("%version", pdfFile.getVersion());
-	    if (player != null)	player.sendMessage(message);
-	    else if (sender != null) sender.sendMessage(message);
+	    message = message.replace("%attempts", value)
+		    .replace("%password", value)
+		    .replace("%version", pdfFile.getVersion());
+	    message = ChatColor.translateAlternateColorCodes('&', message);
+	    if (player != null)	{
+		player.sendMessage(message);
+	    }
+	    else if (sender != null) {
+		sender.sendMessage(message);
+	    }
 	}
 	// If message is null. Should NOT occur.
 	else {
@@ -349,16 +354,25 @@ public class PasswordProtect extends JavaPlugin {
 	    if ((player.isOp() && config.getBoolean("OpsRequirePassword")) || !player.isOp()) {
 		// Remember position?
 		if (config.getBoolean("teleportBack")) {
-		    if (!playerLocations.containsKey(player.getName()))
+		    if (!playerLocations.containsKey(player.getName())) {
 			playerLocations.put(player.getName(), player.getLocation());
+		    }
 		}
 		// Jail!
 		sendToJail(player);
 		// Add him & do bad stuff
-		if (!jailedPlayers.containsKey(player.getName())) jailedPlayers.put(player.getName(), 1);
-		if (config.getBoolean("prevent.Flying")) player.setAllowFlight(false);
-		if (config.getBoolean("darkness")) player.addPotionEffect(new PotionEffect(PotionEffectType.BLINDNESS, 20 * 86400, 15));
-		if (config.getBoolean("slowness")) player.addPotionEffect(new PotionEffect(PotionEffectType.SLOW, 20 * 86400, 5));
+		if (!jailedPlayers.containsKey(player.getName())) {
+		    jailedPlayers.put(player.getName(), 1);
+		}
+		if (config.getBoolean("prevent.Flying")) {
+		    player.setAllowFlight(false);
+		}
+		if (config.getBoolean("darkness")) {
+		    player.addPotionEffect(new PotionEffect(PotionEffectType.BLINDNESS, 20 * 86400, 15));
+		}
+		if (config.getBoolean("slowness")) {
+		    player.addPotionEffect(new PotionEffect(PotionEffectType.SLOW, 20 * 86400, 5));
+		}
 	    }
 	}
     }
