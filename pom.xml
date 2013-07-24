@@ -30,14 +30,14 @@
 		<dependency>
 			<groupId>org.bukkit</groupId>
 			<artifactId>bukkit</artifactId>
-			<version>1.4.7-R0.2-SNAPSHOT</version>
+			<version>1.6.2-R0.1-SNAPSHOT</version>
 			<type>jar</type>
 			<scope>compile</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.mcstats.bukkit</groupId>
 			<artifactId>metrics</artifactId>
-			<version>R6</version>
+			<version>R7</version>
 			<scope>compile</scope>
 		</dependency>
 	</dependencies>
@@ -50,7 +50,7 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
-				<version>2.3.2</version>
+				<version>3.0</version>
 				<configuration>
 					<verbose>true</verbose>
 					<fork>true</fork>
@@ -101,6 +101,14 @@
 					<include>config.yml</include>
 					<include>localization.yml</include>
 					<include>jails.yml</include>
+				</includes>
+			</resource>
+			<resource>
+				<targetPath>.</targetPath>
+				<filtering>true</filtering>
+				<directory>${basedir}</directory>
+				<includes>
+					<include>README.txt</include>
 				</includes>
 			</resource>
 		</resources>
