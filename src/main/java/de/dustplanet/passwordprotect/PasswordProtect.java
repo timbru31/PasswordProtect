@@ -169,7 +169,7 @@ public class PasswordProtect extends JavaPlugin {
 
 	// Commands
 	executor = new PasswordProtectCommands(this);
-	getCommand("getLogger()in").setExecutor(executor);
+	getCommand("login").setExecutor(executor);
 	getCommand("password").setExecutor(executor);
 	getCommand("setpassword").setExecutor(executor);
 	getCommand("setjaillocation").setExecutor(executor);
