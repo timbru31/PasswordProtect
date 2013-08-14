@@ -316,7 +316,11 @@ public class PasswordProtect extends JavaPlugin {
     public void message(CommandSender sender, Player player, String message, String value) {
 	PluginDescriptionFile pdfFile = this.getDescription();
 	if (message != null) {
-	    message = message.replace("%attempts", value)
+	    // Sometimes we have no extra "value" argument, use "" then
+	    if (value == null) {
+		value = "";
+	    }
+ 	    message = message.replace("%attempts", value)
 		    .replace("%password", value)
 		    .replace("%version", pdfFile.getVersion());
 	    message = ChatColor.translateAlternateColorCodes('&', message);
