@@ -35,7 +35,9 @@ public class PasswordProtectEntityListener implements Listener {
     public void onEntityTarget(EntityTargetEvent event) {
         if (plugin.config.getBoolean("prevent.Triggering")) {
             Entity target = event.getTarget();
-            if (target == null) return;
+            if (target == null) {
+                return;
+            }
             if (target.getType().equals(EntityType.PLAYER)) {
                 String playerName = ((Player) target).getName();
                 if (plugin.jailedPlayers.containsKey(playerName)) {

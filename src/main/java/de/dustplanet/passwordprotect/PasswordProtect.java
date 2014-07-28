@@ -55,10 +55,10 @@ public class PasswordProtect extends JavaPlugin {
     private File jailFile;
     private File localizationFile;
     // Integer = attempts to login!
-    public HashMap<String, Integer> jailedPlayers = new HashMap<String, Integer>();
-    private HashMap<World, JailLocation> jailLocations = new HashMap<World, JailLocation>();
-    public HashMap<String, Location> playerLocations = new HashMap<String, Location>();
-    public List<String> commandList = new ArrayList<String>();
+    public HashMap<String, Integer> jailedPlayers = new HashMap<>();
+    private HashMap<World, JailLocation> jailLocations = new HashMap<>();
+    public HashMap<String, Location> playerLocations = new HashMap<>();
+    public List<String> commandList = new ArrayList<>();
     private String[] commands = { "help", "rules", "motd", };
     private String encryption = "SHA-256";
     private File jailedPlayersFile;
@@ -123,7 +123,7 @@ public class PasswordProtect extends JavaPlugin {
         jailFile = new File(getDataFolder(), "jails.yml");
         // Copy if the config doesn't exist
         if (!jailFile.exists()) {
-            copy(getResource("jails.yml"), jailFile);
+            copy("jails.yml", jailFile);
         }
         // Try to load
         jails = YamlConfiguration.loadConfiguration(jailFile);
@@ -131,7 +131,7 @@ public class PasswordProtect extends JavaPlugin {
         // Config
         configFile = new File(getDataFolder(), "config.yml");
         if (!configFile.exists()) {
-            copy(getResource("config.yml"), configFile);
+            copy("config.yml", configFile);
         }
         config = this.getConfig();
         loadConfig();
@@ -139,7 +139,7 @@ public class PasswordProtect extends JavaPlugin {
         // Localization
         localizationFile = new File(getDataFolder(), "localization.yml");
         if (!localizationFile.exists()) {
-            copy(getResource("localization.yml"), localizationFile);
+            copy("localization.yml", localizationFile);
         }
         localization = YamlConfiguration.loadConfiguration(localizationFile);
         loadLocalization();
@@ -279,10 +279,9 @@ public class PasswordProtect extends JavaPlugin {
     }
 
     // If no config is found, copy the default one(s)!
-    private void copy(InputStream in, File file) {
-        OutputStream out = null;
-        try {
-            out = new FileOutputStream(file);
+    private void copy(String yml, File file) {
+        try (OutputStream out = new FileOutputStream(file);
+                InputStream in = getResource(yml)) {
             byte[] buf = new byte[1024];
             int len;
             while ((len = in.read(buf)) > 0) {
@@ -291,23 +290,6 @@ public class PasswordProtect extends JavaPlugin {
         } catch (IOException e) {
             getLogger().warning("Failed to copy the default config! (I/O)");
             e.printStackTrace();
-        } finally {
-            try {
-                if (out != null) {
-                    out.close();
-                }
-            } catch (IOException e) {
-                getLogger().warning("Failed to close the streams! (I/O -> Output)");
-                e.printStackTrace();
-            }
-            try {
-                if (in != null) {
-                    in.close();
-                }
-            } catch (IOException e) {
-                getLogger().warning("Failed to close the streams! (I/O -> Input)");
-                e.printStackTrace();
-            }
         }
     }
 
