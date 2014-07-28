@@ -17,6 +17,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
+import java.util.UUID;
+
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.World;
@@ -55,9 +57,9 @@ public class PasswordProtect extends JavaPlugin {
     private File jailFile;
     private File localizationFile;
     // Integer = attempts to login!
-    public HashMap<String, Integer> jailedPlayers = new HashMap<>();
+    public HashMap<UUID, Integer> jailedPlayers = new HashMap<>();
     private HashMap<World, JailLocation> jailLocations = new HashMap<>();
-    public HashMap<String, Location> playerLocations = new HashMap<>();
+    public HashMap<UUID, Location> playerLocations = new HashMap<>();
     public List<String> commandList = new ArrayList<>();
     private String[] commands = { "help", "rules", "motd", };
     private String encryption = "SHA-512";
@@ -66,8 +68,8 @@ public class PasswordProtect extends JavaPlugin {
     // Shutdown
     public void onDisable() {
         // Remove potion effect
-        for (String playerName : jailedPlayers.keySet()) {
-            Player player = getServer().getPlayerExact(playerName);
+        for (UUID playerUUID : jailedPlayers.keySet()) {
+            Player player = getServer().getPlayer(playerUUID);
             if (player != null) {
                 if (player.hasPotionEffect(PotionEffectType.BLINDNESS)) {
                     player.removePotionEffect(PotionEffectType.BLINDNESS);
@@ -156,7 +158,7 @@ public class PasswordProtect extends JavaPlugin {
         // Read into Memory
         try {
             ObjectInputStream obj = new ObjectInputStream(new FileInputStream(jailedPlayersFile));
-            jailedPlayers = (HashMap<String, Integer>) obj.readObject();
+            jailedPlayers = (HashMap<UUID, Integer>) obj.readObject();
             obj.close();
         } catch (FileNotFoundException e) {
             getLogger().info("Couldn't find the 'jailedPlayers.dat' file!");
@@ -339,15 +341,15 @@ public class PasswordProtect extends JavaPlugin {
             if ((player.isOp() && config.getBoolean("OpsRequirePassword")) || !player.isOp()) {
                 // Remember position?
                 if (config.getBoolean("teleportBack")) {
-                    if (!playerLocations.containsKey(player.getName())) {
-                        playerLocations.put(player.getName(), player.getLocation());
+                    if (!playerLocations.containsKey(player.getUniqueId())) {
+                        playerLocations.put(player.getUniqueId(), player.getLocation());
                     }
                 }
                 // Jail!
                 sendToJail(player);
                 // Add him & do bad stuff
-                if (!jailedPlayers.containsKey(player.getName())) {
-                    jailedPlayers.put(player.getName(), 1);
+                if (!jailedPlayers.containsKey(player.getUniqueId())) {
+                    jailedPlayers.put(player.getUniqueId(), 1);
                 }
                 if (config.getBoolean("prevent.Flying")) {
                     player.setAllowFlight(false);

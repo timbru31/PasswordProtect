@@ -1,5 +1,7 @@
 package de.dustplanet.passwordprotect;
 
+import java.util.UUID;
+
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -29,8 +31,8 @@ public class PasswordProtectBlockListener implements Listener {
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onBlockPlace(BlockPlaceEvent event) {
         if (plugin.config.getBoolean("prevent.BlockPlace")) {
-            String playerName = event.getPlayer().getName();
-            if (plugin.jailedPlayers.containsKey(playerName)) {
+            UUID playerUUID = event.getPlayer().getUniqueId();
+            if (plugin.jailedPlayers.containsKey(playerUUID)) {
                 event.setBuild(false);
                 event.setCancelled(true);
             }
@@ -41,8 +43,8 @@ public class PasswordProtectBlockListener implements Listener {
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onBlockBreak(BlockBreakEvent event) {
         if (plugin.config.getBoolean("prevent.BlockBreak")) {
-            String playerName = event.getPlayer().getName();
-            if (plugin.jailedPlayers.containsKey(playerName)) {
+            UUID playerUUID = event.getPlayer().getUniqueId();
+            if (plugin.jailedPlayers.containsKey(playerUUID)) {
                 event.setCancelled(true);
             }
         }

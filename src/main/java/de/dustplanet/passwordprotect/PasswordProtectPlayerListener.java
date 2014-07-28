@@ -1,5 +1,8 @@
 package de.dustplanet.passwordprotect;
 
+import java.util.UUID;
+
+import org.bukkit.BanList;
 import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
 import org.bukkit.event.EventHandler;
@@ -48,9 +51,9 @@ public class PasswordProtectPlayerListener implements Listener {
     // When the player leaves, remove potion effects if jailed
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onPlayerQuit(PlayerQuitEvent event) {
-        String playerName = event.getPlayer().getName();
+        UUID playerUUID = event.getPlayer().getUniqueId();
         Player player = event.getPlayer();
-        if (plugin.jailedPlayers.containsKey(playerName)) {
+        if (plugin.jailedPlayers.containsKey(playerUUID)) {
             if (player.hasPotionEffect(PotionEffectType.BLINDNESS)) {
                 player.removePotionEffect(PotionEffectType.BLINDNESS);
             }
@@ -64,9 +67,9 @@ public class PasswordProtectPlayerListener implements Listener {
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onPlayerMove(PlayerMoveEvent event) {
         if (plugin.config.getBoolean("prevent.Movement")) {
+            UUID playerUUID = event.getPlayer().getUniqueId();
             Player player = event.getPlayer();
-            String playerName = event.getPlayer().getName();
-            if (plugin.jailedPlayers.containsKey(playerName)) {
+            if (plugin.jailedPlayers.containsKey(playerUUID)) {
                 if (!player.hasPotionEffect(PotionEffectType.BLINDNESS)) {
                     if (plugin.config.getBoolean("darkness")) {
                         player.addPotionEffect(new PotionEffect(PotionEffectType.BLINDNESS, 20 * 86400, 15));
@@ -86,8 +89,8 @@ public class PasswordProtectPlayerListener implements Listener {
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onPlayerInteract(PlayerInteractEvent event) {
         if (plugin.config.getBoolean("prevent.Interaction")) {
-            String playerName = event.getPlayer().getName();
-            if (plugin.jailedPlayers.containsKey(playerName)) {
+            UUID playerUUID = event.getPlayer().getUniqueId();
+            if (plugin.jailedPlayers.containsKey(playerUUID)) {
                 event.setCancelled(true);
             }
         }
@@ -97,8 +100,8 @@ public class PasswordProtectPlayerListener implements Listener {
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onPlayerInteractEntity(PlayerInteractEntityEvent event) {
         if (plugin.config.getBoolean("prevent.InteractionMobs")) {
-            String playerName = event.getPlayer().getName();
-            if (plugin.jailedPlayers.containsKey(playerName)) {
+            UUID playerUUID = event.getPlayer().getUniqueId();
+            if (plugin.jailedPlayers.containsKey(playerUUID)) {
                 event.setCancelled(true);
             }
         }
@@ -108,8 +111,8 @@ public class PasswordProtectPlayerListener implements Listener {
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onPlayerDropItem(PlayerDropItemEvent event) {
         if (plugin.config.getBoolean("prevent.ItemDrop")) {
-            String playerName = event.getPlayer().getName();
-            if (plugin.jailedPlayers.containsKey(playerName)) {
+            UUID playerUUID = event.getPlayer().getUniqueId();
+            if (plugin.jailedPlayers.containsKey(playerUUID)) {
                 event.setCancelled(true);
             }
         }
@@ -119,8 +122,8 @@ public class PasswordProtectPlayerListener implements Listener {
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onPlayerPickupItem(PlayerPickupItemEvent event) {
         if (plugin.config.getBoolean("prevent.ItemPickup")) {
-            String playerName = event.getPlayer().getName();
-            if (plugin.jailedPlayers.containsKey(playerName)) {
+            UUID playerUUID = event.getPlayer().getUniqueId();
+            if (plugin.jailedPlayers.containsKey(playerUUID)) {
                 event.setCancelled(true);
             }
         }
@@ -130,8 +133,8 @@ public class PasswordProtectPlayerListener implements Listener {
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onPlayerPortal(PlayerPortalEvent event) {
         if (plugin.config.getBoolean("prevent.Portal")) {
-            String playerName = event.getPlayer().getName();
-            if (plugin.jailedPlayers.containsKey(playerName)) {
+            UUID playerUUID = event.getPlayer().getUniqueId();
+            if (plugin.jailedPlayers.containsKey(playerUUID)) {
                 event.setCancelled(true);
             }
         }
@@ -141,8 +144,8 @@ public class PasswordProtectPlayerListener implements Listener {
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onPlayerChat(AsyncPlayerChatEvent event) {
         if (plugin.config.getBoolean("prevent.Chat")) {
-            String playerName = event.getPlayer().getName();
-            if (plugin.jailedPlayers.containsKey(playerName)) {
+            UUID playerUUID = event.getPlayer().getUniqueId();
+            if (plugin.jailedPlayers.containsKey(playerUUID)) {
                 event.setCancelled(true);
             }
         }
@@ -152,7 +155,7 @@ public class PasswordProtectPlayerListener implements Listener {
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onPlayerCommandPreprocess(PlayerCommandPreprocessEvent event) throws Exception {
         Player player = event.getPlayer();
-        String playerName = event.getPlayer().getName();
+        UUID playerUUID = event.getPlayer().getUniqueId();
         String message = event.getMessage();
         // Separate commands from the message
         String command = message.replaceFirst("/", "");
@@ -160,7 +163,7 @@ public class PasswordProtectPlayerListener implements Listener {
             command = command.substring(0, command.indexOf(' '));
         }
         // If jailed
-        if (plugin.jailedPlayers.containsKey(playerName)) {
+        if (plugin.jailedPlayers.containsKey(playerUUID)) {
             // Command on the list? Stop here
             if (plugin.commandList.contains(command)) {
                 return;
@@ -175,7 +178,7 @@ public class PasswordProtectPlayerListener implements Listener {
                         String messageLocalization = plugin.localization.getString("password_accepted");
                         plugin.message(null, player, messageLocalization, null);
                         // Remove from jail & remove effects
-                        plugin.jailedPlayers.remove(playerName);
+                        plugin.jailedPlayers.remove(playerUUID);
                         if (player.hasPotionEffect(PotionEffectType.BLINDNESS)) {
                             player.removePotionEffect(PotionEffectType.BLINDNESS);
                         }
@@ -187,16 +190,16 @@ public class PasswordProtectPlayerListener implements Listener {
                         }
                         // Teleport back to logout location? (really: teleport back to login location before jailing ;) )
                         if (plugin.config.getBoolean("teleportBack")) {
-                            if (plugin.playerLocations.containsKey(playerName)) {
-                                player.teleport(plugin.playerLocations.get(playerName));
-                                plugin.playerLocations.remove(playerName);
+                            if (plugin.playerLocations.containsKey(playerUUID)) {
+                                player.teleport(plugin.playerLocations.get(playerUUID));
+                                plugin.playerLocations.remove(playerUUID);
                             }
                         }
                     }
                     // Increase wrong counters and kick/ban if necessary.
                     else {
                         // Attempts from the HashMap
-                        int attempts = plugin.jailedPlayers.get(playerName);
+                        int attempts = plugin.jailedPlayers.get(playerUUID);
                         // After how many attempts?
                         int kickAfter = plugin.config.getInt("wrongAttempts.kick");
                         int banAfter = plugin.config.getInt("wrongAttempts.ban");
@@ -210,7 +213,7 @@ public class PasswordProtectPlayerListener implements Listener {
                                 String ip = player.getAddress().getAddress().toString().replace("/", "");
                                 String messageLocalization = ChatColor.translateAlternateColorCodes('&', plugin.localization.getString("ban_message"));
                                 player.kickPlayer(messageLocalization);
-                                player.setBanned(true);
+                                plugin.getServer().getBanList(BanList.Type.NAME).addBan(player.getName(), "AutoBan - PasswordProtect", null, "PasswordProtect");
                                 // Broadcast message
                                 if (plugin.config.getBoolean("broadcast.ban")) {
                                     messageLocalization = ChatColor.translateAlternateColorCodes('&', plugin.localization.getString("ban_broadcast"));
@@ -221,9 +224,9 @@ public class PasswordProtectPlayerListener implements Listener {
                                     plugin.getServer().banIP(ip);
                                 }
                                 // Remove from all lists!
-                                plugin.jailedPlayers.remove(playerName);
-                                if (plugin.playerLocations.containsKey(playerName)) {
-                                    plugin.playerLocations.remove(playerName);
+                                plugin.jailedPlayers.remove(playerUUID);
+                                if (plugin.playerLocations.containsKey(playerUUID)) {
+                                    plugin.playerLocations.remove(playerUUID);
                                 }
                                 return;
                             }
@@ -255,7 +258,7 @@ public class PasswordProtectPlayerListener implements Listener {
                             plugin.message(null, player, messageLocalization, Integer.toString(attemptsLeftBan));
                             // Increase HashMap value and attempts variable
                             attempts++;
-                            plugin.jailedPlayers.put(playerName, attempts);
+                            plugin.jailedPlayers.put(playerUUID, attempts);
                         }
                     }
                 }

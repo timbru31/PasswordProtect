@@ -1,5 +1,7 @@
 package de.dustplanet.passwordprotect;
 
+import java.util.UUID;
+
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
@@ -39,8 +41,8 @@ public class PasswordProtectEntityListener implements Listener {
                 return;
             }
             if (target.getType().equals(EntityType.PLAYER)) {
-                String playerName = ((Player) target).getName();
-                if (plugin.jailedPlayers.containsKey(playerName)) {
+                UUID playerUUID = ((Player) target).getUniqueId();
+                if (plugin.jailedPlayers.containsKey(playerUUID)) {
                     event.setCancelled(true);
                 }
             }
@@ -53,8 +55,8 @@ public class PasswordProtectEntityListener implements Listener {
         if (plugin.config.getBoolean("prevent.Attacks")) {
             Entity damager = event.getDamager();
             if (damager.getType() == EntityType.PLAYER) {
-                String playerName = ((Player) damager).getName();
-                if (plugin.jailedPlayers.containsKey(playerName)) {
+                UUID playerUUID = ((Player) damager).getUniqueId();
+                if (plugin.jailedPlayers.containsKey(playerUUID)) {
                     event.setCancelled(true);
                 }
             }
@@ -67,9 +69,9 @@ public class PasswordProtectEntityListener implements Listener {
         if (plugin.config.getBoolean("prevent.Damage")) {
             Entity entity = event.getEntity();
             if (entity.getType() == EntityType.PLAYER) {
-                String playerName = ((Player) entity).getName();
+                UUID playerUUID = ((Player) entity).getUniqueId();
                 Player player = (Player) entity;
-                if (plugin.jailedPlayers.containsKey(playerName)) {
+                if (plugin.jailedPlayers.containsKey(playerUUID)) {
                     // Restore food and air. Remove fire
                     player.setFoodLevel(20);
                     player.setFireTicks(0);
@@ -86,8 +88,8 @@ public class PasswordProtectEntityListener implements Listener {
         if (plugin.config.getBoolean("prevent.DeathDrops")) {
             Entity entity = event.getEntity();
             if (entity.getType() == EntityType.PLAYER) {
-                String playerName = ((Player) entity).getName();
-                if (plugin.jailedPlayers.containsKey(playerName)) {
+                UUID playerUUID = ((Player) entity).getUniqueId();
+                if (plugin.jailedPlayers.containsKey(playerUUID)) {
                     // Exp and items
                     event.setDroppedExp(0);
                     event.getDrops().clear();
