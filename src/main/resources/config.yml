@@ -1,5 +1,5 @@
 # For help please refer to http://dev.bukkit.org/bukkit-plugins/passwordprotect/
-encryption: SHA-256
+encryption: SHA-512
 OpsRequirePassword: true
 cleanPassword: false
 password: ''

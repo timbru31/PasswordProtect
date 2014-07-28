@@ -60,7 +60,7 @@ public class PasswordProtect extends JavaPlugin {
     public HashMap<String, Location> playerLocations = new HashMap<>();
     public List<String> commandList = new ArrayList<>();
     private String[] commands = { "help", "rules", "motd", };
-    private String encryption = "SHA-256";
+    private String encryption = "SHA-512";
     private File jailedPlayersFile;
 
     // Shutdown
@@ -185,7 +185,7 @@ public class PasswordProtect extends JavaPlugin {
     // Loads the config at start
     private void loadConfig() {
         config.options().header("For help please refer to");
-        config.addDefault("encryption", "SHA-256");
+        config.addDefault("encryption", "SHA-512");
         config.addDefault("OpsRequirePassword", true);
         config.addDefault("cleanPassword", false);
         config.addDefault("password", "");
@@ -221,10 +221,10 @@ public class PasswordProtect extends JavaPlugin {
             MessageDigest.getInstance(encryption);
         } catch (NoSuchAlgorithmException e) {
             getServer().getConsoleSender().sendMessage(ChatColor.RED + "PasswordProtect can't use this encryption! FATAL!");
-            getServer().getConsoleSender().sendMessage(ChatColor.RED + "Falling back to SHA-256!");
+            getServer().getConsoleSender().sendMessage(ChatColor.RED + "Falling back to SHA-512!");
             getServer().getConsoleSender().sendMessage(ChatColor.RED + "Report this IMMEDIATELY!");
-            encryption = "SHA-256";
-            config.set("encryption", "SHA-256");
+            encryption = "SHA-512";
+            config.set("encryption", "SHA-512");
         }
         config.options().copyDefaults(true);
         saveConfig();
