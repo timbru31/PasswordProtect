@@ -1,128 +1,128 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-	<modelVersion>4.0.0</modelVersion>
-	<groupId>de.dustplanet</groupId>
-	<artifactId>PasswordProtect</artifactId>
-	<version>1.1.6-SNAPSHOT</version>
-	<name>PasswordProtect</name>
-	<description>Protect your server with a password</description>
-	<url>http://dev.bukkit.org/bukkit-plugins/passwordprotect/</url>
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>de.dustplanet</groupId>
+  <artifactId>PasswordProtect</artifactId>
+  <version>1.1.6-SNAPSHOT</version>
+  <name>PasswordProtect</name>
+  <description>Protect your server with a password</description>
+  <url>http://dev.bukkit.org/bukkit-plugins/passwordprotect/</url>
 
-	<!-- Encode in UTF-8 -->
-	<properties>
-		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-	</properties>
+  <!-- Encode in UTF-8 -->
+  <properties>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+  </properties>
 
-	<!-- Repositories -->
-	<repositories>
-		<repository>
-			<id>bukkit-repo</id>
-			<url>http://repo.bukkit.org/content/repositories/snapshots</url>
-		</repository>
-		<repository>
-			<id>Plugin Metrics</id>
-			<url>http://repo.mcstats.org/content/repositories/public</url>
-		</repository>
-	</repositories>
+  <!-- Repositories -->
+  <repositories>
+    <repository>
+      <id>bukkit-repo</id>
+      <url>http://repo.bukkit.org/content/repositories/snapshots</url>
+    </repository>
+    <repository>
+      <id>Plugin Metrics</id>
+      <url>http://repo.mcstats.org/content/repositories/public</url>
+    </repository>
+  </repositories>
 
-	<!-- Dependencies -->
-	<dependencies>
-		<dependency>
-			<groupId>org.bukkit</groupId>
-			<artifactId>bukkit</artifactId>
-			<version>1.7.10-R0.1-SNAPSHOT</version>
-			<type>jar</type>
-			<scope>compile</scope>
-		</dependency>
-		<dependency>
-			<groupId>org.mcstats.bukkit</groupId>
-			<artifactId>metrics</artifactId>
-			<version>R7</version>
-			<scope>compile</scope>
-		</dependency>
-	</dependencies>
+  <!-- Dependencies -->
+  <dependencies>
+    <dependency>
+      <groupId>org.bukkit</groupId>
+      <artifactId>bukkit</artifactId>
+      <version>1.7.10-R0.1-SNAPSHOT</version>
+      <type>jar</type>
+      <scope>compile</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.mcstats.bukkit</groupId>
+      <artifactId>metrics</artifactId>
+      <version>R7</version>
+      <scope>compile</scope>
+    </dependency>
+  </dependencies>
 
-	<build>
-		<!-- Compile for 1.7 and clean before -->
-		<defaultGoal>clean compile package</defaultGoal>
-		<sourceDirectory>${basedir}/src/main/java</sourceDirectory>
-		<plugins>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-compiler-plugin</artifactId>
-				<version>3.1</version>
-				<configuration>
-					<verbose>true</verbose>
-					<source>1.7</source>
-					<target>1.7</target>
-				</configuration>
-			</plugin>
-			<!-- Shade Plugin to include Metrics -->
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-shade-plugin</artifactId>
-				<version>2.3</version>
-				<executions>
-					<execution>
-						<phase>package</phase>
-						<goals>
-							<goal>shade</goal>
-						</goals>
-						<configuration>
-							<artifactSet>
-								<includes>
-									<include>org.mcstats.bukkit:metrics</include>
-								</includes>
-							</artifactSet>
-							<!-- Set the final name -->
-							<finalName>PasswordProtect</finalName>
-							<relocations>
-								<relocation>
-									<pattern>org.mcstats</pattern>
-									<shadedPattern>de.dustplanet.passwordprotect</shadedPattern>
-								</relocation>
-							</relocations>
-						</configuration>
-					</execution>
-				</executions>
-			</plugin>
-		</plugins>
+  <build>
+    <!-- Compile for 1.7 and clean before -->
+    <defaultGoal>clean compile package</defaultGoal>
+    <sourceDirectory>${basedir}/src/main/java</sourceDirectory>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <version>3.1</version>
+        <configuration>
+          <verbose>true</verbose>
+          <source>1.7</source>
+          <target>1.7</target>
+        </configuration>
+      </plugin>
+      <!-- Shade Plugin to include Metrics -->
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-shade-plugin</artifactId>
+        <version>2.3</version>
+        <executions>
+          <execution>
+            <phase>package</phase>
+            <goals>
+              <goal>shade</goal>
+            </goals>
+            <configuration>
+              <artifactSet>
+                <includes>
+                  <include>org.mcstats.bukkit:metrics</include>
+                </includes>
+              </artifactSet>
+              <!-- Set the final name -->
+              <finalName>PasswordProtect</finalName>
+              <relocations>
+                <relocation>
+                  <pattern>org.mcstats</pattern>
+                  <shadedPattern>de.dustplanet.passwordprotect</shadedPattern>
+                </relocation>
+              </relocations>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+    </plugins>
 
-		<!-- Include .yml files -->
-		<resources>
-			<resource>
-				<targetPath>.</targetPath>
-				<filtering>true</filtering>
-				<directory>${basedir}/src/main/resources</directory>
-				<includes>
-					<include>plugin.yml</include>
-					<include>config.yml</include>
-					<include>localization.yml</include>
-					<include>jails.yml</include>
-				</includes>
-			</resource>
-			<resource>
-				<targetPath>.</targetPath>
-				<filtering>true</filtering>
-				<directory>${basedir}</directory>
-				<includes>
-					<include>README.txt</include>
-				</includes>
-			</resource>
-		</resources>
-	</build>
+    <!-- Include .yml files -->
+    <resources>
+      <resource>
+        <targetPath>.</targetPath>
+        <filtering>true</filtering>
+        <directory>${basedir}/src/main/resources</directory>
+        <includes>
+          <include>plugin.yml</include>
+          <include>config.yml</include>
+          <include>localization.yml</include>
+          <include>jails.yml</include>
+        </includes>
+      </resource>
+      <resource>
+        <targetPath>.</targetPath>
+        <filtering>true</filtering>
+        <directory>${basedir}</directory>
+        <includes>
+          <include>README.txt</include>
+        </includes>
+      </resource>
+    </resources>
+  </build>
 
-	<!-- Github information -->
-	<scm>
-		<url>https://github.com/xGhOsTkiLLeRx/PasswordProtect</url>
-		<connection>scm:git:git://github.com/xGhOsTkiLLeRx/PasswordProtect.git</connection>
-		<tag>master</tag>
-		<developerConnection>scm:git:git@github.com:xGhOsTkiLLeRx/PasswordProtect.git</developerConnection>
-	</scm>
+  <!-- Github information -->
+  <scm>
+    <url>https://github.com/xGhOsTkiLLeRx/PasswordProtect</url>
+    <connection>scm:git:git://github.com/xGhOsTkiLLeRx/PasswordProtect.git</connection>
+    <tag>master</tag>
+    <developerConnection>scm:git:git@github.com:xGhOsTkiLLeRx/PasswordProtect.git</developerConnection>
+  </scm>
 
-	<!-- Jenkins information -->
-	<ciManagement>
-		<url>http://ci.dustplanet.de/job/PasswordProtect</url>
-		<system>jenkins</system>
-	</ciManagement>
+  <!-- Jenkins information -->
+  <ciManagement>
+    <url>http://ci.dustplanet.de/job/PasswordProtect</url>
+    <system>jenkins</system>
+  </ciManagement>
 </project>

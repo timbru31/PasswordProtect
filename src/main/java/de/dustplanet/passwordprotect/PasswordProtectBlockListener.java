@@ -22,29 +22,29 @@ public class PasswordProtectBlockListener implements Listener {
     private PasswordProtect plugin;
 
     public PasswordProtectBlockListener(PasswordProtect instance) {
-	plugin = instance;
+        plugin = instance;
     }
 
     // If a block is placed, cancel it
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onBlockPlace(BlockPlaceEvent event) {
-	if (plugin.config.getBoolean("prevent.BlockPlace")) {
-	    String playerName = event.getPlayer().getName();
-	    if (plugin.jailedPlayers.containsKey(playerName)) {
-		event.setBuild(false);
-		event.setCancelled(true);
-	    }
-	}
+        if (plugin.config.getBoolean("prevent.BlockPlace")) {
+            String playerName = event.getPlayer().getName();
+            if (plugin.jailedPlayers.containsKey(playerName)) {
+                event.setBuild(false);
+                event.setCancelled(true);
+            }
+        }
     }
 
     // If a player is in jail, he can't break a block
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onBlockBreak(BlockBreakEvent event) {
-	if (plugin.config.getBoolean("prevent.BlockBreak")) {
-	    String playerName = event.getPlayer().getName();
-	    if (plugin.jailedPlayers.containsKey(playerName)) {
-		event.setCancelled(true);
-	    }
-	}
+        if (plugin.config.getBoolean("prevent.BlockBreak")) {
+            String playerName = event.getPlayer().getName();
+            if (plugin.jailedPlayers.containsKey(playerName)) {
+                event.setCancelled(true);
+            }
+        }
     }
 }

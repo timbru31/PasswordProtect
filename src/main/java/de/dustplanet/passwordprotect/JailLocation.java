@@ -25,31 +25,31 @@ public class JailLocation extends Location {
     private int radius;
 
     public JailLocation(World world, double x, double y, double z, float yaw, float pitch, int radius) {
-	super(world, x, y, z, yaw, pitch);
-	this.radius = radius;
+        super(world, x, y, z, yaw, pitch);
+        this.radius = radius;
     }
 
     public JailLocation(Location location, int radius) {
-	super(location.getWorld(), location.getX(), location.getY(), location.getZ(), location.getYaw(), location.getPitch());
-	this.radius = radius;
+        super(location.getWorld(), location.getX(), location.getY(), location.getZ(), location.getYaw(), location.getPitch());
+        this.radius = radius;
     }
 
     public int getRadius() {
-	return radius;
+        return radius;
     }
 
     @Override
     public boolean equals(Object obj) {
-	return super.equals(super.clone());
+        return super.equals(super.clone());
     }
 
     @Override
     public String toString() {
-	return super.toString() + "; Radius{radius = " + this.radius + "}";
+        return super.toString() + "; Radius{radius = " + this.radius + "}";
     }
 
     @Override
     public int hashCode() {
-	return super.hashCode();
+        return super.hashCode();
     }
 }
