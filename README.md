@@ -78,8 +78,7 @@ loginMessage: true
 ## Commands & Permissions
 (Fallback to OPs, if no permissions system is found)
 
-**Please note that __/setjaillocation has the following aliases_!**  
-Command alias list for /setjaillocation
+**Please note that _/setjaillocation_ has the following aliases**  
 * /setjail
 * /setjailarea
 * /setpasswordjail
