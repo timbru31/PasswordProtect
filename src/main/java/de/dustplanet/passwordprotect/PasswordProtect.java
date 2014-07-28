@@ -2,7 +2,6 @@ package de.dustplanet.passwordprotect;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -76,14 +75,11 @@ public class PasswordProtect extends JavaPlugin {
             }
         }
         // Save the HashMap of the jailedPlayers
-        try {
-            ObjectOutputStream obj = new ObjectOutputStream(new FileOutputStream(jailedPlayersFile));
+        try (ObjectOutputStream obj = new ObjectOutputStream(new FileOutputStream(jailedPlayersFile))) {
             obj.writeObject(jailedPlayers);
-            obj.close();
-        } catch (FileNotFoundException e) {
-            getLogger().info("Couldn't find the 'jailedPlayers.dat' file!");
         } catch (IOException e) {
-            getLogger().info("Couldn't save the 'jailedPlayers.dat' (I/O Exception)!");
+            getLogger().info("Couldn't find the 'jailedPlayers.dat' file!");
+            e.printStackTrace();
         }
         // Clear lists
         jailedPlayers.clear();
@@ -148,20 +144,16 @@ public class PasswordProtect extends JavaPlugin {
             try {
                 jailedPlayersFile.createNewFile();
             } catch (IOException e) {
-                getLogger().info("Couldn't create the 'jailedPlayers.dat' file! (I/O Exception)");
+                getLogger().info("Couldn't create the 'jailedPlayers.dat' file!");
+                e.printStackTrace();
             }
         }
         // Read into Memory
-        try {
-            ObjectInputStream obj = new ObjectInputStream(new FileInputStream(jailedPlayersFile));
+        try (ObjectInputStream obj = new ObjectInputStream(new FileInputStream(jailedPlayersFile))) {
             jailedPlayers = (HashMap<UUID, Integer>) obj.readObject();
-            obj.close();
-        } catch (FileNotFoundException e) {
-            getLogger().info("Couldn't find the 'jailedPlayers.dat' file!");
-        } catch (IOException e) {
+        } catch (IOException | ClassNotFoundException e) {
             getLogger().info("Couldn't read the 'jailedPlayers.dat' file! (I/O Exception)");
-        } catch (ClassNotFoundException e) {
-            getLogger().info("Couldn't read the 'jailedPlayers.dat' file! (Class not found Exception)");
+            e.printStackTrace();
         }
 
         // Commands
@@ -177,6 +169,7 @@ public class PasswordProtect extends JavaPlugin {
             metrics.start();
         } catch (IOException e) {
             getLogger().warning("Could not start Metrics!");
+            e.printStackTrace();
         }
     }
 
@@ -263,7 +256,8 @@ public class PasswordProtect extends JavaPlugin {
         try {
             jails.save(jailFile);
         } catch (IOException e) {
-            getLogger().warning("Failed to save the jails.yml! Please report this!");
+            getLogger().warning("Failed to save the jails.yml!");
+            e.printStackTrace();
         }
     }
 
@@ -272,7 +266,8 @@ public class PasswordProtect extends JavaPlugin {
         try {
             localization.save(localizationFile);
         } catch (IOException e) {
-            getLogger().warning("Failed to save the localization.yml! Please report this!");
+            getLogger().warning("Failed to save the localization.yml");
+            e.printStackTrace();
         }
     }
 
@@ -286,7 +281,7 @@ public class PasswordProtect extends JavaPlugin {
                 out.write(buf, 0, len);
             }
         } catch (IOException e) {
-            getLogger().warning("Failed to copy the default config! (I/O)");
+            getLogger().warning("Failed to copy the default config!");
             e.printStackTrace();
         }
     }
