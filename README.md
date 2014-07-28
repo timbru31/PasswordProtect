@@ -40,11 +40,15 @@ Please see [LICENSE.md](LICENSE.md) for more information.
 ## Standard config
 ````yaml
 # For help please refer to http://dev.bukkit.org/bukkit-plugins/passwordprotect/
+# Which encryption should be used? Example: MD5 or SHA-256
 encryption: SHA-512
+# Are ops forced, to enter the password, too?
 OpsRequirePassword: true
+# Should the password be stored in clean (plain) text?
 cleanPassword: false
 password: ''
 passwordClean: ''
+# What events should be prevented?
 prevent:
   Movement: true
   Interaction: true
@@ -54,24 +58,31 @@ prevent:
   Portal: true
   BlockPlace: true
   BlockBreak: true
+  # Players won't be triggered by mobs anymore
   Triggering: true
   Attacks: true
   Damage: true
   Chat: true
+# After how many attempts should a player be kicked or banned
 wrongAttempts:
   kick: 3
   ban: 5
   banIP: true
+# Broadcast messages when a player is kicked or banned?
 broadcast:
   kick: true
   ban: true
+# Make the players slow and add darkness effects?
 darkness: true
 slowness: true
+# These commands are available, even without logging in
 allowedCommands:
 - help
 - rules
 - motd
+# Teleport back to the location they left?
 teleportBack: true
+# Show the message that a password is required
 loginMessage: true
 ````
 
