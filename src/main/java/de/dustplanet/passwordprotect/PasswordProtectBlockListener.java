@@ -9,17 +9,13 @@ import org.bukkit.event.block.BlockPlaceEvent;
 /**
  * PasswordProtect for CraftBukkit/Bukkit
  * Handles some block related events
- * 
- * 
- * Refer to the forum thread:
- * http://bit.ly/ppbukkit
- * 
+ *
  * Refer to the dev.bukkit.org page:
- * http://bit.ly/ppbukktidev
- * 
+ * http://dev.bukkit.org/bukkit-plugins/passwordprotect/
+ *
  * @author xGhOsTkiLLeRx
- * @thanks to brianewing alias DisabledHamster for the original plugin!
- * 
+ * thanks to brianewing alias DisabledHamster for the original plugin!
+ *
  */
 
 public class PasswordProtectBlockListener implements Listener {

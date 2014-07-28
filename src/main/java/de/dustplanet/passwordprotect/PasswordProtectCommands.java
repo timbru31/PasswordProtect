@@ -10,17 +10,13 @@ import org.bukkit.entity.Player;
 /**
  * PasswordProtect for CraftBukkit/Bukkit
  * Handles commands
- * 
- * 
- * Refer to the forum thread:
- * http://bit.ly/ppbukkit
- * 
+ *
  * Refer to the dev.bukkit.org page:
- * http://bit.ly/ppbukktidev
+ * http://dev.bukkit.org/bukkit-plugins/passwordprotect/
  *
  * @author xGhOsTkiLLeRx
- * @thanks to brianewing alias DisabledHamster for the original plugin!
- * 
+ * thanks to brianewing alias DisabledHamster for the original plugin!
+ *
  */
 
 public class PasswordProtectCommands implements CommandExecutor {

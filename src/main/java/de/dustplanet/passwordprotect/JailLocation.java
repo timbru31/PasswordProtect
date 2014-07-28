@@ -7,19 +7,15 @@ import org.bukkit.World;
  * PasswordProtect for CraftBukkit/Bukkit
  * Custom JailLocation
  * 
- * 
- * Refer to the forum thread: http://bit.ly/ppbukkit
- * 
  * Refer to the dev.bukkit.org page:
- * http://bit.ly/ppbukktidev
- * 
+ * http://dev.bukkit.org/bukkit-plugins/passwordprotect/
+ *
  * @author xGhOsTkiLLeRx
- * @thanks to brianewing alias DisabledHamster for the original plugin!
+ * thanks to brianewing alias DisabledHamster for the original plugin!
  * 
  */
 
 /*
- * 
  * The JailLocation is a square around a specific location provided by the exact
  * location or coordinates. The radius is the value after which the player
  * should be teleported back into the middle of the JailLocation

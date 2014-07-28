@@ -4,8 +4,7 @@ description: Force a password to play on the server
 version: ${project.version}-b${BUILD_NUMBER}
 author: xGhOsTkiLLeRx
 authors: [DisabledHamster]
-website: http://bit.ly/ppbukkitdev
-website: http://bit.ly/ppbukkit
+website: http://dev.bukkit.org/bukkit-plugins/passwordprotect/
 commands:
   login:
     description: Login using this server's password

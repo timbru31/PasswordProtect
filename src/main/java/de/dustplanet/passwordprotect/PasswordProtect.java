@@ -34,14 +34,13 @@ import org.mcstats.Metrics;
 
 /**
  * PasswordProtect for CraftBukkit/Bukkit Handles some general stuff.
- * 
- * 
- * Refer to the forum thread: http://bit.ly/ppbukkit Refer to the dev.bukkit.org
- * page: http://bit.ly/ppbukktidev
- * 
+ *
+ * Refer to the dev.bukkit.org page:
+ * http://dev.bukkit.org/bukkit-plugins/passwordprotect/
+ *
  * @author xGhOsTkiLLeRx
- * @thanks to brianewing alias DisabledHamster for the original plugin!
- * 
+ * thanks to brianewing alias DisabledHamster for the original plugin!
+ *
  */
 
 public class PasswordProtect extends JavaPlugin {

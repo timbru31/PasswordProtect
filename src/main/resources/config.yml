@@ -1,4 +1,4 @@
-# For help please refer to http://bit.ly/ppbukkit or http://bit.ly/ppbukkitdev
+# For help please refer to http://dev.bukkit.org/bukkit-plugins/passwordprotect/
 encryption: SHA-256
 OpsRequirePassword: true
 cleanPassword: false
