@@ -46,22 +46,18 @@ import org.mcstats.Metrics;
  */
 
 public class PasswordProtect extends JavaPlugin {
-    private final PasswordProtectPlayerListener playerListener = new PasswordProtectPlayerListener(this);
-    private final PasswordProtectBlockListener blockListener = new PasswordProtectBlockListener(this);
-    private final PasswordProtectEntityListener entityListener = new PasswordProtectEntityListener(this);
-    private PasswordProtectCommands executor;
-    public FileConfiguration config;
-    public FileConfiguration jails;
-    public FileConfiguration localization;
+    protected FileConfiguration config;
+    protected FileConfiguration localization;
+    private FileConfiguration jails;
     private File configFile;
     private File jailFile;
     private File localizationFile;
     // Integer = attempts to login!
-    public HashMap<UUID, Integer> jailedPlayers = new HashMap<>();
+    protected HashMap<UUID, Integer> jailedPlayers = new HashMap<>();
     private HashMap<World, JailLocation> jailLocations = new HashMap<>();
-    public HashMap<UUID, Location> playerLocations = new HashMap<>();
-    public List<String> commandList = new ArrayList<>();
-    private String[] commands = { "help", "rules", "motd", };
+    protected HashMap<UUID, Location> playerLocations = new HashMap<>();
+    protected List<String> commandList = new ArrayList<>();
+    private String[] commands = { "help", "rules", "motd" };
     private String encryption = "SHA-512";
     private File jailedPlayersFile;
 
@@ -101,9 +97,9 @@ public class PasswordProtect extends JavaPlugin {
     public void onEnable() {
         // Events
         PluginManager pm = getServer().getPluginManager();
-        pm.registerEvents(blockListener, this);
-        pm.registerEvents(playerListener, this);
-        pm.registerEvents(entityListener, this);
+        pm.registerEvents(new PasswordProtectBlockListener(this), this);
+        pm.registerEvents(new PasswordProtectPlayerListener(this), this);
+        pm.registerEvents(new PasswordProtectEntityListener(this), this);
 
         // Clear lists
         jailedPlayers.clear();
@@ -169,7 +165,7 @@ public class PasswordProtect extends JavaPlugin {
         }
 
         // Commands
-        executor = new PasswordProtectCommands(this);
+        PasswordProtectCommands executor = new PasswordProtectCommands(this);
         getCommand("login").setExecutor(executor);
         getCommand("password").setExecutor(executor);
         getCommand("setpassword").setExecutor(executor);
