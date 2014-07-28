@@ -106,7 +106,8 @@
         <filtering>true</filtering>
         <directory>${basedir}</directory>
         <includes>
-          <include>README.txt</include>
+          <include>README.md</include>
+          <include>LICENSE.md</include>
         </includes>
       </resource>
     </resources>
