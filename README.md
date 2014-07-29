@@ -7,7 +7,7 @@ This CraftBukkit plugin aims to offer a simple server password which is the same
 
 Without logging in the user is jailed in a pre defined cuboid and ported back once he leaves the jail area.
 You can define jail areas for each world and configure which actions like block breaking, chatting or flying should be disabled.
-There is an additional abilitiy to allow certain commands or to auto-kick or auto-ban a user after X failed attempts.
+There is an additional ability to allow certain commands or to auto-kick or auto-ban a user after X failed attempts.
 
 **Features**
 * Cancel different interaction events like
