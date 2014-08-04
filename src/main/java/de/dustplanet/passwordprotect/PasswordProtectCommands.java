@@ -87,7 +87,7 @@ public class PasswordProtectCommands implements CommandExecutor {
                 int radius = 4;
                 if (args.length >= 1) {
                     try {
-                        radius = Integer.valueOf(args[0]);
+                        radius = Integer.parseInt(args[0]);
                     }
                     // Radius not a number? Use default!
                     catch (NumberFormatException e) {

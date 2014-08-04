@@ -142,7 +142,9 @@ public class PasswordProtect extends JavaPlugin {
         jailedPlayersFile = new File(getDataFolder(), "jailedPlayers.dat");
         if (!jailedPlayersFile.exists()) {
             try {
-                jailedPlayersFile.createNewFile();
+                if (!jailedPlayersFile.createNewFile()) {
+                    getLogger().info("Creating the 'jailedPlayers.dat' file failed!");
+                }
             } catch (IOException e) {
                 getLogger().info("Couldn't create the 'jailedPlayers.dat' file!");
                 e.printStackTrace();
@@ -393,9 +395,9 @@ public class PasswordProtect extends JavaPlugin {
         data.add(location.getX());
         data.add(location.getY());
         data.add(location.getZ());
-        data.add(new Double(location.getYaw()));
-        data.add(new Double(location.getPitch()));
-        data.add(new Double(location.getRadius()));
+        data.add(Double.valueOf(location.getYaw()));
+        data.add(Double.valueOf(location.getPitch()));
+        data.add(Double.valueOf(location.getRadius()));
         // Write to the config
         String worldName = world.getName();
         jails.set(worldName + ".jailLocation", data);
