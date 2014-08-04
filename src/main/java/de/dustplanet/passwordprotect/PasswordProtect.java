@@ -150,12 +150,14 @@ public class PasswordProtect extends JavaPlugin {
                 e.printStackTrace();
             }
         }
-        // Read into Memory
-        try (ObjectInputStream obj = new ObjectInputStream(new FileInputStream(jailedPlayersFile))) {
-            jailedPlayers = (HashMap<UUID, Integer>) obj.readObject();
-        } catch (IOException | ClassNotFoundException e) {
-            getLogger().info("Couldn't read the 'jailedPlayers.dat' file! (I/O Exception)");
-            e.printStackTrace();
+        else {
+            // Read into Memory
+            try (ObjectInputStream obj = new ObjectInputStream(new FileInputStream(jailedPlayersFile))) {
+                jailedPlayers = (HashMap<UUID, Integer>) obj.readObject();
+            } catch (IOException | ClassNotFoundException e) {
+                getLogger().info("Couldn't read the 'jailedPlayers.dat' file! (I/O Exception)");
+                e.printStackTrace();
+            }
         }
 
         // Commands

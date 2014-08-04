@@ -55,14 +55,14 @@ public class PasswordProtectCommands implements CommandExecutor {
                 String messageLocalization = plugin.localization.getString("password");
                 plugin.message(sender, null, messageLocalization, cleanServerPassword);
             }
+            // Else debug
+            else {
+                sender.sendMessage(ChatColor.DARK_RED + "You shouldn't see this message. Please report this issue, including a copy of the config!");
+            }
             // If password is not set, but a clean one is set and cleanPassword is enabled
             if (cleanServerPassword != null && !plugin.passwordSet() && plugin.config.getBoolean("cleanPassword")) {
                 String messageLocalization = plugin.localization.getString("config_invalid");
                 plugin.message(sender, null, messageLocalization, null);
-            }
-            // Else debug
-            else {
-                sender.sendMessage(ChatColor.DARK_RED + "You shouldn't see this message. Please report this issue, including a copy of the config!");
             }
         }
         // Sets the jail location
