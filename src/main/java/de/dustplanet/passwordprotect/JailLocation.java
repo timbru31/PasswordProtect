@@ -66,10 +66,34 @@ public class JailLocation extends Location {
 
     @Override
     /**
+     * Generate hashCode.
+     */
+    public int hashCode() {
+        final int prime = 31;
+        int result = super.hashCode();
+        result = prime * result + radius;
+        return result;
+    }
+
+    @Override
+    /**
      * Tests if two JailLocation are equal.
      */
     public boolean equals(Object obj) {
-        return super.equals(super.clone());
+        if (obj == null) {
+            return false;
+        }
+        if (this == obj) {
+            return true;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final JailLocation other = (JailLocation) obj;
+        if (this.radius != other.radius) {
+            return false;
+        }
+        return super.equals(obj);
     }
 
     @Override
