@@ -14,7 +14,7 @@ import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.event.entity.EntityTargetEvent;
 
 /**
- * PasswordProtect for CraftBukkit/Bukkit
+ * PasswordProtect for CraftBukkit/Bukkit.
  * Handles entity activities.
  *
  * Refer to the dev.bukkit.org page:
@@ -35,14 +35,14 @@ public class PasswordProtectEntityListener implements Listener {
     // Cancel triggering of jailed player
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onEntityTarget(EntityTargetEvent event) {
-        if (plugin.config.getBoolean("prevent.Triggering")) {
+        if (plugin.getConfig().getBoolean("prevent.Triggering")) {
             Entity target = event.getTarget();
             if (target == null) {
                 return;
             }
             if (target.getType().equals(EntityType.PLAYER)) {
                 UUID playerUUID = ((Player) target).getUniqueId();
-                if (plugin.jailedPlayers.containsKey(playerUUID)) {
+                if (plugin.getJailedPlayers().containsKey(playerUUID)) {
                     event.setCancelled(true);
                 }
             }
@@ -52,11 +52,11 @@ public class PasswordProtectEntityListener implements Listener {
     // Cancel hitting mobs
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onEntityDamageByEntity(EntityDamageByEntityEvent event) {
-        if (plugin.config.getBoolean("prevent.Attacks")) {
+        if (plugin.getConfig().getBoolean("prevent.Attacks")) {
             Entity damager = event.getDamager();
             if (damager.getType() == EntityType.PLAYER) {
                 UUID playerUUID = ((Player) damager).getUniqueId();
-                if (plugin.jailedPlayers.containsKey(playerUUID)) {
+                if (plugin.getJailedPlayers().containsKey(playerUUID)) {
                     event.setCancelled(true);
                 }
             }
@@ -66,12 +66,12 @@ public class PasswordProtectEntityListener implements Listener {
     // Cancel incoming damage
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onEntityDamage(EntityDamageEvent event) {
-        if (plugin.config.getBoolean("prevent.Damage")) {
+        if (plugin.getConfig().getBoolean("prevent.Damage")) {
             Entity entity = event.getEntity();
             if (entity.getType() == EntityType.PLAYER) {
                 UUID playerUUID = ((Player) entity).getUniqueId();
                 Player player = (Player) entity;
-                if (plugin.jailedPlayers.containsKey(playerUUID)) {
+                if (plugin.getJailedPlayers().containsKey(playerUUID)) {
                     // Restore food and air. Remove fire
                     player.setFoodLevel(20);
                     player.setFireTicks(0);
@@ -85,11 +85,11 @@ public class PasswordProtectEntityListener implements Listener {
     // Cancel item drops on death
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onEntityDeath(EntityDeathEvent event) {
-        if (plugin.config.getBoolean("prevent.DeathDrops")) {
+        if (plugin.getConfig().getBoolean("prevent.DeathDrops")) {
             Entity entity = event.getEntity();
             if (entity.getType() == EntityType.PLAYER) {
                 UUID playerUUID = ((Player) entity).getUniqueId();
-                if (plugin.jailedPlayers.containsKey(playerUUID)) {
+                if (plugin.getJailedPlayers().containsKey(playerUUID)) {
                     // Exp and items
                     event.setDroppedExp(0);
                     event.getDrops().clear();

@@ -25,9 +25,9 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
-import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.plugin.PluginDescriptionFile;
 import org.bukkit.plugin.PluginManager;
+import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.mcstats.Metrics;
@@ -45,25 +45,26 @@ import org.mcstats.Metrics;
  */
 
 public class PasswordProtect extends JavaPlugin {
-    protected FileConfiguration config;
-    protected FileConfiguration localization;
+    private FileConfiguration config;
+    private FileConfiguration localization;
     private FileConfiguration jails;
     private File configFile;
     private File jailFile;
     private File localizationFile;
     // Integer = attempts to login!
-    protected HashMap<UUID, Integer> jailedPlayers = new HashMap<>();
+    private HashMap<UUID, Integer> jailedPlayers = new HashMap<>();
     private HashMap<World, JailLocation> jailLocations = new HashMap<>();
-    protected HashMap<UUID, Location> playerLocations = new HashMap<>();
-    protected List<String> commandList = new ArrayList<>();
-    private String[] commands = { "help", "rules", "motd" };
+    private HashMap<UUID, Location> playerLocations = new HashMap<>();
+    private List<String> commandList = new ArrayList<>();
+    private String[] commands = {"help", "rules", "motd"};
     private String encryption = "SHA-512";
     private File jailedPlayersFile;
 
     // Shutdown
+    @Override
     public void onDisable() {
         // Remove potion effect
-        for (UUID playerUUID : jailedPlayers.keySet()) {
+        for (UUID playerUUID : getJailedPlayers().keySet()) {
             Player player = getServer().getPlayer(playerUUID);
             if (player != null) {
                 if (player.hasPotionEffect(PotionEffectType.BLINDNESS)) {
@@ -76,19 +77,20 @@ public class PasswordProtect extends JavaPlugin {
         }
         // Save the HashMap of the jailedPlayers
         try (ObjectOutputStream obj = new ObjectOutputStream(new FileOutputStream(jailedPlayersFile))) {
-            obj.writeObject(jailedPlayers);
+            obj.writeObject(getJailedPlayers());
         } catch (IOException e) {
             getLogger().info("Couldn't find the 'jailedPlayers.dat' file!");
             e.printStackTrace();
         }
         // Clear lists
-        jailedPlayers.clear();
+        getJailedPlayers().clear();
         jailLocations.clear();
-        playerLocations.clear();
-        commandList.clear();
+        getPlayerLocations().clear();
+        getCommandList().clear();
     }
 
     // Start
+    @Override
     @SuppressWarnings("unchecked")
     public void onEnable() {
         // Events
@@ -98,9 +100,9 @@ public class PasswordProtect extends JavaPlugin {
         pm.registerEvents(new PasswordProtectEntityListener(this), this);
 
         // Clear lists
-        jailedPlayers.clear();
+        getJailedPlayers().clear();
         jailLocations.clear();
-        playerLocations.clear();
+        getPlayerLocations().clear();
 
         // Check if the folder exists
         if (!getDataFolder().exists()) {
@@ -135,7 +137,7 @@ public class PasswordProtect extends JavaPlugin {
         if (!localizationFile.exists()) {
             copy("localization.yml", localizationFile);
         }
-        localization = YamlConfiguration.loadConfiguration(localizationFile);
+        setLocalization(YamlConfiguration.loadConfiguration(localizationFile));
         loadLocalization();
 
         // Read the jailedPlayersFile
@@ -149,11 +151,10 @@ public class PasswordProtect extends JavaPlugin {
                 getLogger().info("Couldn't create the 'jailedPlayers.dat' file!");
                 e.printStackTrace();
             }
-        }
-        else {
+        } else {
             // Read into Memory
             try (ObjectInputStream obj = new ObjectInputStream(new FileInputStream(jailedPlayersFile))) {
-                jailedPlayers = (HashMap<UUID, Integer>) obj.readObject();
+                setJailedPlayers((HashMap<UUID, Integer>) obj.readObject());
             } catch (IOException | ClassNotFoundException e) {
                 getLogger().info("Couldn't read the 'jailedPlayers.dat' file! (I/O Exception)");
                 e.printStackTrace();
@@ -207,9 +208,9 @@ public class PasswordProtect extends JavaPlugin {
         config.addDefault("darkness", true);
         config.addDefault("slowness", true);
         config.addDefault("teleportBack", true);
-        config.addDefault("loginMessage", true);		
+        config.addDefault("loginMessage", true);
         config.addDefault("allowedCommands", Arrays.asList(commands));
-        commandList = config.getStringList("allowedCommands");
+        setCommandList(config.getStringList("allowedCommands"));
         encryption = config.getString("encryption");
         // Lets see if the encryption is valid, if not fallback!
         try {
@@ -227,31 +228,31 @@ public class PasswordProtect extends JavaPlugin {
 
     // Loads the localization
     private void loadLocalization() {
-        localization.options().header("The underscores are used for the different lines!");
-        localization.addDefault("permission_denied", "&4You don't have the permission to do this!");
-        localization.addDefault("enter_password_1", "&eThis server is password-protected");
-        localization.addDefault("enter_password_2", "&eEnter the password with &a/login &4<password> &eto play");
-        localization.addDefault("set_password_1", "&ePasswordProtect is enabled but no password has been set");
-        localization.addDefault("set_password_2", "&eUse &a/setpassword &4<password> &eto set it");
-        localization.addDefault("password_accepted", "&aServer password accepted, you can now play");
-        localization.addDefault("attempts_left_kick", "&4Server password incorrect! &e%attempts &4attempts left until kick...");
-        localization.addDefault("attempts_left_ban", "&4Server password incorrect! &e%attempts &4attempts left until ban...");
-        localization.addDefault("kick_message", "&4Kicked by &ePasswordProtect &4for too many wrong attempts...");
-        localization.addDefault("ban_message", "&4Banned by &ePasswordProtect &4for too many wrong attempts...");
-        localization.addDefault("kick_broadcast", "&e%player &4kicked by &ePasswordProtect &4for too many wrong attempts...");
-        localization.addDefault("ban_broadcast", "&e%player &4banned by &ePasswordProtect &4for too many wrong attempts...");
-        localization.addDefault("radius_not_number", "&4The radius was not a number! Using standard (4) instead!");
-        localization.addDefault("jail_set", "&aJail location set");
-        localization.addDefault("password_set", "&aServer password set!");
-        localization.addDefault("only_ingame", "&4The command can only be used ingame!");
-        localization.addDefault("config_invalid", "&4It seems like this server config invalid. Please re-set the password!");
-        localization.addDefault("only_encypted", "&4Server password is only stored encrypted...");
-        localization.addDefault("password_not_set", "&eServer password is not set. Use /setpassword <password>");
-        localization.addDefault("password", "&eServer password is &4%password");
-        localization.addDefault("set_jail_area", "&eYou can set the jail area by going somewhere and using &a/setjaillocation &4[radius]");
-        localization.addDefault("already_logged_in", "&eYou are already logged in!");
-        localization.addDefault("no_login_console", "&eThe console can't login into the server!");
-        localization.options().copyDefaults(true);
+        getLocalization().options().header("The underscores are used for the different lines!");
+        getLocalization().addDefault("permission_denied", "&4You don't have the permission to do this!");
+        getLocalization().addDefault("enter_password_1", "&eThis server is password-protected");
+        getLocalization().addDefault("enter_password_2", "&eEnter the password with &a/login &4<password> &eto play");
+        getLocalization().addDefault("set_password_1", "&ePasswordProtect is enabled but no password has been set");
+        getLocalization().addDefault("set_password_2", "&eUse &a/setpassword &4<password> &eto set it");
+        getLocalization().addDefault("password_accepted", "&aServer password accepted, you can now play");
+        getLocalization().addDefault("attempts_left_kick", "&4Server password incorrect! &e%attempts &4attempts left until kick...");
+        getLocalization().addDefault("attempts_left_ban", "&4Server password incorrect! &e%attempts &4attempts left until ban...");
+        getLocalization().addDefault("kick_message", "&4Kicked by &ePasswordProtect &4for too many wrong attempts...");
+        getLocalization().addDefault("ban_message", "&4Banned by &ePasswordProtect &4for too many wrong attempts...");
+        getLocalization().addDefault("kick_broadcast", "&e%player &4kicked by &ePasswordProtect &4for too many wrong attempts...");
+        getLocalization().addDefault("ban_broadcast", "&e%player &4banned by &ePasswordProtect &4for too many wrong attempts...");
+        getLocalization().addDefault("radius_not_number", "&4The radius was not a number! Using standard (4) instead!");
+        getLocalization().addDefault("jail_set", "&aJail location set");
+        getLocalization().addDefault("password_set", "&aServer password set!");
+        getLocalization().addDefault("only_ingame", "&4The command can only be used ingame!");
+        getLocalization().addDefault("config_invalid", "&4It seems like this server config invalid. Please re-set the password!");
+        getLocalization().addDefault("only_encypted", "&4Server password is only stored encrypted...");
+        getLocalization().addDefault("password_not_set", "&eServer password is not set. Use /setpassword <password>");
+        getLocalization().addDefault("password", "&eServer password is &4%password");
+        getLocalization().addDefault("set_jail_area", "&eYou can set the jail area by going somewhere and using &a/setjaillocation &4[radius]");
+        getLocalization().addDefault("already_logged_in", "&eYou are already logged in!");
+        getLocalization().addDefault("no_login_console", "&eThe console can't login into the server!");
+        getLocalization().options().copyDefaults(true);
         saveLocalization();
     }
 
@@ -268,7 +269,7 @@ public class PasswordProtect extends JavaPlugin {
     // Saves the localization
     private void saveLocalization() {
         try {
-            localization.save(localizationFile);
+            getLocalization().save(localizationFile);
         } catch (IOException e) {
             getLogger().warning("Failed to save the localization.yml");
             e.printStackTrace();
@@ -304,13 +305,11 @@ public class PasswordProtect extends JavaPlugin {
             message = ChatColor.translateAlternateColorCodes('&', message);
             if (player != null)	{
                 player.sendMessage(message);
-            }
-            else if (sender != null) {
+            } else if (sender != null) {
                 sender.sendMessage(message);
             }
-        }
-        // If message is null. Should NOT occur.
-        else {
+        } else {
+            // If message is null. Should NOT occur.
             if (player != null) {
                 player.sendMessage(ChatColor.DARK_RED + "Somehow this message is not defined. Please check your localization.yml");
             } else if (sender != null) {
@@ -325,26 +324,25 @@ public class PasswordProtect extends JavaPlugin {
             // Message player to set the password.
             if (player.hasPermission("passwordprotect.setpassword")) {
                 for (int i = 1; i < 3; i++) {
-                    String messageLocalization = localization.getString("set_password_" + i);
+                    String messageLocalization = getLocalization().getString("set_password_" + i);
                     message(null, player, messageLocalization, null);
                 }
             }
-        }
-        // If he has not the permission to bypass
-        else if (!player.hasPermission("passwordprotect.nopassword")) {
+        } else if (!player.hasPermission("passwordprotect.nopassword")) {
+            // If he has not the permission to bypass
             // If he isn't an OP or OPs are required, too
-            if ((player.isOp() && config.getBoolean("OpsRequirePassword")) || !player.isOp()) {
+            if (player.isOp() && config.getBoolean("OpsRequirePassword") || !player.isOp()) {
                 // Remember position?
                 if (config.getBoolean("teleportBack")) {
-                    if (!playerLocations.containsKey(player.getUniqueId())) {
-                        playerLocations.put(player.getUniqueId(), player.getLocation());
+                    if (!getPlayerLocations().containsKey(player.getUniqueId())) {
+                        getPlayerLocations().put(player.getUniqueId(), player.getLocation());
                     }
                 }
                 // Jail!
                 sendToJail(player);
                 // Add him & do bad stuff
-                if (!jailedPlayers.containsKey(player.getUniqueId())) {
-                    jailedPlayers.put(player.getUniqueId(), 1);
+                if (!getJailedPlayers().containsKey(player.getUniqueId())) {
+                    getJailedPlayers().put(player.getUniqueId(), 1);
                 }
                 if (config.getBoolean("prevent.Flying")) {
                     player.setAllowFlight(false);
@@ -383,7 +381,7 @@ public class PasswordProtect extends JavaPlugin {
     public void sendPasswordRequiredMessage(Player player) {
         if (config.getBoolean("loginMessage")) {
             for (int i = 1; i < 3; i++) {
-                String messageLocalization = localization.getString("enter_password_" + i);
+                String messageLocalization = getLocalization().getString("enter_password_" + i);
                 message(null, player, messageLocalization, null);
             }
         }
@@ -412,9 +410,8 @@ public class PasswordProtect extends JavaPlugin {
         // If world is already on the list
         if (jailLocations.containsKey(world)) {
             jailLocation = jailLocations.get(world);
-        }
-        // Is the jailLocation null? Yes -> Make one at spawn, No -> return
-        else {
+        } else {
+            // Is the jailLocation null? Yes -> Make one at spawn, No -> return
             // Try to load and add to the list
             jailLocation = loadJailLocation(world);
             Location spawnLocation = world.getSpawnLocation();
@@ -451,13 +448,17 @@ public class PasswordProtect extends JavaPlugin {
         String encryptedPassword = encrypt(password);
         config.set("password", encryptedPassword);
         // Additionally store "clean"
-        if (config.getBoolean("cleanPassword")) config.set("passwordClean", password);
+        if (config.getBoolean("cleanPassword")) {
+            config.set("passwordClean", password);
+        }
         saveConfig();
     }
 
     // Check for the password, return null or the password
     public String getPasswordClean() {
-        if (config.getBoolean("cleanPassword")) return config.getString("passwordClean");
+        if (config.getBoolean("cleanPassword")) {
+            return config.getString("passwordClean");
+        }
         return null;
     }
 
@@ -476,11 +477,43 @@ public class PasswordProtect extends JavaPlugin {
         try {
             MessageDigest md = MessageDigest.getInstance(encryption);
             md.update(password.getBytes(Charset.defaultCharset()));
-            byte byteData[] = md.digest();
+            byte[] byteData = md.digest();
             return String.format("%0" + (byteData.length << 1) + "x", new BigInteger(1, byteData));
         } catch (NoSuchAlgorithmException e) {
             getServer().getLogger().severe("The alrogirthm is NOT known: " + encryption);
             return null;
         }
+    }
+
+    public FileConfiguration getLocalization() {
+        return localization;
+    }
+
+    public void setLocalization(FileConfiguration localization) {
+        this.localization = localization;
+    }
+
+    public HashMap<UUID, Integer> getJailedPlayers() {
+        return jailedPlayers;
+    }
+
+    public void setJailedPlayers(HashMap<UUID, Integer> jailedPlayers) {
+        this.jailedPlayers = jailedPlayers;
+    }
+
+    public List<String> getCommandList() {
+        return commandList;
+    }
+
+    public void setCommandList(List<String> commandList) {
+        this.commandList = commandList;
+    }
+
+    public HashMap<UUID, Location> getPlayerLocations() {
+        return playerLocations;
+    }
+
+    public void setPlayerLocations(HashMap<UUID, Location> playerLocations) {
+        this.playerLocations = playerLocations;
     }
 }
