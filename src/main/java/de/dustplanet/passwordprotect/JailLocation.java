@@ -79,12 +79,4 @@ public class JailLocation extends Location {
     public String toString() {
         return super.toString() + "; Radius{radius = " + this.radius + "}";
     }
-
-    @Override
-    /**
-     * Generates hashCode.
-     */
-    public int hashCode() {
-        return super.hashCode();
-    }
 }

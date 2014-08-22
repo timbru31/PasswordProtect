@@ -105,14 +105,11 @@ public class PasswordProtect extends JavaPlugin {
         getPlayerLocations().clear();
 
         // Check if the folder exists
-        if (!getDataFolder().exists()) {
-            // Break if no folder can be created!
-            if (!getDataFolder().mkdirs()) {
-                getLogger().severe("The config folder could NOT be created, make sure it's writable!");
-                getLogger().severe("Disabling now!");
-                setEnabled(false);
-                return;
-            }
+        if (!getDataFolder().exists() && !getDataFolder().mkdirs()) {
+            getLogger().severe("The config folder could NOT be created, make sure it's writable!");
+            getLogger().severe("Disabling now!");
+            setEnabled(false);
+            return;
         }
 
         // Jails config
@@ -328,31 +325,25 @@ public class PasswordProtect extends JavaPlugin {
                     message(null, player, messageLocalization, null);
                 }
             }
-        } else if (!player.hasPermission("passwordprotect.nopassword")) {
-            // If he has not the permission to bypass
-            // If he isn't an OP or OPs are required, too
-            if (player.isOp() && config.getBoolean("OpsRequirePassword") || !player.isOp()) {
-                // Remember position?
-                if (config.getBoolean("teleportBack")) {
-                    if (!getPlayerLocations().containsKey(player.getUniqueId())) {
-                        getPlayerLocations().put(player.getUniqueId(), player.getLocation());
-                    }
-                }
-                // Jail!
-                sendToJail(player);
-                // Add him & do bad stuff
-                if (!getJailedPlayers().containsKey(player.getUniqueId())) {
-                    getJailedPlayers().put(player.getUniqueId(), 1);
-                }
-                if (config.getBoolean("prevent.Flying")) {
-                    player.setAllowFlight(false);
-                }
-                if (config.getBoolean("darkness")) {
-                    player.addPotionEffect(new PotionEffect(PotionEffectType.BLINDNESS, 20 * 86400, 15));
-                }
-                if (config.getBoolean("slowness")) {
-                    player.addPotionEffect(new PotionEffect(PotionEffectType.SLOW, 20 * 86400, 5));
-                }
+        } else if (!player.hasPermission("passwordprotect.nopassword") &&player.isOp() && config.getBoolean("OpsRequirePassword") || !player.isOp()) {
+            // Remember position?
+            if (config.getBoolean("teleportBack") && !getPlayerLocations().containsKey(player.getUniqueId())) {
+                getPlayerLocations().put(player.getUniqueId(), player.getLocation());
+            }
+            // Jail!
+            sendToJail(player);
+            // Add him & do bad stuff
+            if (!getJailedPlayers().containsKey(player.getUniqueId())) {
+                getJailedPlayers().put(player.getUniqueId(), 1);
+            }
+            if (config.getBoolean("prevent.Flying")) {
+                player.setAllowFlight(false);
+            }
+            if (config.getBoolean("darkness")) {
+                player.addPotionEffect(new PotionEffect(PotionEffectType.BLINDNESS, 20 * 86400, 15));
+            }
+            if (config.getBoolean("slowness")) {
+                player.addPotionEffect(new PotionEffect(PotionEffectType.SLOW, 20 * 86400, 5));
             }
         }
     }

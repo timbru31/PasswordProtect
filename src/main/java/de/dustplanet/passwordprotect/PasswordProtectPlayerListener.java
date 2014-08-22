@@ -70,15 +70,11 @@ public class PasswordProtectPlayerListener implements Listener {
             UUID playerUUID = event.getPlayer().getUniqueId();
             Player player = event.getPlayer();
             if (plugin.getJailedPlayers().containsKey(playerUUID)) {
-                if (!player.hasPotionEffect(PotionEffectType.BLINDNESS)) {
-                    if (plugin.getConfig().getBoolean("darkness")) {
-                        player.addPotionEffect(new PotionEffect(PotionEffectType.BLINDNESS, 20 * 86400, 15));
-                    }
+                if (!player.hasPotionEffect(PotionEffectType.BLINDNESS) && plugin.getConfig().getBoolean("darkness")) {
+                    player.addPotionEffect(new PotionEffect(PotionEffectType.BLINDNESS, 20 * 86400, 15));
                 }
-                if (!player.hasPotionEffect(PotionEffectType.SLOW)) {
-                    if (plugin.getConfig().getBoolean("slowness")) {
-                        player.addPotionEffect(new PotionEffect(PotionEffectType.SLOW, 20 * 86400, 15));
-                    }
+                if (!player.hasPotionEffect(PotionEffectType.SLOW) && plugin.getConfig().getBoolean("slowness")) {
+                    player.addPotionEffect(new PotionEffect(PotionEffectType.SLOW, 20 * 86400, 15));
                 }
                 plugin.stayInJail(player);
             }
@@ -189,11 +185,9 @@ public class PasswordProtectPlayerListener implements Listener {
                             player.setAllowFlight(true);
                         }
                         // Teleport back to logout location? (really: teleport back to login location before jailing ;) )
-                        if (plugin.getConfig().getBoolean("teleportBack")) {
-                            if (plugin.getPlayerLocations().containsKey(playerUUID)) {
-                                player.teleport(plugin.getPlayerLocations().get(playerUUID));
-                                plugin.getPlayerLocations().remove(playerUUID);
-                            }
+                        if (plugin.getConfig().getBoolean("teleportBack") && plugin.getPlayerLocations().containsKey(playerUUID)) {
+                            player.teleport(plugin.getPlayerLocations().get(playerUUID));
+                            plugin.getPlayerLocations().remove(playerUUID);
                         }
                     } else {
                         // Increase wrong counters and kick/ban if necessary.
