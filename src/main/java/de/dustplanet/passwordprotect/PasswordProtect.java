@@ -153,7 +153,7 @@ public class PasswordProtect extends JavaPlugin {
             try (ObjectInputStream obj = new ObjectInputStream(new FileInputStream(jailedPlayersFile))) {
                 setJailedPlayers((HashMap<UUID, Integer>) obj.readObject());
             } catch (IOException | ClassNotFoundException e) {
-                getLogger().info("Couldn't read the 'jailedPlayers.dat' file! (I/O Exception)");
+                getLogger().info("Couldn't read the 'jailedPlayers.dat' file!");
                 e.printStackTrace();
             }
         }
