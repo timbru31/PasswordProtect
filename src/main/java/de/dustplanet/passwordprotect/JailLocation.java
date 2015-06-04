@@ -17,7 +17,7 @@ import org.bukkit.World;
  *
  */
 
-public class JailLocation extends Location {
+public class JailLocation extends Location implements IJailLocation {
     /**
      * Radius used.
      */
@@ -48,26 +48,17 @@ public class JailLocation extends Location {
         this.radius = radius;
     }
 
-    /**
-     * Returns current radius for the JailLocation.
-     * @return
-     */
+    @Override
     public int getRadius() {
         return radius;
     }
 
-    /**
-     * Sets an updated radius of the JailLocation.
-     * @param radius new radius
-     */
+    @Override
     public void setRadius(int radius) {
         this.radius = radius;
     }
 
     @Override
-    /**
-     * Generate hashCode.
-     */
     public int hashCode() {
         final int prime = 31;
         int result = super.hashCode();
@@ -76,9 +67,6 @@ public class JailLocation extends Location {
     }
 
     @Override
-    /**
-     * Tests if two JailLocation are equal.
-     */
     public boolean equals(Object obj) {
         if (obj == null) {
             return false;

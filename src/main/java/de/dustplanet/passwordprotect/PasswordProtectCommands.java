@@ -62,9 +62,8 @@ public class PasswordProtectCommands implements CommandExecutor {
                 String messageLocalization = plugin.getLocalization().getString("config_invalid");
                 plugin.message(sender, null, messageLocalization, null);
             }
-        }
-        // Sets the jail location
-        else if (command.getName().equalsIgnoreCase("setjaillocation")) {
+        } else if (command.getName().equalsIgnoreCase("setjaillocation")) {
+            // Sets the jail location
             // Console can't define jaillocation
             if (!(sender instanceof Player)) {
                 String messageLocalization = plugin.getLocalization().getString("only_ingame");
@@ -120,9 +119,8 @@ public class PasswordProtectCommands implements CommandExecutor {
                 messageLocalization = plugin.getLocalization().getString("set_jail_area");
                 plugin.message(sender, null, messageLocalization, null);
             }
-        }
-        // Console logins should be denied
-        else if (command.getName().equalsIgnoreCase("login") && !(sender instanceof Player)) {
+        } else if (command.getName().equalsIgnoreCase("login") && !(sender instanceof Player)) {
+            // Console logins should be denied
             String messageLocalization = plugin.getLocalization().getString("no_login_console");
             plugin.message(sender, null, messageLocalization, null);
         }

@@ -293,17 +293,18 @@ public class PasswordProtect extends JavaPlugin {
         PluginDescriptionFile pdfFile = this.getDescription();
         if (message != null) {
             // Sometimes we have no extra "value" argument, use "" then
-            if (value == null) {
-                value = "";
+            String valueToSend = value;
+            if (valueToSend == null) {
+                valueToSend = "";
             }
-            message = message.replace("%attempts", value)
+            String messageToSend = message.replace("%attempts", value)
                     .replace("%password", value)
                     .replace("%version", pdfFile.getVersion());
-            message = ChatColor.translateAlternateColorCodes('&', message);
-            if (player != null)	{
-                player.sendMessage(message);
+            messageToSend = ChatColor.translateAlternateColorCodes('&', messageToSend);
+            if (player != null) {
+                player.sendMessage(messageToSend);
             } else if (sender != null) {
-                sender.sendMessage(message);
+                sender.sendMessage(messageToSend);
             }
         } else {
             // If message is null. Should NOT occur.
@@ -325,7 +326,7 @@ public class PasswordProtect extends JavaPlugin {
                     message(null, player, messageLocalization, null);
                 }
             }
-        } else if (!player.hasPermission("passwordprotect.nopassword") &&player.isOp() && config.getBoolean("OpsRequirePassword") || !player.isOp()) {
+        } else if (!player.hasPermission("passwordprotect.nopassword") && player.isOp() && config.getBoolean("OpsRequirePassword") || !player.isOp()) {
             // Remember position?
             if (config.getBoolean("teleportBack") && !getPlayerLocations().containsKey(player.getUniqueId())) {
                 getPlayerLocations().put(player.getUniqueId(), player.getLocation());
@@ -382,7 +383,7 @@ public class PasswordProtect extends JavaPlugin {
         // Set it to the hashmap
         jailLocations.put(world, location);
         // Make data array
-        ArrayList<Double> data = new ArrayList<Double>();
+        ArrayList<Double> data = new ArrayList<>();
         data.add(location.getX());
         data.add(location.getY());
         data.add(location.getZ());

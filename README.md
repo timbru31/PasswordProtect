@@ -33,8 +33,8 @@ There is an additional ability to allow certain commands or to auto-kick or auto
 * Metrics for usage statistics
 
 ## License
-This plugin is released under the  
-*Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International (CC BY-NC-SA 4.0)* license.  
+This plugin is released under the
+*Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International (CC BY-NC-SA 4.0)* license.
 Please see [LICENSE.md](LICENSE.md) for more information.
 
 ## Standard config
@@ -89,7 +89,7 @@ loginMessage: true
 ## Commands & Permissions
 (Fallback to OPs, if no permissions system is found)
 
-**Please note that _/setjaillocation_ has the following aliases**  
+**Please note that _/setjaillocation_ has the following aliases**
 * /setjail
 * /setjailarea
 * /setpasswordjail
@@ -115,7 +115,7 @@ loginMessage: true
 For support visit the dev.bukkit.org page: http://dev.bukkit.org/bukkit-plugins/password-protect
 
 ## Pull Requests
-Feel free to submit any PRs here. :)  
+Feel free to submit any PRs here. :)
 Please follow the Sun Coding Guidelines, thanks!
 
 ## Usage statistics
@@ -143,5 +143,5 @@ The file ../plugins/Plugin Metrics/config.yml contains an option to *opt-out*
 ## Donation
 [![PayPal](https://www.paypalobjects.com/en_US/i/btn/btn_donateCC_LG.gif "Donation via PayPal")](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=T9TEV7Q88B9M2)
 
-![BitCoin](https://dl.dropboxusercontent.com/u/26476995/bitcoin_logo.png "Donation via BitCoins")  
+![BitCoin](https://dl.dropboxusercontent.com/u/26476995/bitcoin_logo.png "Donation via BitCoins")
 Address: 1NnrRgdy7CfiYN63vKHiypSi3MSctCP55C
