@@ -13,5 +13,4 @@ public interface IJailLocation {
      * @param radius new radius
      */
     public abstract void setRadius(int radius);
-
 }
