@@ -294,11 +294,11 @@ public class PasswordProtect extends JavaPlugin {
         if (message != null) {
             // Sometimes we have no extra "value" argument, use "" then
             String valueToSend = value;
-            if (valueToSend == null) {
+            if (value == null) {
                 valueToSend = "";
             }
-            String messageToSend = message.replace("%attempts", value)
-                    .replace("%password", value)
+            String messageToSend = message.replace("%attempts", valueToSend)
+                    .replace("%password", valueToSend)
                     .replace("%version", pdfFile.getVersion());
             messageToSend = ChatColor.translateAlternateColorCodes('&', messageToSend);
             if (player != null) {
