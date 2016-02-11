@@ -27,7 +27,7 @@ There is an additional ability to allow certain commands or to auto-kick or auto
   * Flying
 * Auto kick and auto ban (even the IP) after configurable amount of tries
 * Blindness and slowness for the player
-* Jail area - the player is teleported back if he leaves the area - can be turned off
+* Jail area - the player is teleported back if he leaves the area - can be turned off with disableJailArea
 * Per world jail area!
 * **Hashing (one way!)** of password, choose between **SHA, SHA-256, SHA-512, MD5 & more**
 * Custom commands are allowed to execute (like /rules)
@@ -42,7 +42,7 @@ This plugin is released under the
 Please see [LICENSE.md](LICENSE.md) for more information.
 
 ## Standard config
-````yaml
+```yaml
 # For help please refer to http://dev.bukkit.org/bukkit-plugins/passwordprotect/
 # Which hash should be used? Example: SHA-256 or SHA-512
 hash: SHA-512
@@ -70,7 +70,7 @@ prevent:
   Damage: true
   Chat: true
   DeathDrops: true
-  Fyling: true
+  Flying: true
 # After how many attempts should a player be kicked or banned
 wrongAttempts:
   kick: 3
@@ -92,7 +92,7 @@ allowedCommands:
 teleportBack: true
 # Show the message that a password is required
 loginMessage: true
-````
+```
 
 ## Commands & Permissions
 (Fallback to OPs, if no permissions system is found)
@@ -107,7 +107,7 @@ loginMessage: true
 |:----------:|:----------:|:----------:|
 | /login <password> | - | allows you to login |
 | /password | passwordprotect.getpassword | Gets the password if not stored encrypted |
-| /setpassword <xyz> | passwordprotect.setpassword | Sets the password to xyz |
+| /setpassword <xyz> | passwordprotect.setpassword | Sets the password |
 | /setjailloctation <radius> | passwordprotect.setjailarea | Sets the jail location with the given radius |
 
 #### Special permissions
@@ -116,8 +116,7 @@ loginMessage: true
 
 ## Credits
 * DisabledHamster/brianewing for the original plugin!
-* muHum for mPasswordProtector
-* You - for using it!
+* muHum for [mPasswordProtector](https://github.com/muHum/mPasswordProtector)
 
 ## Support
 For support visit the dev.bukkit.org page: http://dev.bukkit.org/bukkit-plugins/password-protect
