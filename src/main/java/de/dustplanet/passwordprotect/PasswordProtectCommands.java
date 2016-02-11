@@ -43,7 +43,7 @@ public class PasswordProtectCommands implements CommandExecutor {
             String cleanServerPassword = plugin.getPasswordClean();
             // If password is only stored encrypted
             if (cleanServerPassword == null && plugin.passwordSet() && !plugin.getConfig().getBoolean("cleanPassword", false)) {
-                String messageLocalization = plugin.getLocalization().getString("only_encypted");
+                String messageLocalization = plugin.getLocalization().getString("only_hashed");
                 plugin.message(sender, null, messageLocalization, null);
             } else if (cleanServerPassword == null && !plugin.passwordSet()) {
                 // If no password is set, tell the sender the instructions
