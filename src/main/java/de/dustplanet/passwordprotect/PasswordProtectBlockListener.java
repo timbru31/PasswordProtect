@@ -30,7 +30,7 @@ public class PasswordProtectBlockListener implements Listener {
     // If a block is placed, cancel it
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onBlockPlace(BlockPlaceEvent event) {
-        if (plugin.getConfig().getBoolean("prevent.BlockPlace")) {
+        if (plugin.getConfig().getBoolean("prevent.BlockPlace", true)) {
             UUID playerUUID = event.getPlayer().getUniqueId();
             if (plugin.getJailedPlayers().containsKey(playerUUID)) {
                 event.setBuild(false);
@@ -42,7 +42,7 @@ public class PasswordProtectBlockListener implements Listener {
     // If a player is in jail, he can't break a block
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onBlockBreak(BlockBreakEvent event) {
-        if (plugin.getConfig().getBoolean("prevent.BlockBreak")) {
+        if (plugin.getConfig().getBoolean("prevent.BlockBreak", true)) {
             UUID playerUUID = event.getPlayer().getUniqueId();
             if (plugin.getJailedPlayers().containsKey(playerUUID)) {
                 event.setCancelled(true);
