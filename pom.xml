@@ -45,7 +45,6 @@
         </exclusion>
       </exclusions>
     </dependency>
-    <dependency>>
   </dependencies>
 
   <build>
