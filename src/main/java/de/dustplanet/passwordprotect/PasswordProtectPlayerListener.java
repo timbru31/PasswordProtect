@@ -23,7 +23,7 @@ import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
 /**
- * PasswordProtect for CraftBukkit/Bukkit.
+ * PasswordProtect for CraftBukkit/Spgiot.
  * Handles player activities.
  *
  * Refer to the dev.bukkit.org page:
@@ -66,14 +66,14 @@ public class PasswordProtectPlayerListener implements Listener {
     // Don't cancel movement, teleport back instead
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onPlayerMove(PlayerMoveEvent event) {
-        if (plugin.getConfig().getBoolean("prevent.Movement")) {
+        if (plugin.getConfig().getBoolean("prevent.Movement", true)) {
             UUID playerUUID = event.getPlayer().getUniqueId();
             Player player = event.getPlayer();
             if (plugin.getJailedPlayers().containsKey(playerUUID)) {
-                if (!player.hasPotionEffect(PotionEffectType.BLINDNESS) && plugin.getConfig().getBoolean("darkness")) {
+                if (!player.hasPotionEffect(PotionEffectType.BLINDNESS) && plugin.getConfig().getBoolean("darkness", true)) {
                     player.addPotionEffect(new PotionEffect(PotionEffectType.BLINDNESS, 20 * 86400, 15));
                 }
-                if (!player.hasPotionEffect(PotionEffectType.SLOW) && plugin.getConfig().getBoolean("slowness")) {
+                if (!player.hasPotionEffect(PotionEffectType.SLOW) && plugin.getConfig().getBoolean("slowness", true)) {
                     player.addPotionEffect(new PotionEffect(PotionEffectType.SLOW, 20 * 86400, 15));
                 }
                 plugin.stayInJail(player);
@@ -84,7 +84,7 @@ public class PasswordProtectPlayerListener implements Listener {
     // Don't let him interact
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onPlayerInteract(PlayerInteractEvent event) {
-        if (plugin.getConfig().getBoolean("prevent.Interaction")) {
+        if (plugin.getConfig().getBoolean("prevent.Interaction", true)) {
             UUID playerUUID = event.getPlayer().getUniqueId();
             if (plugin.getJailedPlayers().containsKey(playerUUID)) {
                 event.setCancelled(true);
@@ -95,7 +95,7 @@ public class PasswordProtectPlayerListener implements Listener {
     // Don't let him interact with mobs
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onPlayerInteractEntity(PlayerInteractEntityEvent event) {
-        if (plugin.getConfig().getBoolean("prevent.InteractionMobs")) {
+        if (plugin.getConfig().getBoolean("prevent.InteractionMobs", true)) {
             UUID playerUUID = event.getPlayer().getUniqueId();
             if (plugin.getJailedPlayers().containsKey(playerUUID)) {
                 event.setCancelled(true);
@@ -106,7 +106,7 @@ public class PasswordProtectPlayerListener implements Listener {
     // Don't let him drop items
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onPlayerDropItem(PlayerDropItemEvent event) {
-        if (plugin.getConfig().getBoolean("prevent.ItemDrop")) {
+        if (plugin.getConfig().getBoolean("prevent.ItemDrop", true)) {
             UUID playerUUID = event.getPlayer().getUniqueId();
             if (plugin.getJailedPlayers().containsKey(playerUUID)) {
                 event.setCancelled(true);
@@ -117,7 +117,7 @@ public class PasswordProtectPlayerListener implements Listener {
     // Don't let him pickup stuff
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onPlayerPickupItem(PlayerPickupItemEvent event) {
-        if (plugin.getConfig().getBoolean("prevent.ItemPickup")) {
+        if (plugin.getConfig().getBoolean("prevent.ItemPickup", true)) {
             UUID playerUUID = event.getPlayer().getUniqueId();
             if (plugin.getJailedPlayers().containsKey(playerUUID)) {
                 event.setCancelled(true);
@@ -128,7 +128,7 @@ public class PasswordProtectPlayerListener implements Listener {
     // Sorry, no nether ;)
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onPlayerPortal(PlayerPortalEvent event) {
-        if (plugin.getConfig().getBoolean("prevent.Portal")) {
+        if (plugin.getConfig().getBoolean("prevent.Portal", true)) {
             UUID playerUUID = event.getPlayer().getUniqueId();
             if (plugin.getJailedPlayers().containsKey(playerUUID)) {
                 event.setCancelled(true);
@@ -139,7 +139,7 @@ public class PasswordProtectPlayerListener implements Listener {
     // Sorry, no chat
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onPlayerChat(AsyncPlayerChatEvent event) {
-        if (plugin.getConfig().getBoolean("prevent.Chat")) {
+        if (plugin.getConfig().getBoolean("prevent.Chat", true)) {
             UUID playerUUID = event.getPlayer().getUniqueId();
             if (plugin.getJailedPlayers().containsKey(playerUUID)) {
                 event.setCancelled(true);
@@ -168,7 +168,7 @@ public class PasswordProtectPlayerListener implements Listener {
                 if (message.length() > 7) {
                     // Get the password
                     String password = message.substring(7, message.length());
-                    password = plugin.encrypt(password);
+                    password = plugin.hash(password);
                     // Is the password right?
                     if (password.equals(plugin.getPassword())) {
                         String messageLocalization = plugin.getLocalization().getString("password_accepted");
@@ -185,7 +185,7 @@ public class PasswordProtectPlayerListener implements Listener {
                             player.setAllowFlight(true);
                         }
                         // Teleport back to logout location? (really: teleport back to login location before jailing ;) )
-                        if (plugin.getConfig().getBoolean("teleportBack") && plugin.getPlayerLocations().containsKey(playerUUID)) {
+                        if (plugin.getConfig().getBoolean("teleportBack", true) && plugin.getPlayerLocations().containsKey(playerUUID)) {
                             player.teleport(plugin.getPlayerLocations().get(playerUUID));
                             plugin.getPlayerLocations().remove(playerUUID);
                         }
@@ -208,12 +208,12 @@ public class PasswordProtectPlayerListener implements Listener {
                                 player.kickPlayer(messageLocalization);
                                 plugin.getServer().getBanList(BanList.Type.NAME).addBan(player.getName(), "AutoBan - PasswordProtect", null, "PasswordProtect");
                                 // Broadcast message
-                                if (plugin.getConfig().getBoolean("broadcast.ban")) {
+                                if (plugin.getConfig().getBoolean("broadcast.ban", true)) {
                                     messageLocalization = ChatColor.translateAlternateColorCodes('&', plugin.getLocalization().getString("ban_broadcast"));
                                     plugin.getServer().broadcastMessage(messageLocalization.replace("%player", player.getName()));
                                 }
                                 // Ban IP
-                                if (plugin.getConfig().getBoolean("wrongAttempts.banIP")) {
+                                if (plugin.getConfig().getBoolean("wrongAttempts.banIP", true)) {
                                     plugin.getServer().banIP(ip);
                                 }
                                 // Remove from all lists!
@@ -233,7 +233,7 @@ public class PasswordProtectPlayerListener implements Listener {
                                     player.removePotionEffect(PotionEffectType.SLOW);
                                 }
                                 // Broadcast message
-                                if (plugin.getConfig().getBoolean("broadcast.kick")) {
+                                if (plugin.getConfig().getBoolean("broadcast.kick", true)) {
                                     messageLocalization = ChatColor.translateAlternateColorCodes('&', plugin.getLocalization().getString("kick_broadcast"));
                                     plugin.getServer().broadcastMessage(messageLocalization.replace("%player", player.getName()));
                                 }

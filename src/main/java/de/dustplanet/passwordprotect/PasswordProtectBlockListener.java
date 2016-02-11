@@ -9,7 +9,7 @@ import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
 
 /**
- * PasswordProtect for CraftBukkit/Bukkit.
+ * PasswordProtect for CraftBukkit/Spigot.
  * Handles some block related events.
  *
  * Refer to the dev.bukkit.org page:

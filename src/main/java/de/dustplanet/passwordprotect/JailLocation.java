@@ -4,7 +4,7 @@ import org.bukkit.Location;
 import org.bukkit.World;
 
 /**
- * PasswordProtect for CraftBukkit/Bukkit.
+ * PasswordProtect for CraftBukkit/Spigot.
  * The JailLocation is a square around a specific location provided by the exact
  * location or coordinates. The radius is the value after which the player
  * should be teleported back into the middle of the JailLocation

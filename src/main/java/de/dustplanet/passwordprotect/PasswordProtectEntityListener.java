@@ -14,7 +14,7 @@ import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.event.entity.EntityTargetEvent;
 
 /**
- * PasswordProtect for CraftBukkit/Bukkit.
+ * PasswordProtect for CraftBukkit/Spgiot.
  * Handles entity activities.
  *
  * Refer to the dev.bukkit.org page:
@@ -35,7 +35,7 @@ public class PasswordProtectEntityListener implements Listener {
     // Cancel triggering of jailed player
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onEntityTarget(EntityTargetEvent event) {
-        if (plugin.getConfig().getBoolean("prevent.Triggering")) {
+        if (plugin.getConfig().getBoolean("prevent.Triggering", true)) {
             Entity target = event.getTarget();
             if (target == null) {
                 return;
@@ -52,7 +52,7 @@ public class PasswordProtectEntityListener implements Listener {
     // Cancel hitting mobs
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onEntityDamageByEntity(EntityDamageByEntityEvent event) {
-        if (plugin.getConfig().getBoolean("prevent.Attacks")) {
+        if (plugin.getConfig().getBoolean("prevent.Attacks", true)) {
             Entity damager = event.getDamager();
             if (damager.getType() == EntityType.PLAYER) {
                 UUID playerUUID = ((Player) damager).getUniqueId();
@@ -66,7 +66,7 @@ public class PasswordProtectEntityListener implements Listener {
     // Cancel incoming damage
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onEntityDamage(EntityDamageEvent event) {
-        if (plugin.getConfig().getBoolean("prevent.Damage")) {
+        if (plugin.getConfig().getBoolean("prevent.Damage", true)) {
             Entity entity = event.getEntity();
             if (entity.getType() == EntityType.PLAYER) {
                 UUID playerUUID = ((Player) entity).getUniqueId();
@@ -85,7 +85,7 @@ public class PasswordProtectEntityListener implements Listener {
     // Cancel item drops on death
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onEntityDeath(EntityDeathEvent event) {
-        if (plugin.getConfig().getBoolean("prevent.DeathDrops")) {
+        if (plugin.getConfig().getBoolean("prevent.DeathDrops", true)) {
             Entity entity = event.getEntity();
             if (entity.getType() == EntityType.PLAYER) {
                 UUID playerUUID = ((Player) entity).getUniqueId();

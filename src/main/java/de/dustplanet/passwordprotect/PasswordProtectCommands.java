@@ -8,7 +8,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 /**
- * PasswordProtect for CraftBukkit/Bukkit.
+ * PasswordProtect for CraftBukkit/Spgiot.
  * Handles commands.
  *
  * Refer to the dev.bukkit.org page:
@@ -42,7 +42,7 @@ public class PasswordProtectCommands implements CommandExecutor {
             // Could be null, additional checks required
             String cleanServerPassword = plugin.getPasswordClean();
             // If password is only stored encrypted
-            if (cleanServerPassword == null && plugin.passwordSet() && !plugin.getConfig().getBoolean("cleanPassword")) {
+            if (cleanServerPassword == null && plugin.passwordSet() && !plugin.getConfig().getBoolean("cleanPassword", false)) {
                 String messageLocalization = plugin.getLocalization().getString("only_encypted");
                 plugin.message(sender, null, messageLocalization, null);
             } else if (cleanServerPassword == null && !plugin.passwordSet()) {
@@ -58,7 +58,7 @@ public class PasswordProtectCommands implements CommandExecutor {
                 sender.sendMessage(ChatColor.DARK_RED + "You shouldn't see this message. Please report this issue, including a copy of the config!");
             }
             // If password is not set, but a clean one is set and cleanPassword is enabled
-            if (cleanServerPassword != null && !plugin.passwordSet() && plugin.getConfig().getBoolean("cleanPassword")) {
+            if (cleanServerPassword != null && !plugin.passwordSet() && plugin.getConfig().getBoolean("cleanPassword", false)) {
                 String messageLocalization = plugin.getLocalization().getString("config_invalid");
                 plugin.message(sender, null, messageLocalization, null);
             }

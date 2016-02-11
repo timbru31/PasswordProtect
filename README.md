@@ -1,7 +1,11 @@
-# PasswordProtect [![Build Status](http://ci.dustplanet.de/job/PasswordProtect/badge/icon)](http://ci.dustplanet.de/job/PasswordProtect/)
+# PasswordProtect
+[![Build Status](https://ci.dustplanet.de/job/PasswordProtect/badge/icon)](https://ci.dustplanet.de/job/PasswordProtect/)
+[![Build Status](https://travis-ci.org/timbru31/PasswordProtect.svg?branch=master)](https://travis-ci.org/timbru31/PasswordProtect)
+[![Circle CI](https://img.shields.io/circleci/project/timbru31/PasswordProtect.svg)](https://circleci.com/gh/timbru31/PasswordProtect)
+[![Build status](https://ci.appveyor.com/api/projects/status/alqexsstuby24650?svg=true)](https://ci.appveyor.com/project/timbru31/passwordprotect)
 
 ## Info
-This CraftBukkit plugin aims to offer a simple server password which is the same for _all_ users.
+This CraftBukkit/Spigot plugin aims to offer a simple server password which is the same for _all_ users.
 
 **THIS IS NOT A PLUGIN FOR A USER SPECIFIC PASSWORD**
 
@@ -23,9 +27,9 @@ There is an additional ability to allow certain commands or to auto-kick or auto
   * Flying
 * Auto kick and auto ban (even the IP) after configurable amount of tries
 * Blindness and slowness for the player
-* Jail area - the player is teleported back if he leaves the area
+* Jail area - the player is teleported back if he leaves the area - can be turned off
 * Per world jail area!
-* **Safe encryption** of password, choose between **SHA, SHA-256, SHA-512, MD5 & more**
+* **Hashing (one way!)** of password, choose between **SHA, SHA-256, SHA-512, MD5 & more**
 * Custom commands are allowed to execute (like /rules)
 * Teleport the player back to the previous location (location on logout)
 
@@ -40,10 +44,12 @@ Please see [LICENSE.md](LICENSE.md) for more information.
 ## Standard config
 ````yaml
 # For help please refer to http://dev.bukkit.org/bukkit-plugins/passwordprotect/
-# Which encryption should be used? Example: MD5 or SHA-256
-encryption: SHA-512
+# Which hash should be used? Example: SHA-256 or SHA-512
+hash: SHA-512
 # Are ops forced, to enter the password, too?
-OpsRequirePassword: true
+opsRequirePassword: true
+# Should the jail area be disabled?
+disableJailArea: false
 # Should the password be stored in clean (plain) text?
 cleanPassword: false
 password: ''
@@ -63,6 +69,8 @@ prevent:
   Attacks: true
   Damage: true
   Chat: true
+  DeathDrops: true
+  Fyling: true
 # After how many attempts should a player be kicked or banned
 wrongAttempts:
   kick: 3
