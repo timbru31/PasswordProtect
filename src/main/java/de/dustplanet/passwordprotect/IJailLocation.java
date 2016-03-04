@@ -1,5 +1,12 @@
 package de.dustplanet.passwordprotect;
 
+/**
+ * PasswordProtect for CraftBukkit/Spigot.
+ * Interface for the JailLocation.
+ *
+ * @author xGhOsTkiLLeRx
+ *
+ */
 public interface IJailLocation {
 
     /**

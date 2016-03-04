@@ -256,7 +256,7 @@ public class PasswordProtect extends JavaPlugin {
         getLocalization().addDefault("only_ingame", "&4The command can only be used ingame!");
         getLocalization().addDefault("config_invalid",
                 "&4It seems like this server config invalid. Please re-set the password!");
-        getLocalization().addDefault("only_hashed", "&4Server password is only stored encrypted...");
+        getLocalization().addDefault("only_hashed", "&4Server password is only stored hashed...");
         getLocalization().addDefault("password_not_set", "&eServer password is not set. Use /setpassword <password>");
         getLocalization().addDefault("password", "&eServer password is &4%password");
         getLocalization().addDefault("set_jail_area",
