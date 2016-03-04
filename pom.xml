@@ -9,6 +9,7 @@
 
   <!-- Encode in UTF-8 -->
   <properties>
+    <build.number>-b${BUILD_NUMBER}</build.number>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
   </properties>
 

@@ -1,7 +1,7 @@
 name: PasswordProtect
 main: de.dustplanet.passwordprotect.PasswordProtect
 description: Force a password to play on the server
-version: ${project.version}-b${BUILD_NUMBER}
+version: ${project.version}${build.number}
 author: xGhOsTkiLLeRx
 authors: [DisabledHamster]
 website: http://dev.bukkit.org/bukkit-plugins/passwordprotect/
