@@ -3,6 +3,8 @@
 [![Build Status](https://travis-ci.org/timbru31/PasswordProtect.svg?branch=master)](https://travis-ci.org/timbru31/PasswordProtect)
 [![Circle CI](https://img.shields.io/circleci/project/timbru31/PasswordProtect.svg)](https://circleci.com/gh/timbru31/PasswordProtect)
 [![Build status](https://ci.appveyor.com/api/projects/status/alqexsstuby24650?svg=true)](https://ci.appveyor.com/project/timbru31/passwordprotect)
+[![BukkitDev](https://img.shields.io/badge/BukkitDev-v1.3-orange.svg)]hhttp://dev.bukkit.org/bukkit-plugins/passwordprotect//)
+[![License](https://img.shields.io/badge/License-CC%20BY--NC--SA%204.0-blue.svg)](LICENSE.md)
 
 ## Info
 This CraftBukkit/Spigot plugin aims to offer a simple server password which is the same for _all_ users.
@@ -150,5 +152,5 @@ The file ../plugins/Plugin Metrics/config.yml contains an option to *opt-out*
 ## Donation
 [![PayPal](https://www.paypalobjects.com/en_US/i/btn/btn_donateCC_LG.gif "Donation via PayPal")](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=T9TEV7Q88B9M2)
 
-![BitCoin](https://dl.dropboxusercontent.com/u/26476995/bitcoin_logo.png "Donation via BitCoins")
+![BitCoin](https://dl.dropboxusercontent.com/u/26476995/bitcoin_logo.png "Donation via BitCoins")<br>
 Address: 1NnrRgdy7CfiYN63vKHiypSi3MSctCP55C
