@@ -35,7 +35,7 @@ public class PasswordProtectCommands implements CommandExecutor {
                 // If the player hasn't got the permission, don't display the password
                 if (!player.hasPermission("passwordprotect.getpassword")) {
                     String messageLocalization = plugin.getLocalization().getString("permission_denied");
-                    plugin.message(null, player, messageLocalization, null);
+                    plugin.message(player, messageLocalization, null);
                     return true;
                 }
             }
@@ -44,15 +44,15 @@ public class PasswordProtectCommands implements CommandExecutor {
             // If password is only stored encrypted
             if (cleanServerPassword == null && plugin.passwordSet() && !plugin.getConfig().getBoolean("cleanPassword", false)) {
                 String messageLocalization = plugin.getLocalization().getString("only_hashed");
-                plugin.message(sender, null, messageLocalization, null);
+                plugin.message(sender, messageLocalization, null);
             } else if (cleanServerPassword == null && !plugin.passwordSet()) {
                 // If no password is set, tell the sender the instructions
                 String messageLocalization = plugin.getLocalization().getString("password_not_set");
-                plugin.message(sender, null, messageLocalization, null);
+                plugin.message(sender, messageLocalization, null);
             } else if (cleanServerPassword != null && plugin.passwordSet()) {
                 // Tell the sender the password
                 String messageLocalization = plugin.getLocalization().getString("password");
-                plugin.message(sender, null, messageLocalization, cleanServerPassword);
+                plugin.message(sender, messageLocalization, cleanServerPassword);
             } else {
                 // Else debug
                 sender.sendMessage(ChatColor.DARK_RED + "You shouldn't see this message. Please report this issue, including a copy of the config!");
@@ -60,20 +60,20 @@ public class PasswordProtectCommands implements CommandExecutor {
             // If password is not set, but a clean one is set and cleanPassword is enabled
             if (cleanServerPassword != null && !plugin.passwordSet() && plugin.getConfig().getBoolean("cleanPassword", false)) {
                 String messageLocalization = plugin.getLocalization().getString("config_invalid");
-                plugin.message(sender, null, messageLocalization, null);
+                plugin.message(sender, messageLocalization, null);
             }
         } else if (command.getName().equalsIgnoreCase("setjaillocation")) {
             // Sets the jail location
             // Console can't define jaillocation
             if (!(sender instanceof Player)) {
                 String messageLocalization = plugin.getLocalization().getString("only_ingame");
-                plugin.message(sender, null, messageLocalization, null);
+                plugin.message(sender, messageLocalization, null);
             } else {
                 Player player = (Player) sender;
                 // If the player hasn't got the permission, cancel it
                 if (!player.hasPermission("passwordprotect.setjailarea")) {
                     String messageLocalization = plugin.getLocalization().getString("permission_denied");
-                    plugin.message(null, player, messageLocalization, null);
+                    plugin.message(player, messageLocalization, null);
                     return true;
                 }
 
@@ -87,7 +87,7 @@ public class PasswordProtectCommands implements CommandExecutor {
                     } catch (NumberFormatException e) {
                         // Radius not a number? Use default!
                         String messageLocalization = plugin.getLocalization().getString("radius_not_number");
-                        plugin.message(null, player, messageLocalization, null);
+                        plugin.message(player, messageLocalization, null);
                         radius = 4; // Better safe than sorry
                     }
                 }
@@ -95,7 +95,7 @@ public class PasswordProtectCommands implements CommandExecutor {
                 JailLocation loc = new JailLocation(player.getLocation(), radius);
                 plugin.setJailLocation(world, loc);
                 String messageLocalization = plugin.getLocalization().getString("jail_set");
-                plugin.message(null, player, messageLocalization, null);
+                plugin.message(player, messageLocalization, null);
             }
         } else if (command.getName().equalsIgnoreCase("setpassword")) {
             // If someone tries to set a password
@@ -107,22 +107,22 @@ public class PasswordProtectCommands implements CommandExecutor {
             // If the player hasn't got the permission, cancel it
             if (!sender.hasPermission("passwordprotect.setpassword")) {
                 String messageLocalization = plugin.getLocalization().getString("permission_denied");
-                plugin.message(sender, null, messageLocalization, null);
+                plugin.message(sender, messageLocalization, null);
                 return true;
             }
             // Set password
             plugin.setPassword(password);
             String messageLocalization = plugin.getLocalization().getString("password_set");
-            plugin.message(sender, null, messageLocalization, null);
+            plugin.message(sender, messageLocalization, null);
             // Reminder for the jail area
             if (sender instanceof Player) {
                 messageLocalization = plugin.getLocalization().getString("set_jail_area");
-                plugin.message(sender, null, messageLocalization, null);
+                plugin.message(sender, messageLocalization, null);
             }
         } else if (command.getName().equalsIgnoreCase("login") && !(sender instanceof Player)) {
             // Console logins should be denied
             String messageLocalization = plugin.getLocalization().getString("no_login_console");
-            plugin.message(sender, null, messageLocalization, null);
+            plugin.message(sender, messageLocalization, null);
         }
         return true;
     }

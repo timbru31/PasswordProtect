@@ -172,7 +172,7 @@ public class PasswordProtectPlayerListener implements Listener {
                     // Is the password right?
                     if (password.equals(plugin.getPassword())) {
                         String messageLocalization = plugin.getLocalization().getString("password_accepted");
-                        plugin.message(null, player, messageLocalization, null);
+                        plugin.message(player, messageLocalization, null);
                         // Remove from jail & remove effects
                         plugin.getJailedPlayers().remove(playerUUID);
                         if (player.hasPotionEffect(PotionEffectType.BLINDNESS)) {
@@ -244,10 +244,10 @@ public class PasswordProtectPlayerListener implements Listener {
                             // Leave kick out later
                             if (attemptsLeftKick > 0) {
                                 String messageLocalization = plugin.getLocalization().getString("attempts_left_kick");
-                                plugin.message(null, player, messageLocalization, Integer.toString(attemptsLeftKick));
+                                plugin.message(player, messageLocalization, Integer.toString(attemptsLeftKick));
                             }
                             String messageLocalization = plugin.getLocalization().getString("attempts_left_ban");
-                            plugin.message(null, player, messageLocalization, Integer.toString(attemptsLeftBan));
+                            plugin.message(player, messageLocalization, Integer.toString(attemptsLeftBan));
                             // Increase HashMap value and attempts variable
                             attempts++;
                             plugin.getJailedPlayers().put(playerUUID, attempts);
@@ -266,7 +266,7 @@ public class PasswordProtectPlayerListener implements Listener {
         } else if (message.toLowerCase().startsWith("/login")) {
             // Else already logged in
             String messageLocalization = plugin.getLocalization().getString("already_logged_in");
-            plugin.message(null, player, messageLocalization, null);
+            plugin.message(player, messageLocalization, null);
             event.setCancelled(true);
         }
     }
