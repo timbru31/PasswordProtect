@@ -3,7 +3,7 @@
 [![Build Status](https://travis-ci.org/timbru31/PasswordProtect.svg?branch=master)](https://travis-ci.org/timbru31/PasswordProtect)
 [![Circle CI](https://img.shields.io/circleci/project/timbru31/PasswordProtect.svg)](https://circleci.com/gh/timbru31/PasswordProtect)
 [![Build status](https://ci.appveyor.com/api/projects/status/alqexsstuby24650?svg=true)](https://ci.appveyor.com/project/timbru31/passwordprotect)
-[![BukkitDev](https://img.shields.io/badge/BukkitDev-v1.3-orange.svg)](http://dev.bukkit.org/bukkit-plugins/passwordprotect//)
+[![BukkitDev](https://img.shields.io/badge/BukkitDev-v1.3.1-orange.svg)](http://dev.bukkit.org/bukkit-plugins/passwordprotect/)
 [![License](https://img.shields.io/badge/License-CC%20BY--NC--SA%204.0-blue.svg)](LICENSE.md)
 
 ## Info
