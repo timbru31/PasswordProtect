@@ -23,7 +23,6 @@ import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.PluginDescriptionFile;
 import org.bukkit.plugin.PluginManager;
@@ -120,7 +119,7 @@ public class PasswordProtect extends JavaPlugin {
             copy("jails.yml", jailFile);
         }
         // Try to load
-        jails = YamlConfiguration.loadConfiguration(jailFile);
+        jails = ScalarYamlConfiguration.loadConfiguration(jailFile);
 
         // Config
         configFile = new File(getDataFolder(), "config.yml");
@@ -135,7 +134,8 @@ public class PasswordProtect extends JavaPlugin {
         if (!localizationFile.exists()) {
             copy("localization.yml", localizationFile);
         }
-        setLocalization(YamlConfiguration.loadConfiguration(localizationFile));
+        setLocalization(
+                ScalarYamlConfiguration.loadConfiguration(localizationFile));
         loadLocalization();
 
         // Read the jailedPlayersFile
@@ -242,14 +242,10 @@ public class PasswordProtect extends JavaPlugin {
         .header("The underscores are used for the different lines!");
         getLocalization().addDefault("permission_denied",
                 "&4You don't have the permission to do this!");
-        getLocalization().addDefault("enter_password_1",
-                "&eThis server is password-protected");
-        getLocalization().addDefault("enter_password_2",
-                "&eEnter the password with &a/login &4<password> &eto play");
-        getLocalization().addDefault("set_password_1",
-                "&ePasswordProtect is enabled but no password has been set");
-        getLocalization().addDefault("set_password_2",
-                "&eUse &a/setpassword &4<password> &eto set it");
+        getLocalization().addDefault("enter_password",
+                "&eThis server is password-protected\n&eEnter the password with &a/login &4<password> &eto play");
+        getLocalization().addDefault("set_password",
+                "&ePasswordProtect is enabled but no password has been set\n&eUse &a/setpassword &4<password> &eto set it");
         getLocalization().addDefault("password_accepted",
                 "&aServer password accepted, you can now play");
         getLocalization().addDefault("attempts_left_kick",
@@ -332,11 +328,12 @@ public class PasswordProtect extends JavaPlugin {
             if (value == null) {
                 valueToSend = "";
             }
-            String messageToSend = message.replace("%attempts", valueToSend)
+            String replacedMessage = message.replace("%attempts", valueToSend)
                     .replace("%password", valueToSend)
                     .replace("%version", pdfFile.getVersion());
-            messageToSend = ChatColor.translateAlternateColorCodes('&',
-                    messageToSend);
+            String[] messageToSend = ChatColor
+                    .translateAlternateColorCodes('&', replacedMessage)
+                    .split("\n");
             if (sender != null) {
                 sender.sendMessage(messageToSend);
             }
@@ -352,11 +349,9 @@ public class PasswordProtect extends JavaPlugin {
         if (!passwordSet()) {
             // Message player to set the password.
             if (player.hasPermission("passwordprotect.setpassword")) {
-                for (int i = 1; i < 3; i++) {
-                    String messageLocalization = getLocalization()
-                            .getString("set_password_" + i);
-                    message(player, messageLocalization, null);
-                }
+                String messageLocalization = getLocalization()
+                        .getString("set_password");
+                message(player, messageLocalization, null);
             }
         } else if (!player.hasPermission("passwordprotect.nopassword")
                 && player.isOp()
@@ -420,11 +415,9 @@ public class PasswordProtect extends JavaPlugin {
     // Message
     public void sendPasswordRequiredMessage(Player player) {
         if (config.getBoolean("loginMessage", true)) {
-            for (int i = 1; i < 3; i++) {
-                String messageLocalization = getLocalization()
-                        .getString("enter_password_" + i);
-                message(player, messageLocalization, null);
-            }
+            String messageLocalization = getLocalization()
+                    .getString("enter_password");
+            message(player, messageLocalization, null);
         }
     }
 
