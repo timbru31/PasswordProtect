@@ -31,28 +31,38 @@ import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.mcstats.Metrics;
 
+import lombok.Getter;
+import lombok.Setter;
+
 /**
  * PasswordProtect for CraftBukkit/Spigot. Handles some general stuff.
  *
  * Refer to the dev.bukkit.org page:
  * http://dev.bukkit.org/bukkit-plugins/passwordprotect/
  *
- * @author xGhOsTkiLLeRx thanks to brianewing alias DisabledHamster for the
- *         original plugin!
+ * @author xGhOsTkiLLeRx
+ * thanks to brianewing alias DisabledHamster for the original plugin!
  *
  */
 
 public class PasswordProtect extends JavaPlugin {
     private FileConfiguration config;
+    @Getter
+    @Setter
     private FileConfiguration localization;
     private FileConfiguration jails;
     private File configFile;
     private File jailFile;
     private File localizationFile;
     // Integer = attempts to login!
+    @Getter
+    @Setter
     private HashMap<UUID, Integer> jailedPlayers = new HashMap<>();
     private HashMap<World, JailLocation> jailLocations = new HashMap<>();
+    @Getter
     private HashMap<UUID, Location> playerLocations = new HashMap<>();
+    @Getter
+    @Setter
     private List<String> commandList = new ArrayList<>();
     private String[] commands = { "help", "rules", "motd" };
     private String hash = "SHA-512";
@@ -525,37 +535,5 @@ public class PasswordProtect extends JavaPlugin {
             .severe("The algorithm is NOT known: " + hash);
             return null;
         }
-    }
-
-    public FileConfiguration getLocalization() {
-        return localization;
-    }
-
-    public void setLocalization(FileConfiguration localization) {
-        this.localization = localization;
-    }
-
-    public HashMap<UUID, Integer> getJailedPlayers() {
-        return jailedPlayers;
-    }
-
-    public void setJailedPlayers(HashMap<UUID, Integer> jailedPlayers) {
-        this.jailedPlayers = jailedPlayers;
-    }
-
-    public List<String> getCommandList() {
-        return commandList;
-    }
-
-    public void setCommandList(List<String> commandList) {
-        this.commandList = commandList;
-    }
-
-    public HashMap<UUID, Location> getPlayerLocations() {
-        return playerLocations;
-    }
-
-    public void setPlayerLocations(HashMap<UUID, Location> playerLocations) {
-        this.playerLocations = playerLocations;
     }
 }
