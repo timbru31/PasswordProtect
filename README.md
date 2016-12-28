@@ -3,7 +3,7 @@
 [![Build Status](https://travis-ci.org/timbru31/PasswordProtect.svg?branch=master)](https://travis-ci.org/timbru31/PasswordProtect)
 [![Circle CI](https://img.shields.io/circleci/project/timbru31/PasswordProtect.svg)](https://circleci.com/gh/timbru31/PasswordProtect)
 [![Build status](https://ci.appveyor.com/api/projects/status/alqexsstuby24650?svg=true)](https://ci.appveyor.com/project/timbru31/passwordprotect)
-[![BukkitDev](https://img.shields.io/badge/BukkitDev-v1.3.1-orange.svg)](http://dev.bukkit.org/bukkit-plugins/passwordprotect/)
+[![BukkitDev](https://img.shields.io/badge/BukkitDev-v1.3.1-orange.svg)](https://dev.bukkit.org/projects/passwordprotect)
 [![License](https://img.shields.io/badge/License-CC%20BY--NC--SA%204.0-blue.svg)](LICENSE.md)
 
 ## Info
@@ -45,7 +45,7 @@ Please see [LICENSE.md](LICENSE.md) for more information.
 
 ## Standard config
 ```yaml
-# For help please refer to http://dev.bukkit.org/bukkit-plugins/passwordprotect/
+# For help please refer to https://dev.bukkit.org/projects/passwordprotect
 # Which hash should be used? Example: SHA-256 or SHA-512
 hash: SHA-512
 # Are ops forced, to enter the password, too?
@@ -121,7 +121,7 @@ loginMessage: true
 * muHum for [mPasswordProtector](https://github.com/muHum/mPasswordProtector)
 
 ## Support
-For support visit the dev.bukkit.org page: http://dev.bukkit.org/bukkit-plugins/password-protect
+For support visit the dev.bukkit.org page: https://dev.bukkit.org/projects/passwordprotect
 
 ## Pull Requests
 Feel free to submit any PRs here. :)

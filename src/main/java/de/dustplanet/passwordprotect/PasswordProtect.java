@@ -38,7 +38,7 @@ import lombok.Setter;
  * PasswordProtect for CraftBukkit/Spigot. Handles some general stuff.
  *
  * Refer to the dev.bukkit.org page:
- * http://dev.bukkit.org/bukkit-plugins/passwordprotect/
+ * https://dev.bukkit.org/projects/passwordprotect
  *
  * @author xGhOsTkiLLeRx
  * thanks to brianewing alias DisabledHamster for the original plugin!
@@ -191,7 +191,7 @@ public class PasswordProtect extends JavaPlugin {
 
     // Loads the config at start
     private void loadConfig() {
-        config.options().header("For help please refer to");
+        config.options().header("For help please refer to https://dev.bukkit.org/projects/passwordprotect");
         config.addDefault("hash", "SHA-512");
         config.addDefault("disableJailArea", false);
         config.addDefault("opsRequirePassword", true);
