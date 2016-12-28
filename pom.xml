@@ -21,7 +21,7 @@
     </repository>
     <repository>
       <id>Plugin Metrics</id>
-      <url>http://repo.mcstats.org/content/repositories/public</url>
+      <url>https://repo.mcstats.org/content/repositories/public</url>
     </repository>
   </repositories>
 
@@ -30,9 +30,7 @@
     <dependency>
       <groupId>org.bukkit</groupId>
       <artifactId>bukkit</artifactId>
-      <version>1.11-R0.1-SNAPSHOT</version>
-      <type>jar</type>
-      <scope>compile</scope>
+      <version>1.11.2-R0.1-SNAPSHOT</version>
     </dependency>
     <dependency>
       <groupId>org.mcstats.bukkit</groupId>
