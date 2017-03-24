@@ -8,7 +8,7 @@ install:
   - cmd: mvn --version
   - cmd: java -version
 build_script:
-  - mvn clean package
+  - mvn clean package -Pmetrics
 test_script:
   - mvn test
 cache:

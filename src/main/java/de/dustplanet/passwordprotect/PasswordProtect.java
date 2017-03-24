@@ -18,6 +18,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
 
+import org.bstats.Metrics;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.World;
@@ -29,7 +30,6 @@ import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
-import org.mcstats.Metrics;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -54,7 +54,6 @@ public class PasswordProtect extends JavaPlugin {
     private File configFile;
     private File jailFile;
     private File localizationFile;
-    // Integer = attempts to login!
     @Getter
     @Setter
     private HashMap<UUID, Integer> jailedPlayers = new HashMap<>();
@@ -68,10 +67,8 @@ public class PasswordProtect extends JavaPlugin {
     private String hash = "SHA-512";
     private File jailedPlayersFile;
 
-    // Shutdown
     @Override
     public void onDisable() {
-        // Remove potion effect
         for (UUID playerUUID : getJailedPlayers().keySet()) {
             Player player = getServer().getPlayer(playerUUID);
             if (player != null) {
@@ -83,7 +80,7 @@ public class PasswordProtect extends JavaPlugin {
                 }
             }
         }
-        // Save the HashMap of the jailedPlayers
+
         try (ObjectOutputStream obj = new ObjectOutputStream(
                 new FileOutputStream(jailedPlayersFile))) {
             obj.writeObject(getJailedPlayers());
@@ -91,47 +88,38 @@ public class PasswordProtect extends JavaPlugin {
             getLogger().info("Couldn't find the 'jailedPlayers.dat' file!");
             e.printStackTrace();
         }
-        // Clear lists
+
         getJailedPlayers().clear();
         jailLocations.clear();
         getPlayerLocations().clear();
         getCommandList().clear();
     }
 
-    // Start
     @Override
     @SuppressWarnings("unchecked")
     public void onEnable() {
-        // Events
         PluginManager pm = getServer().getPluginManager();
         pm.registerEvents(new PasswordProtectBlockListener(this), this);
         pm.registerEvents(new PasswordProtectPlayerListener(this), this);
         pm.registerEvents(new PasswordProtectEntityListener(this), this);
 
-        // Clear lists
         getJailedPlayers().clear();
         jailLocations.clear();
         getPlayerLocations().clear();
 
-        // Check if the folder exists
         if (!getDataFolder().exists() && !getDataFolder().mkdirs()) {
-            getLogger().severe(
-                    "The config folder could NOT be created, make sure it's writable!");
+            getLogger().severe("The config folder could NOT be created, make sure it's writable!");
             getLogger().severe("Disabling now!");
             setEnabled(false);
             return;
         }
 
-        // Jails config
         jailFile = new File(getDataFolder(), "jails.yml");
-        // Copy if the config doesn't exist
         if (!jailFile.exists()) {
             copy("jails.yml", jailFile);
         }
-        // Try to load
         jails = ScalarYamlConfiguration.loadConfiguration(jailFile);
 
-        // Config
         configFile = new File(getDataFolder(), "config.yml");
         if (!configFile.exists()) {
             copy("config.yml", configFile);
@@ -139,16 +127,13 @@ public class PasswordProtect extends JavaPlugin {
         config = this.getConfig();
         loadConfig();
 
-        // Localization
         localizationFile = new File(getDataFolder(), "localization.yml");
         if (!localizationFile.exists()) {
             copy("localization.yml", localizationFile);
         }
-        setLocalization(
-                ScalarYamlConfiguration.loadConfiguration(localizationFile));
+        setLocalization( ScalarYamlConfiguration.loadConfiguration(localizationFile));
         loadLocalization();
 
-        // Read the jailedPlayersFile
         jailedPlayersFile = new File(getDataFolder(), "jailedPlayers.dat");
         if (!jailedPlayersFile.exists()) {
             try {
@@ -162,7 +147,6 @@ public class PasswordProtect extends JavaPlugin {
                 e.printStackTrace();
             }
         } else {
-            // Read into Memory
             try (ObjectInputStream obj = new ObjectInputStream(
                     new FileInputStream(jailedPlayersFile))) {
                 setJailedPlayers((HashMap<UUID, Integer>) obj.readObject());
@@ -172,24 +156,15 @@ public class PasswordProtect extends JavaPlugin {
             }
         }
 
-        // Commands
         PasswordProtectCommands executor = new PasswordProtectCommands(this);
         getCommand("login").setExecutor(executor);
         getCommand("password").setExecutor(executor);
         getCommand("setpassword").setExecutor(executor);
         getCommand("setjaillocation").setExecutor(executor);
 
-        // Stats
-        try {
-            Metrics metrics = new Metrics(this);
-            metrics.start();
-        } catch (IOException e) {
-            getLogger().warning("Could not start Metrics!");
-            e.printStackTrace();
-        }
+        Metrics metrics = new Metrics(this);
     }
 
-    // Loads the config at start
     private void loadConfig() {
         config.options().header("For help please refer to https://dev.bukkit.org/projects/passwordprotect");
         config.addDefault("hash", "SHA-512");
@@ -226,10 +201,9 @@ public class PasswordProtect extends JavaPlugin {
         if (config.contains("hash")) {
             hash = config.getString("hash");
         } else {
-            // Fallback
             hash = config.getString("encryption");
         }
-        // Lets see if the hash is valid, if not fallback!
+
         try {
             MessageDigest.getInstance(hash);
         } catch (NoSuchAlgorithmException e) {
@@ -246,7 +220,6 @@ public class PasswordProtect extends JavaPlugin {
         saveConfig();
     }
 
-    // Loads the localization
     private void loadLocalization() {
         getLocalization().options()
         .header("The underscores are used for the different lines!");
@@ -294,7 +267,6 @@ public class PasswordProtect extends JavaPlugin {
         saveLocalization();
     }
 
-    // Try to save the players.yml
     private void saveJails() {
         try {
             jails.save(jailFile);
@@ -304,7 +276,6 @@ public class PasswordProtect extends JavaPlugin {
         }
     }
 
-    // Saves the localization
     private void saveLocalization() {
         try {
             getLocalization().save(localizationFile);
@@ -314,7 +285,6 @@ public class PasswordProtect extends JavaPlugin {
         }
     }
 
-    // If no config is found, copy the default one(s)!
     private void copy(String yml, File file) {
         try (OutputStream out = new FileOutputStream(file);
                 InputStream in = getResource(yml)) {
@@ -329,11 +299,9 @@ public class PasswordProtect extends JavaPlugin {
         }
     }
 
-    // Message sender
     public void message(CommandSender sender, String message, String value) {
         PluginDescriptionFile pdfFile = this.getDescription();
         if (message != null) {
-            // Sometimes we have no extra "value" argument, use "" then
             String valueToSend = value;
             if (value == null) {
                 valueToSend = "";
@@ -348,16 +316,13 @@ public class PasswordProtect extends JavaPlugin {
                 sender.sendMessage(messageToSend);
             }
         } else {
-            // If message is null. Should NOT occur.
             sender.sendMessage(ChatColor.DARK_RED
                     + "Somehow this message is not defined. Please check your localization.yml");
         }
     }
 
     public void check(Player player) {
-        // Password not set
         if (!passwordSet()) {
-            // Message player to set the password.
             if (player.hasPermission("passwordprotect.setpassword")) {
                 String messageLocalization = getLocalization()
                         .getString("set_password");
@@ -367,17 +332,16 @@ public class PasswordProtect extends JavaPlugin {
                 && player.isOp()
                 && config.getBoolean("opsRequirePassword", true)
                 || !player.isOp()) {
-            // Remember position?
             if (config.getBoolean("teleportBack", true) && !getPlayerLocations()
                     .containsKey(player.getUniqueId())) {
                 getPlayerLocations().put(player.getUniqueId(),
                         player.getLocation());
             }
-            // Jail!
+
             if (!config.getBoolean("disableJailArea", false)) {
                 sendToJail(player);
             }
-            // Add him & do bad stuff
+
             if (!getJailedPlayers().containsKey(player.getUniqueId())) {
                 getJailedPlayers().put(player.getUniqueId(), 1);
             }
@@ -395,7 +359,6 @@ public class PasswordProtect extends JavaPlugin {
         }
     }
 
-    // Teleport back to the middle if player leaves area
     public void stayInJail(Player player) {
         if (config.getBoolean("disableJailArea", false)) {
             return;
@@ -415,26 +378,21 @@ public class PasswordProtect extends JavaPlugin {
         sendToJail(player);
     }
 
-    // Jail the player. Teleport and message
     private void sendToJail(Player player) {
         JailLocation jailLocation = getJailLocation(player);
         player.teleport(jailLocation);
         sendPasswordRequiredMessage(player);
     }
 
-    // Message
     public void sendPasswordRequiredMessage(Player player) {
         if (config.getBoolean("loginMessage", true)) {
-            String messageLocalization = getLocalization()
-                    .getString("enter_password");
+            String messageLocalization = getLocalization().getString("enter_password");
             message(player, messageLocalization, null);
         }
     }
 
     public void setJailLocation(World world, JailLocation location) {
-        // Set it to the HashMap
         jailLocations.put(world, location);
-        // Make data array
         ArrayList<Double> data = new ArrayList<>();
         data.add(location.getX());
         data.add(location.getY());
@@ -442,7 +400,6 @@ public class PasswordProtect extends JavaPlugin {
         data.add(Double.valueOf(location.getYaw()));
         data.add(Double.valueOf(location.getPitch()));
         data.add(Double.valueOf(location.getRadius()));
-        // Write to the config
         String worldName = world.getName();
         jails.set(worldName + ".jailLocation", data);
         saveJails();
@@ -451,12 +408,10 @@ public class PasswordProtect extends JavaPlugin {
     public JailLocation getJailLocation(Player player) {
         World world = player.getWorld();
         JailLocation jailLocation;
-        // If world is already on the list
+
         if (jailLocations.containsKey(world)) {
             jailLocation = jailLocations.get(world);
         } else {
-            // Is the jailLocation null? Yes -> Make one at spawn, No -> return
-            // Try to load and add to the list
             jailLocation = loadJailLocation(world);
             Location spawnLocation = world.getSpawnLocation();
             if (jailLocation == null) {
@@ -476,35 +431,30 @@ public class PasswordProtect extends JavaPlugin {
     private JailLocation loadJailLocation(World world) {
         String worldName = world.getName();
         List<Double> data = jails.getDoubleList(worldName + ".jailLocation");
-        // If no data is stored, return null
         if (data == null || data.size() != 6) { // [x, y, z, yaw, pitch, radius]
             return null;
         }
-        // Else load them
         Double x = data.get(0);
         Double y = data.get(1);
         Double z = data.get(2);
         Float yaw = new Float(data.get(3));
         Float pitch = new Float(data.get(4));
         int radius = data.get(5).intValue();
-        // Return location
+
         JailLocation jailLocation = new JailLocation(world, x, y, z, yaw, pitch,
                 radius);
         return jailLocation;
     }
 
     public void setPassword(String password) {
-        // Encrypt
         String encryptedPassword = hash(password);
         config.set("password", encryptedPassword);
-        // Additionally store "clean"
         if (config.getBoolean("cleanPassword", false)) {
             config.set("passwordClean", password);
         }
         saveConfig();
     }
 
-    // Check for the password, return null or the password
     public String getPasswordClean() {
         if (config.getBoolean("cleanPassword", false)) {
             return config.getString("passwordClean");
@@ -512,17 +462,14 @@ public class PasswordProtect extends JavaPlugin {
         return null;
     }
 
-    // Check for the password, return null or the password
     public String getPassword() {
         return config.getString("password");
     }
 
-    // Is the password set?
     public boolean passwordSet() {
         return !config.getString("password").isEmpty();
     }
 
-    // Hashing. Stores only hex format
     public String hash(String password) {
         try {
             MessageDigest md = MessageDigest.getInstance(hash);
@@ -531,8 +478,7 @@ public class PasswordProtect extends JavaPlugin {
             return String.format("%0" + (byteData.length << 1) + "x",
                     new BigInteger(1, byteData));
         } catch (NoSuchAlgorithmException e) {
-            getServer().getLogger()
-            .severe("The algorithm is NOT known: " + hash);
+            getServer().getLogger().severe("The algorithm is NOT known: " + hash);
             return null;
         }
     }
