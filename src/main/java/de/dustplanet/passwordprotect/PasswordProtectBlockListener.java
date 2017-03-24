@@ -27,7 +27,6 @@ public class PasswordProtectBlockListener implements Listener {
         plugin = instance;
     }
 
-    // If a block is placed, cancel it
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onBlockPlace(BlockPlaceEvent event) {
         if (plugin.getConfig().getBoolean("prevent.BlockPlace", true)) {
@@ -39,7 +38,6 @@ public class PasswordProtectBlockListener implements Listener {
         }
     }
 
-    // If a player is in jail, he can't break a block
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onBlockBreak(BlockBreakEvent event) {
         if (plugin.getConfig().getBoolean("prevent.BlockBreak", true)) {

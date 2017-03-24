@@ -32,7 +32,6 @@ public class PasswordProtectEntityListener implements Listener {
         plugin = instance;
     }
 
-    // Cancel triggering of jailed player
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onEntityTarget(EntityTargetEvent event) {
         if (plugin.getConfig().getBoolean("prevent.Triggering", true)) {
@@ -49,7 +48,6 @@ public class PasswordProtectEntityListener implements Listener {
         }
     }
 
-    // Cancel hitting mobs
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onEntityDamageByEntity(EntityDamageByEntityEvent event) {
         if (plugin.getConfig().getBoolean("prevent.Attacks", true)) {
@@ -63,7 +61,6 @@ public class PasswordProtectEntityListener implements Listener {
         }
     }
 
-    // Cancel incoming damage
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onEntityDamage(EntityDamageEvent event) {
         if (plugin.getConfig().getBoolean("prevent.Damage", true)) {
@@ -72,7 +69,6 @@ public class PasswordProtectEntityListener implements Listener {
                 UUID playerUUID = ((Player) entity).getUniqueId();
                 Player player = (Player) entity;
                 if (plugin.getJailedPlayers().containsKey(playerUUID)) {
-                    // Restore food and air. Remove fire
                     player.setFoodLevel(20);
                     player.setFireTicks(0);
                     player.setRemainingAir(player.getMaximumAir());
@@ -82,7 +78,6 @@ public class PasswordProtectEntityListener implements Listener {
         }
     }
 
-    // Cancel item drops on death
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onEntityDeath(EntityDeathEvent event) {
         if (plugin.getConfig().getBoolean("prevent.DeathDrops", true)) {
@@ -90,7 +85,6 @@ public class PasswordProtectEntityListener implements Listener {
             if (entity.getType() == EntityType.PLAYER) {
                 UUID playerUUID = ((Player) entity).getUniqueId();
                 if (plugin.getJailedPlayers().containsKey(playerUUID)) {
-                    // Exp and items
                     event.setDroppedExp(0);
                     event.getDrops().clear();
                 }

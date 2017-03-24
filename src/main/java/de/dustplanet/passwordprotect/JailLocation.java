@@ -3,14 +3,14 @@ package de.dustplanet.passwordprotect;
 import org.bukkit.Location;
 import org.bukkit.World;
 
+import lombok.Getter;
+import lombok.Setter;
+
 /**
- * PasswordProtect for CraftBukkit/Spigot.
- * The JailLocation is a square around a specific location provided by the exact
- * location or coordinates. The radius is the value after which the player
- * should be teleported back into the middle of the JailLocation
+ * The JailLocation is a square around a specific location provided by the exact location or coordinates. The radius is
+ * the value after which the player should be teleported back into the middle of the JailLocation
  *
- * Refer to the dev.bukkit.org page:
- * https://dev.bukkit.org/projects/passwordprotect
+ * Refer to the dev.bukkit.org page: https://dev.bukkit.org/projects/passwordprotect
  *
  * @author xGhOsTkiLLeRx
  * thanks to brianewing alias DisabledHamster for the original plugin!
@@ -21,10 +21,13 @@ public class JailLocation extends Location implements IJailLocation {
     /**
      * Radius used.
      */
+    @Getter
+    @Setter
     private int radius;
 
     /**
      * Creates a new JailLocation.
+     *
      * @param world where the JailLocation exists
      * @param x x-coordinate of the center
      * @param y y-coordinate of the center
@@ -40,21 +43,13 @@ public class JailLocation extends Location implements IJailLocation {
 
     /**
      * Creates a new JailLocation.
+     *
      * @param location given location as the center
      * @param radius radius of the JailLocation
      */
     public JailLocation(Location location, int radius) {
-        super(location.getWorld(), location.getX(), location.getY(), location.getZ(), location.getYaw(), location.getPitch());
-        this.radius = radius;
-    }
-
-    @Override
-    public int getRadius() {
-        return radius;
-    }
-
-    @Override
-    public void setRadius(int radius) {
+        super(location.getWorld(), location.getX(), location.getY(), location.getZ(), location.getYaw(),
+                location.getPitch());
         this.radius = radius;
     }
 
@@ -85,9 +80,6 @@ public class JailLocation extends Location implements IJailLocation {
     }
 
     @Override
-    /**
-     * Stringifies the JailLocation.
-     */
     public String toString() {
         return super.toString() + "; Radius{radius = " + this.radius + "}";
     }
