@@ -107,7 +107,7 @@ loginMessage: true
 
 #### General commands
 | Command                    | Permission node             | Description                                  |
-|:--------------------------:|:---------------------------:|:--------------------------------------------:|
+|:---------------------------|:----------------------------|:---------------------------------------------|
 | /login <password>          | -                           | allows you to login                          |
 | /password                  | passwordprotect.getpassword | Gets the password if not stored encrypted    |
 | /setpassword <xyz>         | passwordprotect.setpassword | Sets the password                            |
@@ -134,7 +134,7 @@ _stats images are returning soon!_
 ## Data usage collection of Metrics
 
 #### Disabling Metrics
-The file ../plugins/Plugin Metrics/config.yml contains an option to *opt-out*
+The file `./plugins/bStats/config.yml` contains an option to *opt-out*
 
 #### The following data is **read and sent** to https://bstats.org and can be seen under https://bstats.org/plugin/bukkit/PasswordProtect
 * Your server's randomly generated UUID
