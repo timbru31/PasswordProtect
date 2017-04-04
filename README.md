@@ -37,7 +37,7 @@ There is an additional ability to allow certain commands or to auto-kick or auto
 * Teleport the player back to the previous location (location on logout)
 
 *Third party features, all of them can be disabled*
-* Metrics for usage statistics
+* bStats for usage statistics
 
 ## License
 This plugin is released under the
@@ -131,9 +131,9 @@ Please follow the Sun Coding Guidelines, thanks!
 ## Usage statistics
 _stats images are returning soon!_
 
-## Data usage collection of Metrics
+## Data usage collection of bStats
 
-#### Disabling Metrics
+#### Disabling bStats
 The file `./plugins/bStats/config.yml` contains an option to *opt-out*
 
 #### The following data is **read and sent** to https://bstats.org and can be seen under https://bstats.org/plugin/bukkit/PasswordProtect
