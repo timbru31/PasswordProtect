@@ -8,7 +8,6 @@
     <relativePath />
   </parent>
 
-  <groupId>de.dustplanet</groupId>
   <artifactId>PasswordProtect</artifactId>
   <version>1.3.2-SNAPSHOT</version>
   <name>PasswordProtect</name>
