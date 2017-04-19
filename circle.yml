@@ -1,3 +1,15 @@
 machine:
   java:
     version: oraclejdk8
+dependencies:
+  pre:
+    - java -version
+    - mvn -version
+    - wget https://letsencrypt.org/certs/lets-encrypt-x3-cross-signed.pem
+    - sudo keytool -trustcacerts -keystore $JAVA_HOME/jre/lib/security/cacerts -storepass changeit -noprompt -importcert -file lets-encrypt-x3-cross-signed.pem
+    - mvn clean install
+  override:
+    - mvn dependency:resolve
+test:
+  override:
+    - mvn clean package -Pmetrics
