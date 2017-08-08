@@ -9,6 +9,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
+import org.bukkit.event.entity.EntityPickupItemEvent;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import org.bukkit.event.player.PlayerDropItemEvent;
@@ -16,23 +17,10 @@ import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
-import org.bukkit.event.player.PlayerPickupItemEvent;
 import org.bukkit.event.player.PlayerPortalEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
-
-/**
- * PasswordProtect for CraftBukkit/Spgiot.
- * Handles player activities.
- *
- * Refer to the dev.bukkit.org page:
- * https://dev.bukkit.org/projects/passwordprotect
- *
- * @author xGhOsTkiLLeRx
- * thanks to brianewing alias DisabledHamster for the original plugin!
- *
- */
 
 public class PasswordProtectPlayerListener implements Listener {
     private PasswordProtect plugin;
@@ -109,9 +97,12 @@ public class PasswordProtectPlayerListener implements Listener {
     }
 
     @EventHandler(priority = EventPriority.HIGHEST)
-    public void onPlayerPickupItem(PlayerPickupItemEvent event) {
+    public void onPlayerPickupItem(EntityPickupItemEvent event) {
+        if (!(event.getEntity() instanceof Player)) {
+            return;
+        }
         if (plugin.getConfig().getBoolean("prevent.ItemPickup", true)) {
-            UUID playerUUID = event.getPlayer().getUniqueId();
+            UUID playerUUID = event.getEntity().getUniqueId();
             if (plugin.getJailedPlayers().containsKey(playerUUID)) {
                 event.setCancelled(true);
             }
@@ -180,11 +171,14 @@ public class PasswordProtectPlayerListener implements Listener {
                         if (attemptsLeftKick <= 0 || attemptsLeftBan <= 0) {
                             if (attemptsLeftBan <= 0) {
                                 String ip = player.getAddress().getAddress().toString().replace("/", "");
-                                String messageLocalization = ChatColor.translateAlternateColorCodes('&', plugin.getLocalization().getString("ban_message"));
+                                String messageLocalization = ChatColor.translateAlternateColorCodes('&',
+                                        plugin.getLocalization().getString("ban_message"));
                                 player.kickPlayer(messageLocalization);
-                                plugin.getServer().getBanList(BanList.Type.NAME).addBan(player.getName(), "AutoBan - PasswordProtect", null, "PasswordProtect");
+                                plugin.getServer().getBanList(BanList.Type.NAME).addBan(player.getName(), "AutoBan - PasswordProtect", null,
+                                        "PasswordProtect");
                                 if (plugin.getConfig().getBoolean("broadcast.ban", true)) {
-                                    messageLocalization = ChatColor.translateAlternateColorCodes('&', plugin.getLocalization().getString("ban_broadcast"));
+                                    messageLocalization = ChatColor.translateAlternateColorCodes('&',
+                                            plugin.getLocalization().getString("ban_broadcast"));
                                     plugin.getServer().broadcastMessage(messageLocalization.replace("%player", player.getName()));
                                 }
                                 if (plugin.getConfig().getBoolean("wrongAttempts.banIP", true)) {
@@ -196,7 +190,8 @@ public class PasswordProtectPlayerListener implements Listener {
                                 }
                                 return;
                             } else if (attemptsLeftKick == 0) {
-                                String messageLocalization = ChatColor.translateAlternateColorCodes('&', plugin.getLocalization().getString("kick_message"));
+                                String messageLocalization = ChatColor.translateAlternateColorCodes('&',
+                                        plugin.getLocalization().getString("kick_message"));
                                 player.kickPlayer(messageLocalization);
                                 if (player.hasPotionEffect(PotionEffectType.BLINDNESS)) {
                                     player.removePotionEffect(PotionEffectType.BLINDNESS);
@@ -205,7 +200,8 @@ public class PasswordProtectPlayerListener implements Listener {
                                     player.removePotionEffect(PotionEffectType.SLOW);
                                 }
                                 if (plugin.getConfig().getBoolean("broadcast.kick", true)) {
-                                    messageLocalization = ChatColor.translateAlternateColorCodes('&', plugin.getLocalization().getString("kick_broadcast"));
+                                    messageLocalization = ChatColor.translateAlternateColorCodes('&',
+                                            plugin.getLocalization().getString("kick_broadcast"));
                                     plugin.getServer().broadcastMessage(messageLocalization.replace("%player", player.getName()));
                                 }
                             }
