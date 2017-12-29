@@ -4,7 +4,7 @@
   <parent>
     <groupId>de.dustplanet</groupId>
     <artifactId>bukkit-plugin</artifactId>
-    <version>3.5.1-SNAPSHOT</version>
+    <version>4.1.2</version>
     <relativePath />
   </parent>
 
@@ -18,7 +18,6 @@
     <plugin.name>PasswordProtect</plugin.name>
     <plugin.main>de.dustplanet.passwordprotect.PasswordProtect</plugin.main>
     <plugin.package>de.dustplanet.passwordprotect</plugin.package>
-    <jdk.version>1.8</jdk.version>
   </properties>
 
   <repositories>
