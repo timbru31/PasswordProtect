@@ -5,6 +5,7 @@ version: ${project.version}${build.number}
 author: xGhOsTkiLLeRx
 authors: [DisabledHamster]
 website: https://dev.bukkit.org/projects/passwordprotect
+api-version: 1.13
 commands:
   login:
     description: Login using this server's password

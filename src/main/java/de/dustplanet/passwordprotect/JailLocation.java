@@ -7,14 +7,11 @@ import lombok.Getter;
 import lombok.Setter;
 
 /**
- * The JailLocation is a square around a specific location provided by the exact location or coordinates. The radius is
- * the value after which the player should be teleported back into the middle of the JailLocation
+ * The JailLocation is a square around a specific location provided by the exact location or coordinates. The radius is the value after
+ * which the player should be teleported back into the middle of the JailLocation Refer to the dev.bukkit.org page:
+ * https://dev.bukkit.org/projects/passwordprotect
  *
- * Refer to the dev.bukkit.org page: https://dev.bukkit.org/projects/passwordprotect
- *
- * @author xGhOsTkiLLeRx
- * thanks to brianewing alias DisabledHamster for the original plugin!
- *
+ * @author xGhOsTkiLLeRx thanks to brianewing alias DisabledHamster for the original plugin!
  */
 
 public class JailLocation extends Location implements IJailLocation {
@@ -48,8 +45,7 @@ public class JailLocation extends Location implements IJailLocation {
      * @param radius radius of the JailLocation
      */
     public JailLocation(Location location, int radius) {
-        super(location.getWorld(), location.getX(), location.getY(), location.getZ(), location.getYaw(),
-                location.getPitch());
+        super(location.getWorld(), location.getX(), location.getY(), location.getZ(), location.getYaw(), location.getPitch());
         this.radius = radius;
     }
 
