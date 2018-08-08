@@ -3,9 +3,12 @@
 [![Build Status](https://travis-ci.org/timbru31/PasswordProtect.svg?branch=master)](https://travis-ci.org/timbru31/PasswordProtect)
 [![Circle CI](https://img.shields.io/circleci/project/timbru31/PasswordProtect.svg)](https://circleci.com/gh/timbru31/PasswordProtect)
 [![Build status](https://ci.appveyor.com/api/projects/status/alqexsstuby24650?svg=true)](https://ci.appveyor.com/project/timbru31/passwordprotect)
+
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/c44d903ca5124d3c8b3278070c0eb704)](https://www.codacy.com/app/timbru31/PasswordProtect?utm_source=github.com&utm_medium=referral&utm_content=timbru31/PasswordProtect&utm_campaign=badger)
+
 [![BukkitDev](https://img.shields.io/badge/BukkitDev-v1.3.1-orange.svg)](https://dev.bukkit.org/projects/passwordprotect)
-[![License](https://img.shields.io/badge/License-CC%20BY--NC--SA%204.0-blue.svg)](LICENSE.md)
+
+[![License](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 
 ## Info
 This CraftBukkit/Spigot plugin aims to offer a simple server password which is the same for _all_ users.
@@ -38,11 +41,6 @@ There is an additional ability to allow certain commands or to auto-kick or auto
 
 *Third party features, all of them can be disabled*
 * bStats for usage statistics
-
-## License
-This plugin is released under the
-*Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International (CC BY-NC-SA 4.0)* license.
-Please see [LICENSE.md](LICENSE.md) for more information.
 
 ## Standard config
 ```yaml
@@ -154,3 +152,7 @@ The file `./plugins/bStats/config.yml` contains an option to *opt-out*
 
 ![BitCoin](https://dustplanet.de/wp-content/uploads/2015/01/bitcoin-logo-plain.png "Donation via BitCoins")  
 1NnrRgdy7CfiYN63vKHiypSi3MSctCP55C
+
+
+---
+Built by (c) Tim Brust and contributors. Released under the MIT license.
