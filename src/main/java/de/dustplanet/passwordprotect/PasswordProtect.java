@@ -388,11 +388,11 @@ public class PasswordProtect extends JavaPlugin {
         if (data == null || data.size() != 6) { // [x, y, z, yaw, pitch, radius]
             return null;
         }
-        Double x = data.get(0);
-        Double y = data.get(1);
-        Double z = data.get(2);
-        Float yaw = new Float(data.get(3));
-        Float pitch = new Float(data.get(4));
+        double x = data.get(0);
+        double y = data.get(1);
+        double z = data.get(2);
+        float yaw = data.get(3).floatValue();
+        float pitch = data.get(4).floatValue();
         int radius = data.get(5).intValue();
 
         JailLocation jailLocation = new JailLocation(world, x, y, z, yaw, pitch, radius);
