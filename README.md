@@ -57,21 +57,21 @@ password: ''
 passwordClean: ''
 # What events should be prevented?
 prevent:
-  Movement: true
-  Interaction: true
-  InteractionMobs: true
-  ItemPickup: true
-  ItemDrop: true
-  Portal: true
-  BlockPlace: true
-  BlockBreak: true
+  movement: true
+  interaction: true
+  interactionMobs: true
+  itemPickup: true
+  itemDrop: true
+  portal: true
+  blockPlace: true
+  blockBreak: true
   # Players won't be triggered by mobs anymore
-  Triggering: true
-  Attacks: true
-  Damage: true
-  Chat: true
-  DeathDrops: true
-  Flying: true
+  triggering: true
+  attacks: true
+  damage: true
+  chat: true
+  deathDrops: true
+  flying: true
 # After how many attempts should a player be kicked or banned
 wrongAttempts:
   kick: 3

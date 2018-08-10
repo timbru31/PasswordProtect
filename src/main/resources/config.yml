@@ -6,20 +6,20 @@ cleanPassword: false
 password: ''
 passwordClean: ''
 prevent:
-  Movement: true
-  Interaction: true
-  InteractionMobs: true
-  ItemPickup: true
-  ItemDrop: true
-  Portal: true
-  BlockPlace: true
-  BlockBreak: true
-  Triggering: true
-  Attacks: true
-  Damage: true
-  Chat: true
-  DeathDrops: true
-  Flying: true
+  movement: true
+  interaction: true
+  interactionMobs: true
+  itemPickup: true
+  itemDrop: true
+  portal: true
+  blockPlace: true
+  blockBreak: true
+  triggering: true
+  attacks: true
+  damage: true
+  chat: true
+  deathDrops: true
+  flying: true
 wrongAttempts:
   kick: 3
   ban: 5
