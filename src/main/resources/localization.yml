@@ -1,8 +1,11 @@
 # The underscores are used for the different lines!
 permission_denied: '&4You don''t have the permission to do this!'
-enter_password: '&eThis server is password-protected\n&eEnter the password with &a/login &4<password> &eto play'
-set_password: '&ePasswordProtect is enabled but no password has been set\n&eUse &a/setpassword &4<password> &eto set it'
-password_accepted: '&aServer password accepted, you can now play'
+enter_password: |-
+  &eThis server is password-protected
+  &eEnter the password with &a/login &4<password> &eto play
+set_password: |-
+  &ePasswordProtect is enabled but no password has been set
+  &eUse &a/setpassword &4<password> &eto set itpassword_accepted: '&aServer password accepted, you can now play'
 attempts_left_kick: '&4Server password incorrect! &e%attempts &4attempts left until kick...'
 attempts_left_ban: '&4Server password incorrect! &e%attempts &4attempts left until ban...'
 kick_message: '&4Kicked by &ePasswordProtect &4for too many wrong attempts...'

@@ -8,15 +8,10 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 /**
- * PasswordProtect for CraftBukkit/Spgiot.
- * Handles commands.
- *
- * Refer to the dev.bukkit.org page:
+ * PasswordProtect for CraftBukkit/Spgiot. Handles commands. Refer to the dev.bukkit.org page:
  * https://dev.bukkit.org/projects/passwordprotect
  *
- * @author xGhOsTkiLLeRx
- * thanks to brianewing alias DisabledHamster for the original plugin!
- *
+ * @author xGhOsTkiLLeRx thanks to brianewing alias DisabledHamster for the original plugin!
  */
 
 public class PasswordProtectCommands implements CommandExecutor {
@@ -48,7 +43,8 @@ public class PasswordProtectCommands implements CommandExecutor {
                 String messageLocalization = plugin.getLocalization().getString("password");
                 plugin.message(sender, messageLocalization, cleanServerPassword);
             } else {
-                sender.sendMessage(ChatColor.DARK_RED + "You shouldn't see this message. Please report this issue, including a copy of the config!");
+                sender.sendMessage(
+                        ChatColor.DARK_RED + "You shouldn't see this message. Please report this issue, including a copy of the config!");
             }
             if (cleanServerPassword != null && !plugin.passwordSet() && plugin.getConfig().getBoolean("cleanPassword", false)) {
                 String messageLocalization = plugin.getLocalization().getString("config_invalid");
@@ -71,7 +67,7 @@ public class PasswordProtectCommands implements CommandExecutor {
                 if (args.length >= 1) {
                     try {
                         radius = Integer.parseInt(args[0]);
-                    } catch (NumberFormatException e) {
+                    } catch (@SuppressWarnings("unused") NumberFormatException e) {
                         String messageLocalization = plugin.getLocalization().getString("radius_not_number");
                         plugin.message(player, messageLocalization, null);
                         radius = 4;
