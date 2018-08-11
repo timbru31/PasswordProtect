@@ -6,7 +6,7 @@
 
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/c44d903ca5124d3c8b3278070c0eb704)](https://www.codacy.com/app/timbru31/PasswordProtect?utm_source=github.com&utm_medium=referral&utm_content=timbru31/PasswordProtect&utm_campaign=badger)
 
-[![BukkitDev](https://img.shields.io/badge/BukkitDev-v1.3.1-orange.svg)](https://dev.bukkit.org/projects/passwordprotect)
+[![BukkitDev](https://img.shields.io/badge/BukkitDev-v2.0.0-orange.svg)](https://dev.bukkit.org/projects/passwordprotect)
 
 [![License](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 
