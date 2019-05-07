@@ -1,10 +1,7 @@
 # PasswordProtect
 [![Build Status](https://ci.dustplanet.de/job/PasswordProtect/badge/icon)](https://ci.dustplanet.de/job/PasswordProtect/)
 [![Build Status](https://travis-ci.org/timbru31/PasswordProtect.svg?branch=master)](https://travis-ci.org/timbru31/PasswordProtect)
-[![Circle CI](https://img.shields.io/circleci/project/timbru31/PasswordProtect.svg)](https://circleci.com/gh/timbru31/PasswordProtect)
 [![Build status](https://ci.appveyor.com/api/projects/status/alqexsstuby24650?svg=true)](https://ci.appveyor.com/project/timbru31/passwordprotect)
-
-[![Codacy Badge](https://api.codacy.com/project/badge/Grade/c44d903ca5124d3c8b3278070c0eb704)](https://www.codacy.com/app/timbru31/PasswordProtect?utm_source=github.com&utm_medium=referral&utm_content=timbru31/PasswordProtect&utm_campaign=badger)
 
 [![BukkitDev](https://img.shields.io/badge/BukkitDev-v2.0.0-orange.svg)](https://dev.bukkit.org/projects/passwordprotect)
 
