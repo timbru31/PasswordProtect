@@ -42,6 +42,7 @@ import lombok.Setter;
  */
 
 public class PasswordProtect extends JavaPlugin {
+    private static final int BSTATS_PLUGIN_ID = 2038;
     private FileConfiguration config;
     @Getter
     @Setter
@@ -154,7 +155,7 @@ public class PasswordProtect extends JavaPlugin {
         getCommand("setpassword").setExecutor(executor);
         getCommand("setjaillocation").setExecutor(executor);
 
-        new Metrics(this);
+        new Metrics(this, BSTATS_PLUGIN_ID);
     }
 
     private void loadConfig() {
