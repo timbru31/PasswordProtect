@@ -1,11 +1,13 @@
 package de.dustplanet.passwordprotect;
 
 import java.util.UUID;
+import java.util.concurrent.TimeUnit;
 
 import org.bukkit.BanList;
 import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
 import org.bukkit.entity.Player;
+import org.bukkit.event.Cancellable;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -13,6 +15,7 @@ import org.bukkit.event.entity.EntityPickupItemEvent;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import org.bukkit.event.player.PlayerDropItemEvent;
+import org.bukkit.event.player.PlayerEvent;
 import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
@@ -23,6 +26,8 @@ import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
 public class PasswordProtectPlayerListener implements Listener {
+    private static final int POTION_AMPLIFIER = 15;
+    private static final int TICKS_PER_SECOND = 20;
     private PasswordProtect plugin;
 
     public PasswordProtectPlayerListener(PasswordProtect instance) {
@@ -56,10 +61,12 @@ public class PasswordProtectPlayerListener implements Listener {
             Player player = event.getPlayer();
             if (plugin.getJailedPlayers().containsKey(playerUUID)) {
                 if (!player.hasPotionEffect(PotionEffectType.BLINDNESS) && plugin.getConfig().getBoolean("darkness", true)) {
-                    player.addPotionEffect(new PotionEffect(PotionEffectType.BLINDNESS, 20 * 86400, 15));
+                    player.addPotionEffect(new PotionEffect(PotionEffectType.BLINDNESS,
+                            (int) (TICKS_PER_SECOND * TimeUnit.DAYS.toSeconds(1L)), POTION_AMPLIFIER));
                 }
                 if (!player.hasPotionEffect(PotionEffectType.SLOW) && plugin.getConfig().getBoolean("slowness", true)) {
-                    player.addPotionEffect(new PotionEffect(PotionEffectType.SLOW, 20 * 86400, 15));
+                    player.addPotionEffect(new PotionEffect(PotionEffectType.SLOW, (int) (TICKS_PER_SECOND * TimeUnit.DAYS.toSeconds(1L)),
+                            POTION_AMPLIFIER));
                 }
                 plugin.stayInJail(player);
             }
@@ -68,32 +75,17 @@ public class PasswordProtectPlayerListener implements Listener {
 
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onPlayerInteract(PlayerInteractEvent event) {
-        if (plugin.getConfig().getBoolean("prevent.Interaction", true)) {
-            UUID playerUUID = event.getPlayer().getUniqueId();
-            if (plugin.getJailedPlayers().containsKey(playerUUID)) {
-                event.setCancelled(true);
-            }
-        }
+        checkBasicEvent(event, "prevent.Interaction");
     }
 
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onPlayerInteractEntity(PlayerInteractEntityEvent event) {
-        if (plugin.getConfig().getBoolean("prevent.InteractionMobs", true)) {
-            UUID playerUUID = event.getPlayer().getUniqueId();
-            if (plugin.getJailedPlayers().containsKey(playerUUID)) {
-                event.setCancelled(true);
-            }
-        }
+        checkBasicEvent(event, "prevent.InteractionMobs");
     }
 
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onPlayerDropItem(PlayerDropItemEvent event) {
-        if (plugin.getConfig().getBoolean("prevent.ItemDrop", true)) {
-            UUID playerUUID = event.getPlayer().getUniqueId();
-            if (plugin.getJailedPlayers().containsKey(playerUUID)) {
-                event.setCancelled(true);
-            }
-        }
+        checkBasicEvent(event, "prevent.ItemDrop");
     }
 
     @EventHandler(priority = EventPriority.HIGHEST)
@@ -111,22 +103,12 @@ public class PasswordProtectPlayerListener implements Listener {
 
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onPlayerPortal(PlayerPortalEvent event) {
-        if (plugin.getConfig().getBoolean("prevent.Portal", true)) {
-            UUID playerUUID = event.getPlayer().getUniqueId();
-            if (plugin.getJailedPlayers().containsKey(playerUUID)) {
-                event.setCancelled(true);
-            }
-        }
+        checkBasicEvent(event, "prevent.Portal");
     }
 
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onPlayerChat(AsyncPlayerChatEvent event) {
-        if (plugin.getConfig().getBoolean("prevent.Chat", true)) {
-            UUID playerUUID = event.getPlayer().getUniqueId();
-            if (plugin.getJailedPlayers().containsKey(playerUUID)) {
-                event.setCancelled(true);
-            }
-        }
+        checkBasicEvent(event, "prevent.Chat");
     }
 
     @EventHandler(priority = EventPriority.HIGHEST)
@@ -230,4 +212,14 @@ public class PasswordProtectPlayerListener implements Listener {
             event.setCancelled(true);
         }
     }
+
+    private void checkBasicEvent(PlayerEvent event, String configKey) {
+        if (plugin.getConfig().getBoolean(configKey, true)) {
+            UUID playerUUID = event.getPlayer().getUniqueId();
+            if (plugin.getJailedPlayers().containsKey(playerUUID)) {
+                ((Cancellable) event).setCancelled(true);
+            }
+        }
+    }
+
 }

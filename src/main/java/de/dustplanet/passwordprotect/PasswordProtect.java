@@ -91,8 +91,8 @@ public class PasswordProtect extends JavaPlugin {
         getCommandList().clear();
     }
 
-    @Override
     @SuppressWarnings({ "unchecked", "unused" })
+    @Override
     public void onEnable() {
         PluginManager pm = getServer().getPluginManager();
         pm.registerEvents(new PasswordProtectBlockListener(this), this);
@@ -199,12 +199,13 @@ public class PasswordProtect extends JavaPlugin {
 
         try {
             MessageDigest.getInstance(hash);
-        } catch (@SuppressWarnings("unused") NoSuchAlgorithmException e) {
+        } catch (NoSuchAlgorithmException e) {
             getServer().getConsoleSender().sendMessage(ChatColor.RED + "PasswordProtect can't use this hash! FATAL!");
             getServer().getConsoleSender().sendMessage(ChatColor.RED + "Falling back to SHA-512!");
             getServer().getConsoleSender().sendMessage(ChatColor.RED + "Report this IMMEDIATELY!");
             hash = "SHA-512";
             config.set("hash", "SHA-512");
+            e.printStackTrace();
         }
         config.options().copyDefaults(true);
         saveConfig();
