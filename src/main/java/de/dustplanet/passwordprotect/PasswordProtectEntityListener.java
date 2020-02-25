@@ -14,15 +14,10 @@ import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.event.entity.EntityTargetEvent;
 
 /**
- * PasswordProtect for CraftBukkit/Spgiot.
- * Handles entity activities.
- *
- * Refer to the dev.bukkit.org page:
+ * PasswordProtect for CraftBukkit/Spgiot. Handles entity activities. Refer to the dev.bukkit.org page:
  * https://dev.bukkit.org/projects/passwordprotect
  *
- * @author xGhOsTkiLLeRx
- * thanks to brianewing alias DisabledHamster for the original plugin!
- *
+ * @author xGhOsTkiLLeRx thanks to brianewing alias DisabledHamster for the original plugin!
  */
 
 public class PasswordProtectEntityListener implements Listener {
@@ -39,7 +34,7 @@ public class PasswordProtectEntityListener implements Listener {
             if (target == null) {
                 return;
             }
-            if (target.getType().equals(EntityType.PLAYER)) {
+            if (target.getType() == EntityType.PLAYER) {
                 UUID playerUUID = ((Player) target).getUniqueId();
                 if (plugin.getJailedPlayers().containsKey(playerUUID)) {
                     event.setCancelled(true);

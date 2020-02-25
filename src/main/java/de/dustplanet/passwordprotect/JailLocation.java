@@ -53,8 +53,7 @@ public class JailLocation extends Location implements IJailLocation {
     public int hashCode() {
         final int prime = 31;
         int result = super.hashCode();
-        result = prime * result + radius;
-        return result;
+        return prime * result + radius;
     }
 
     @Override

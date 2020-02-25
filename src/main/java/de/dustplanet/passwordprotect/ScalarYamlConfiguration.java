@@ -19,13 +19,11 @@ public class ScalarYamlConfiguration extends YamlConfiguration {
     private final Representer yamlRepresenter = new YamlRepresenter();
     private final Yaml yaml = new Yaml(new YamlConstructor(), yamlRepresenter, yamlOptions);
 
-
     /**
      * Creates a new {@link YamlConfiguration}, loading from the given file.
      * <p>
-     * Any errors loading the Configuration will be logged and then ignored.
-     * If the specified input is not a valid config, a blank config will be
-     * returned.
+     * Any errors loading the Configuration will be logged and then ignored. If the specified input is not a valid config, a blank config
+     * will be returned.
      * <p>
      * The encoding used may follow the system dependent default.
      *
@@ -57,7 +55,7 @@ public class ScalarYamlConfiguration extends YamlConfiguration {
         String header = buildHeader();
         String dump = yaml.dump(getValues(false));
 
-        if (dump.equals(BLANK_CONFIG)) {
+        if (BLANK_CONFIG.equals(dump)) {
             dump = "";
         }
 

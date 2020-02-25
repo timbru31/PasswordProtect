@@ -1,5 +1,6 @@
 package de.dustplanet.passwordprotect;
 
+import java.util.Locale;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
@@ -137,7 +138,7 @@ public class PasswordProtectPlayerListener implements Listener {
                         if (player.hasPotionEffect(PotionEffectType.SLOW)) {
                             player.removePotionEffect(PotionEffectType.SLOW);
                         }
-                        if (player.getGameMode().equals(GameMode.CREATIVE)) {
+                        if (player.getGameMode() == GameMode.CREATIVE) {
                             player.setAllowFlight(true);
                         }
                         if (plugin.getConfig().getBoolean("teleportBack", true) && plugin.getPlayerLocations().containsKey(playerUUID)) {
@@ -188,7 +189,7 @@ public class PasswordProtectPlayerListener implements Listener {
                                 }
                             }
                         }
-                        if (attemptsLeftKick > 0 || attemptsLeftBan > 0) {
+                        if (attemptsLeftKick > 0) {
                             if (attemptsLeftKick > 0) {
                                 String messageLocalization = plugin.getLocalization().getString("attempts_left_kick");
                                 plugin.message(player, messageLocalization, Integer.toString(attemptsLeftKick));
@@ -206,7 +207,7 @@ public class PasswordProtectPlayerListener implements Listener {
                 plugin.sendPasswordRequiredMessage(player);
             }
             event.setCancelled(true);
-        } else if (message.toLowerCase().startsWith("/login")) {
+        } else if (message.toLowerCase(Locale.ENGLISH).startsWith("/login")) {
             String messageLocalization = plugin.getLocalization().getString("already_logged_in");
             plugin.message(player, messageLocalization, null);
             event.setCancelled(true);

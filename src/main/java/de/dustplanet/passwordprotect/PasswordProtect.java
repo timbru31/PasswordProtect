@@ -387,7 +387,7 @@ public class PasswordProtect extends JavaPlugin {
     private JailLocation loadJailLocation(World world) {
         String worldName = world.getName();
         List<Double> data = jails.getDoubleList(worldName + ".jailLocation");
-        if (data == null || data.size() != 6) { // [x, y, z, yaw, pitch, radius]
+        if (data.size() != 6) { // [x, y, z, yaw, pitch, radius]
             return null;
         }
         double x = data.get(0);
@@ -397,8 +397,7 @@ public class PasswordProtect extends JavaPlugin {
         float pitch = data.get(4).floatValue();
         int radius = data.get(5).intValue();
 
-        JailLocation jailLocation = new JailLocation(world, x, y, z, yaw, pitch, radius);
-        return jailLocation;
+        return new JailLocation(world, x, y, z, yaw, pitch, radius);
     }
 
     public void setPassword(String password) {
@@ -431,8 +430,9 @@ public class PasswordProtect extends JavaPlugin {
             md.update(password.getBytes(Charset.defaultCharset()));
             byte[] byteData = md.digest();
             return String.format("%0" + (byteData.length << 1) + "x", new BigInteger(1, byteData));
-        } catch (@SuppressWarnings("unused") NoSuchAlgorithmException e) {
+        } catch (NoSuchAlgorithmException e) {
             getServer().getLogger().severe("The algorithm is NOT known: " + hash);
+            e.printStackTrace();
             return null;
         }
     }
