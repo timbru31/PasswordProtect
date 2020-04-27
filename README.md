@@ -1,7 +1,7 @@
 # PasswordProtect
 [![Build Status](https://ci.dustplanet.de/job/PasswordProtect/badge/icon)](https://ci.dustplanet.de/job/PasswordProtect/)
 [![Build Status](https://travis-ci.org/timbru31/PasswordProtect.svg?branch=master)](https://travis-ci.org/timbru31/PasswordProtect)
-[![Build status](https://ci.appveyor.com/api/projects/status/alqexsstuby24650?svg=true)](https://ci.appveyor.com/project/timbru31/passwordprotect)
+[![Build the plugin](https://github.com/timbru31/PasswordProtect/workflows/Build%20the%20plugin/badge.svg)](https://github.com/timbru31/PasswordProtect/actions?query=workflow%3A%22Build+the+plugin%22)
 
 [![BukkitDev](https://img.shields.io/badge/BukkitDev-v3.0.0-orange.svg)](https://dev.bukkit.org/projects/passwordprotect)
 
