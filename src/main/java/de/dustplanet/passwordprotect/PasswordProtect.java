@@ -319,6 +319,8 @@ public class PasswordProtect extends JavaPlugin {
             if (config.getBoolean("slowness", true)) {
                 player.addPotionEffect(new PotionEffect(PotionEffectType.SLOW, 20 * 86400, 5));
             }
+
+            sendPasswordRequiredMessage(player);
         }
     }
 
@@ -341,7 +343,6 @@ public class PasswordProtect extends JavaPlugin {
     private void sendToJail(Player player) {
         JailLocation jailLocation = getJailLocation(player);
         player.teleport(jailLocation);
-        sendPasswordRequiredMessage(player);
     }
 
     public void sendPasswordRequiredMessage(Player player) {
