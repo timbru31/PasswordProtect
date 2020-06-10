@@ -13,7 +13,7 @@ import de.dustplanet.passwordprotect.utils.PasswordProtectUtilities;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
 /**
- * PasswordProtect for CraftBukkit/Spgiot. Handles the setjaillocation command.
+ * PasswordProtect for CraftBukkit/Spigot. Handles the setjaillocation command.
  *
  * @author timbru31
  * @author brianewing

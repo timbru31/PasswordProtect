@@ -10,7 +10,7 @@ import de.dustplanet.passwordprotect.utils.PasswordProtectUtilities;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
 /**
- * PasswordProtect for CraftBukkit/Spgiot. Handles the setpassword command.
+ * PasswordProtect for CraftBukkit/Spigot. Handles the setpassword command.
  *
  * @author timbru31
  * @author brianewing
