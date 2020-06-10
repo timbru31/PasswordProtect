@@ -1,4 +1,4 @@
-package de.dustplanet.passwordprotect;
+package de.dustplanet.passwordprotect.jail;
 
 import org.bukkit.Location;
 import org.bukkit.World;
@@ -8,12 +8,13 @@ import lombok.Setter;
 
 /**
  * The JailLocation is a square around a specific location provided by the exact location or coordinates. The radius is the value after
- * which the player should be teleported back into the middle of the JailLocation Refer to the dev.bukkit.org page:
- * https://dev.bukkit.org/projects/passwordprotect
+ * which the player should be teleported back into the middle of the JailLocation.
  *
- * @author xGhOsTkiLLeRx thanks to brianewing alias DisabledHamster for the original plugin!
+ * @author timbru31
+ * @author brianewing
  */
 
+@SuppressWarnings("PMD.CommentSize")
 public class JailLocation extends Location implements IJailLocation {
     /**
      * Radius used.
@@ -33,7 +34,9 @@ public class JailLocation extends Location implements IJailLocation {
      * @param pitch pitch of the center
      * @param radius radius of the JailLocation
      */
-    public JailLocation(World world, double x, double y, double z, float yaw, float pitch, int radius) {
+    @SuppressWarnings("PMD.ShortVariable")
+    public JailLocation(final World world, final double x, final double y, final double z, final float yaw, final float pitch,
+            final int radius) {
         super(world, x, y, z, yaw, pitch);
         this.radius = radius;
     }
@@ -44,7 +47,7 @@ public class JailLocation extends Location implements IJailLocation {
      * @param location given location as the center
      * @param radius radius of the JailLocation
      */
-    public JailLocation(Location location, int radius) {
+    public JailLocation(final Location location, final int radius) {
         super(location.getWorld(), location.getX(), location.getY(), location.getZ(), location.getYaw(), location.getPitch());
         this.radius = radius;
     }
@@ -52,12 +55,12 @@ public class JailLocation extends Location implements IJailLocation {
     @Override
     public int hashCode() {
         final int prime = 31;
-        int result = super.hashCode();
+        final int result = super.hashCode();
         return prime * result + radius;
     }
 
     @Override
-    public boolean equals(Object obj) {
+    public boolean equals(final Object obj) {
         if (obj == null) {
             return false;
         }

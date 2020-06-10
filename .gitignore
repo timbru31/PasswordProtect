@@ -3,3 +3,4 @@ target/
 .classpath
 .settings/*
 dependency-reduced-pom.xml
+.eclipse-pmd

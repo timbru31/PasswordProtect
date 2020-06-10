@@ -1,10 +1,9 @@
-package de.dustplanet.passwordprotect;
+package de.dustplanet.passwordprotect.jail;
 
 /**
  * Interface for the JailLocation.
  *
- * @author xGhOsTkiLLeRx
- *
+ * @author timbru31
  */
 public interface IJailLocation {
 
