@@ -296,8 +296,9 @@ public class PasswordProtect extends JavaPlugin {
                 String messageLocalization = getLocalization().getString("set_password");
                 message(player, messageLocalization, null);
             }
-        } else if (!player.hasPermission("passwordprotect.nopassword") && player.isOp() && config.getBoolean("opsRequirePassword", true)
-                || !player.isOp()) {
+        } else if ((player.isOp() && config.getBoolean("opsRequirePassword", true))
+            || !player.hasPermission("passwordprotect.nopassword")) {
+
             if (config.getBoolean("teleportBack", true) && !getPlayerLocations().containsKey(player.getUniqueId())) {
                 getPlayerLocations().put(player.getUniqueId(), player.getLocation());
             }
@@ -318,6 +319,8 @@ public class PasswordProtect extends JavaPlugin {
             if (config.getBoolean("slowness", true)) {
                 player.addPotionEffect(new PotionEffect(PotionEffectType.SLOW, 20 * 86400, 5));
             }
+
+            sendPasswordRequiredMessage(player);
         }
     }
 
@@ -340,7 +343,6 @@ public class PasswordProtect extends JavaPlugin {
     private void sendToJail(Player player) {
         JailLocation jailLocation = getJailLocation(player);
         player.teleport(jailLocation);
-        sendPasswordRequiredMessage(player);
     }
 
     public void sendPasswordRequiredMessage(Player player) {
