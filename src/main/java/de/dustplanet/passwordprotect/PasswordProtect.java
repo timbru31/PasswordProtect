@@ -296,8 +296,9 @@ public class PasswordProtect extends JavaPlugin {
                 String messageLocalization = getLocalization().getString("set_password");
                 message(player, messageLocalization, null);
             }
-        } else if (!player.hasPermission("passwordprotect.nopassword") && player.isOp() && config.getBoolean("opsRequirePassword", true)
-                || !player.isOp()) {
+        } else if ((player.isOp() && config.getBoolean("opsRequirePassword", true))
+            || !player.hasPermission("passwordprotect.nopassword")) {
+
             if (config.getBoolean("teleportBack", true) && !getPlayerLocations().containsKey(player.getUniqueId())) {
                 getPlayerLocations().put(player.getUniqueId(), player.getLocation());
             }
