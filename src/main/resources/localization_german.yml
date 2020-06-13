@@ -1,0 +1,25 @@
+permission_denied: '&4Du hast nicht die Berechtigung dies zu tun!'
+enter_password: |-
+  &eDieser Server ist durch ein Passwort geschützt.
+  &eGib das Passwort via &a/login &4<password> &eein, um zu spielen!
+set_password: |-
+  &ePasswordProtect ist aktiv, aber es ist kein Passwort gesetzt.
+  &eNutze &a/setpassword &4<password> &eum ein Passwort zu setzen.
+password_accepted: '&aServer Passwort korrekt, du kannst nun spielen.'
+attempts_left_kick: '&4Das Server Passwort ist falsch! &e%attempts &4Versuche über bis zum Kick...'
+attempts_left_ban: '&4Das Server Passwort ist falsch! &e%attempts &4Versuche über bis zum Bann...'
+kick_message: '&4Gekickt von &ePasswordProtect &4für zu viele falsche Versuche...'
+ban_message: '&4Gebannt von &ePasswordProtect &4für zu viele falsche Versuche...'
+kick_broadcast: '&e%player &4 wurde gekickt durch &ePasswordProtect &4für zu viele falsche Versuche...'
+ban_broadcast: '&e%player &4wurde gebannt durch &ePasswordProtect &4für zu viele falsche Versuche...'
+radius_not_number: '&4Der angegebene Radius ist keine Zahl! Der Standard (4) wird stattdessen genutzt!'
+jail_set: '&aGefägnisareal gesetzt!'
+password_set: '&aServer Passwort gesetzt!'
+only_ingame: '&4Die Konsole kann dieses Kommand nicht ausführen!'
+config_invalid: '&4Es scheint, als ist die Konfiguration fehlerhaft. Bitte setzt das Passwort erneut!'
+only_hashed: '&4Das Server Passwort ist nur als Hash gespeichert...'
+password_not_set: '&eDas Server Passwort ist nicht gesetzt. Nutze /setpassword <password>'
+password: '&eDas Server Passwort ist &4%password'
+set_jail_area: '&eDu kannst das Gefägnisareal an deiner Stelle mit &a/setjaillocation &4[radius] &e setzen.'
+already_logged_in: '&eDu bist bereits eingeloggt!'
+no_login_console: '&eDie Konsole kann sich nicht einloggen!'
