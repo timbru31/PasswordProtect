@@ -147,7 +147,6 @@ public class PasswordProtectUtilities {
      * @param localizationFile the file to save the defaults to
      */
     public void loadLocalization(final FileConfiguration localization, final File localizationFile) {
-        localization.options().header("The underscores are used for the different lines!");
         localization.addDefault("permission_denied", "&4You don't have the permission to do this!");
         localization.addDefault("enter_password",
                 "&eThis server is password-protected\n&eEnter the password with &a/login &4<password> &eto play");
