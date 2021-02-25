@@ -79,7 +79,7 @@ public class PasswordProtectPlayerListener implements Listener {
     @EventHandler(priority = EventPriority.HIGHEST)
     @SuppressWarnings("checkstyle:MissingJavadocMethod")
     public void onPlayerMove(final PlayerMoveEvent event) {
-        if (!plugin.getConfig().getBoolean("prevent.Movement", true)) {
+        if (!plugin.getConfig().getBoolean("prevent.movement", true)) {
             return;
         }
 
@@ -101,19 +101,19 @@ public class PasswordProtectPlayerListener implements Listener {
     @EventHandler(priority = EventPriority.HIGHEST)
     @SuppressWarnings("checkstyle:MissingJavadocMethod")
     public void onPlayerInteract(final PlayerInteractEvent event) {
-        checkBasicEvent(event, "prevent.Interaction");
+        checkBasicEvent(event, "prevent.interaction");
     }
 
     @EventHandler(priority = EventPriority.HIGHEST)
     @SuppressWarnings("checkstyle:MissingJavadocMethod")
     public void onPlayerInteractEntity(final PlayerInteractEntityEvent event) {
-        checkBasicEvent(event, "prevent.InteractionMobs");
+        checkBasicEvent(event, "prevent.interactionMobs");
     }
 
     @EventHandler(priority = EventPriority.HIGHEST)
     @SuppressWarnings("checkstyle:MissingJavadocMethod")
     public void onPlayerDropItem(final PlayerDropItemEvent event) {
-        checkBasicEvent(event, "prevent.ItemDrop");
+        checkBasicEvent(event, "prevent.itemDrop");
     }
 
     @EventHandler(priority = EventPriority.HIGHEST)
@@ -122,7 +122,7 @@ public class PasswordProtectPlayerListener implements Listener {
         if (!(event.getEntity() instanceof Player)) {
             return;
         }
-        if (plugin.getConfig().getBoolean("prevent.ItemPickup", true)) {
+        if (plugin.getConfig().getBoolean("prevent.itemPickup", true)) {
             final UUID playerUUID = event.getEntity().getUniqueId();
             if (jailHelper.getJailedPlayers().containsKey(playerUUID)) {
                 event.setCancelled(true);
@@ -133,13 +133,13 @@ public class PasswordProtectPlayerListener implements Listener {
     @EventHandler(priority = EventPriority.HIGHEST)
     @SuppressWarnings("checkstyle:MissingJavadocMethod")
     public void onPlayerPortal(final PlayerPortalEvent event) {
-        checkBasicEvent(event, "prevent.Portal");
+        checkBasicEvent(event, "prevent.portal");
     }
 
     @EventHandler(priority = EventPriority.HIGHEST)
     @SuppressWarnings("checkstyle:MissingJavadocMethod")
     public void onPlayerChat(final AsyncPlayerChatEvent event) {
-        checkBasicEvent(event, "prevent.Chat");
+        checkBasicEvent(event, "prevent.chat");
     }
 
     @EventHandler(priority = EventPriority.HIGHEST)

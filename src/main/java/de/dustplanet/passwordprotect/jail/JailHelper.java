@@ -144,8 +144,7 @@ public class JailHelper {
             return;
         }
 
-        if (player.isOp() && plugin.getConfig().getBoolean("opsRequirePassword", true)
-                || !player.hasPermission("passwordprotect.nopassword")) {
+        if (checkPlayerPermissions(player)) {
             if (plugin.getConfig().getBoolean("teleportBack", true) && !getPlayerLocations().containsKey(player.getUniqueId())) {
                 getPlayerLocations().put(player.getUniqueId(), player.getLocation());
             }
@@ -157,7 +156,7 @@ public class JailHelper {
             if (!getJailedPlayers().containsKey(player.getUniqueId())) {
                 getJailedPlayers().put(player.getUniqueId(), 1);
             }
-            if (plugin.getConfig().getBoolean("prevent.Flying", true)) {
+            if (plugin.getConfig().getBoolean("prevent.flying", true)) {
                 player.setAllowFlight(false);
             }
             if (plugin.getConfig().getBoolean("darkness", true)) {
@@ -169,6 +168,13 @@ public class JailHelper {
 
             utils.sendPasswordRequiredMessage(player);
         }
+    }
+
+    private boolean checkPlayerPermissions(final Player player) {
+        if (player.isOp()) {
+            return plugin.getConfig().getBoolean("opsRequirePassword", true);
+        }
+        return !player.hasPermission("passwordprotect.nopassword");
     }
 
     private void sendToJail(final Player player) {

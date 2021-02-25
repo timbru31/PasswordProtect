@@ -33,7 +33,7 @@ public class PasswordProtectBlockListener implements Listener {
     @EventHandler(priority = EventPriority.HIGHEST)
     @SuppressWarnings("checkstyle:MissingJavadocMethod")
     public void onBlockPlace(final BlockPlaceEvent event) {
-        if (plugin.getConfig().getBoolean("prevent.BlockPlace", true)) {
+        if (plugin.getConfig().getBoolean("prevent.blockPlace", true)) {
             final UUID playerUUID = event.getPlayer().getUniqueId();
             if (jailHelper.getJailedPlayers().containsKey(playerUUID)) {
                 event.setBuild(false);
@@ -45,7 +45,7 @@ public class PasswordProtectBlockListener implements Listener {
     @EventHandler(priority = EventPriority.HIGHEST)
     @SuppressWarnings("checkstyle:MissingJavadocMethod")
     public void onBlockBreak(final BlockBreakEvent event) {
-        if (plugin.getConfig().getBoolean("prevent.BlockBreak", true)) {
+        if (plugin.getConfig().getBoolean("prevent.blockBreak", true)) {
             final UUID playerUUID = event.getPlayer().getUniqueId();
             if (jailHelper.getJailedPlayers().containsKey(playerUUID)) {
                 event.setCancelled(true);

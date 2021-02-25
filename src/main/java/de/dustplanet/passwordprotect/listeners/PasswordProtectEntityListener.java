@@ -40,7 +40,7 @@ public class PasswordProtectEntityListener implements Listener {
     @EventHandler(priority = EventPriority.HIGHEST)
     @SuppressWarnings("checkstyle:MissingJavadocMethod")
     public void onEntityTarget(final EntityTargetEvent event) {
-        if (!plugin.getConfig().getBoolean("prevent.Triggering", true)) {
+        if (!plugin.getConfig().getBoolean("prevent.triggering", true)) {
             return;
         }
 
@@ -60,7 +60,7 @@ public class PasswordProtectEntityListener implements Listener {
     @EventHandler(priority = EventPriority.HIGHEST)
     @SuppressWarnings("checkstyle:MissingJavadocMethod")
     public void onEntityDamageByEntity(final EntityDamageByEntityEvent event) {
-        if (!plugin.getConfig().getBoolean("prevent.Attacks", true)) {
+        if (!plugin.getConfig().getBoolean("prevent.attacks", true)) {
             return;
         }
 
@@ -77,7 +77,7 @@ public class PasswordProtectEntityListener implements Listener {
     @EventHandler(priority = EventPriority.HIGHEST)
     @SuppressWarnings("checkstyle:MissingJavadocMethod")
     public void onEntityDamage(final EntityDamageEvent event) {
-        if (!plugin.getConfig().getBoolean("prevent.Damage", true)) {
+        if (!plugin.getConfig().getBoolean("prevent.damage", true)) {
             return;
         }
 
@@ -98,7 +98,7 @@ public class PasswordProtectEntityListener implements Listener {
     @EventHandler(priority = EventPriority.HIGHEST)
     @SuppressWarnings("checkstyle:MissingJavadocMethod")
     public void onEntityDeath(final EntityDeathEvent event) {
-        if (!plugin.getConfig().getBoolean("prevent.DeathDrops", true)) {
+        if (!plugin.getConfig().getBoolean("prevent.deathDrops", true)) {
             return;
         }
 
