@@ -95,6 +95,7 @@ public class PasswordProtectUtilities {
         config.addDefault("cleanPassword", Boolean.FALSE);
         config.addDefault("password", "");
         config.addDefault("passwordClean", "");
+        config.addDefault("autoUpdater", Boolean.TRUE);
         config.addDefault("prevent.movement", Boolean.TRUE);
         config.addDefault("prevent.interaction", Boolean.TRUE);
         config.addDefault("prevent.interactionMobs", Boolean.TRUE);

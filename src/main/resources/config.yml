@@ -5,6 +5,7 @@ disableJailArea: false
 cleanPassword: false
 password: ''
 passwordClean: ''
+autoUpdater: true
 prevent:
   movement: true
   interaction: true

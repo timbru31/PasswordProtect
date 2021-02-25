@@ -41,6 +41,7 @@ There is an additional ability to allow certain commands or to auto-kick or auto
 _Third party features, all of them can be disabled_
 
 - bStats for usage statistics
+- Auto Updater (connecting to https://dev.bukkit.org for updating checking)
 
 ## Standard config
 
@@ -56,6 +57,7 @@ disableJailArea: false
 cleanPassword: false
 password: ""
 passwordClean: ""
+autoUpdater: true
 # What events should be prevented?
 prevent:
   movement: true

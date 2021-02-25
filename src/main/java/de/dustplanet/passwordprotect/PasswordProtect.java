@@ -25,6 +25,7 @@ import de.dustplanet.passwordprotect.utils.ScalarYamlConfiguration;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import lombok.Getter;
 import lombok.Setter;
+import net.gravitydevelopment.updater.Updater;
 
 /**
  * PasswordProtect for CraftBukkit/Spigot. Handles some general stuff. Refer to the dev.bukkit.org page:
@@ -39,6 +40,7 @@ import lombok.Setter;
         "PMD.AtLeastOneConstructor" })
 public class PasswordProtect extends JavaPlugin {
     private static final int BSTATS_PLUGIN_ID = 2038;
+    private static final int PLUGIN_ID = 39_561;
     private JailHelper jailHelper;
     @Getter
     @Setter
@@ -110,6 +112,7 @@ public class PasswordProtect extends JavaPlugin {
 
         utils.registerCommands(jailHelper);
 
+        checkForUpdate();
         registerMetrics();
     }
 
@@ -139,6 +142,26 @@ public class PasswordProtect extends JavaPlugin {
     @SuppressFBWarnings("SEC_SIDE_EFFECT_CONSTRUCTOR")
     private void registerMetrics() {
         new Metrics(this, BSTATS_PLUGIN_ID);
+    }
+
+    @SuppressWarnings({ "PMD.AvoidCatchingGenericException", "checkstyle:IllegalCatch", "unused" })
+    private void checkForUpdate() {
+        if (getConfig().getBoolean("autoUpdater", true)) {
+            if (getDescription().getVersion().contains("SNAPSHOT")) {
+                getLogger().info("AutoUpdater is disabled because you are running a dev build!");
+            } else {
+                try {
+                    new Updater(this, PLUGIN_ID, getFile(), Updater.UpdateType.DEFAULT, updaterResult -> {
+                        getLogger().log(Level.INFO, "Result from AutoUpdater is: {0}", updaterResult.getResult());
+                    }, true);
+                    getLogger().info("AutoUpdater is enabled and now running.");
+                } catch (final Exception e) {
+                    getLogger().log(Level.INFO, "Error while auto updating:", e);
+                }
+            }
+        } else {
+            getLogger().info("AutoUpdater is disabled due to config setting.");
+        }
     }
 
 }
