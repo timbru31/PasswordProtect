@@ -9,7 +9,7 @@
   </parent>
 
   <artifactId>PasswordProtect</artifactId>
-  <version>3.1.0</version>
+  <version>3.1.1-SNAPSHOT</version>
   <name>PasswordProtect</name>
   <description>Protect your server with a password</description>
   <url>https://dev.bukkit.org/projects/passwordprotect</url>
@@ -57,6 +57,6 @@
     <url>https://github.com/timbru31/PasswordProtect</url>
     <connection>scm:git:git://github.com/timbru31/PasswordProtect.git</connection>
     <developerConnection>scm:git:git@github.com:timbru31/PasswordProtect.git</developerConnection>
-    <tag>PasswordProtect-3.1.0</tag>
+    <tag>HEAD</tag>
   </scm>
 </project>
