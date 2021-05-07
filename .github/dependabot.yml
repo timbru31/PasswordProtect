@@ -1,17 +1,10 @@
 version: 2
-registries:
-  maven-repository-repo-dustplanet-de:
-    type: maven-repository
-    url: https://repo.dustplanet.de
-    username: jenkins
-    password: "${{secrets.MAVEN_REPOSITORY_REPO_DUSTPLANET_DE_PASSWORD}}"
-
 updates:
-- package-ecosystem: maven
+- package-ecosystem: "maven"
   directory: "/"
   schedule:
     interval: daily
-    time: "08:00"
-  open-pull-requests-limit: 10
-  registries:
-  - maven-repository-repo-dustplanet-de
+- package-ecosystem: "github-actions"
+  directory: "/"
+  schedule:
+    interval: "daily"
