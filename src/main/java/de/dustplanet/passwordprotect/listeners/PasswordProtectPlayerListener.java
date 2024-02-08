@@ -14,6 +14,8 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityPickupItemEvent;
+import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import org.bukkit.event.player.PlayerDropItemEvent;
@@ -114,6 +116,14 @@ public class PasswordProtectPlayerListener implements Listener {
     @SuppressWarnings("checkstyle:MissingJavadocMethod")
     public void onPlayerDropItem(final PlayerDropItemEvent event) {
         checkBasicEvent(event, "prevent.itemDrop");
+    }
+
+    @EventHandler(priority = EventPriority.HIGHEST)
+    @SuppressWarnings("checkstyle:MissingJavadocMethod")
+    public void onInventoryClick(final InventoryClickEvent event) {
+        if (event.getSlotType() == InventoryType.SlotType.ARMOR){
+            event.setCancelled(true);
+        }
     }
 
     @EventHandler(priority = EventPriority.HIGHEST)
