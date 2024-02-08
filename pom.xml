@@ -9,7 +9,7 @@
   </parent>
 
   <artifactId>PasswordProtect</artifactId>
-  <version>3.1.1-SNAPSHOT</version>
+  <version>3.1.2-SNAPSHOT</version>
   <name>PasswordProtect</name>
   <description>Protect your server with a password</description>
   <url>https://dev.bukkit.org/projects/passwordprotect</url>
