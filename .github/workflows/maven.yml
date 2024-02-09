@@ -40,7 +40,8 @@ jobs:
       with:
         name: PasswordProtect-${{ matrix.os }}-${{ matrix.java }}.jar
         path: staging
-    - run: ls
+    - run: ls -R
+    - run: cd staging
     - name: Download artifact
       uses: actions/download-artifact@v3
       with:
