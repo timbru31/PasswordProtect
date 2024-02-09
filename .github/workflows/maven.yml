@@ -37,20 +37,17 @@ jobs:
       uses: actions/upload-artifact@v4.3.1
       with:
         name: PasswordProtect-${{ matrix.os }}-${{ matrix.java }}.jar
-        path: target
-
-    - name: Download artifact
-      uses: actions/download-artifact@v3
-      with:
-        name: PasswordProtect-${{ matrix.os }}-${{ matrix.java }}.jar
-        path: target
+        path: .target/
 
   release:
     needs: build
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4.1.1
+
+      - name: Download artifact
+        uses: actions/download-artifact@v3
+        with:
+          name: PasswordProtect-${{ matrix.os }}-${{ matrix.java }}.jar
 
       - name: Create Release
         id: create_release
