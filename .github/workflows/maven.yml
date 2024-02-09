@@ -1,4 +1,4 @@
-name: Build the plugin
+name: Build and Release Plugin
 
 on:
   push:
@@ -40,11 +40,9 @@ jobs:
   auto-merge:
     runs-on: ubuntu-latest
     needs: build
-
     permissions:
       pull-requests: write
       contents: write
-
     steps:
       - name: Automatically merge dependabot upgrades
         uses: fastify/github-action-merge-dependabot@v3.9.1
@@ -62,16 +60,20 @@ jobs:
         with:
           name: PasswordProtect
 
-      - name: Release
-        id: create-release
+      - name: Create Release
+        id: create_release
         uses: actions/create-release@v1
         with:
           tag_name: ${{ github.run_number }}
           release_name: PasswordProtect ${{ github.run_number }}
-      - name: Upload release asset
+          draft: false
+          prerelease: false
+
+      - name: Upload Release Asset
+        id: upload-release-asset
         uses: actions/upload-release-asset@v1
         with:
-          upload_url: ${{ steps.create-release.outputs.upload_url }}
-          asset_path: ./PasswordProtect.jar
-          asset-name: PasswordProtect-v${{ github.run_number }}.jar
-          asset-content-type: application/jar
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ./target/PasswordProtect.jar
+          asset_name: PasswordProtect-v${{ github.run_number }}.jar
+          asset_content_type: application/java-archive
