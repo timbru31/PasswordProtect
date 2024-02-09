@@ -63,6 +63,6 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
         upload_url: ${{ steps.create_release.outputs.upload_url }}
-        asset_path: staging/PasswordProtect-${{ matrix.os }}-${{ matrix.java }}.jar
+        asset_path: staging/PasswordProtect.jar
         asset_name: PasswordProtect-${{ matrix.os }}-${{ matrix.java }}.jar
         asset_content_type: application/java-archive
