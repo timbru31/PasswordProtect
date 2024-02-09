@@ -48,9 +48,9 @@ jobs:
 
       - name: Download artifact
         uses: actions/download-artifact@v3
-
-      - name: db
-        run: ls -R
+        with:
+          name: PasswordProtect-${{ matrix.java }}.jar
+          path: ./target/PasswordProtect.jar
 
       - name: Create Release
         id: create_release
