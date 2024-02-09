@@ -43,7 +43,7 @@ jobs:
     - name: Download artifact
       uses: actions/download-artifact@v3
       with:
-        name: PasswordProtect-${{ matrix.os }}-${{ matrix.java }}.jar
+        name: PasswordProtect-*
         path: ./
 
     - name: Create Release
