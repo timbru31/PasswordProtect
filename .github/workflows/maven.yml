@@ -32,11 +32,11 @@ jobs:
 
     - name: Build with Maven
       run: mvn -D"http.keepAlive=false" -D"maven.wagon.http.pool=false" -D"maven.wagon.httpconnectionManager.ttlSeconds=120" -DskipTests=true -B -V clean package
-        - name: Upload Artifact
-          uses: actions/upload-artifact@v2
-          with:
-            name: PasswordProtect
-            path: ./target/PasswordProtect.jar
+    - name: Upload Artifact
+      uses: actions/upload-artifact@v2
+      with:
+        name: PasswordProtect
+        path: ./target/PasswordProtect.jar
 
   auto-merge:
     runs-on: ubuntu-latest
