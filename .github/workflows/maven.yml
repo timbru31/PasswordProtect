@@ -45,7 +45,7 @@ jobs:
     - name: Download artifact
       uses: actions/download-artifact@v3
       with:
-        path: ./
+        name: PasswordProtect.jar
 
     - name: Create Release
       id: create_release
