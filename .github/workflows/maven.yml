@@ -36,7 +36,7 @@ jobs:
     - name: Upload Artifact
       uses: actions/upload-artifact@v4.3.1
       with:
-        name: PasswordProtect-${{ matrix.os }}
+        name: PasswordProtect-${{ matrix.os }}-${{ matrix.java }}
         path: ./target/PasswordProtect.jar
 
   release:
