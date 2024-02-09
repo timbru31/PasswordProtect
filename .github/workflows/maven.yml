@@ -37,13 +37,13 @@ jobs:
       uses: actions/upload-artifact@v4.3.1
       with:
         name: PasswordProtect-${{ matrix.os }}-${{ matrix.java }}.jar
-        path: ./target/PasswordProtect.jar
+        path: ./target
 
     - name: Download artifact
       uses: actions/download-artifact@v3
       with:
-        name: PasswordProtect-${{ matrix.java }}.jar
-        path: ./target/PasswordProtect.jar
+        name: PasswordProtect-${{ matrix.os }}-${{ matrix.java }}.jar
+        path: ./target
 
   release:
     needs: build
