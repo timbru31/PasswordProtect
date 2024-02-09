@@ -40,12 +40,6 @@ jobs:
       with:
         name: PasswordProtect-${{ matrix.os }}-${{ matrix.java }}.jar
         path: staging
-    - run: ls -R
-    - run: cd staging
-    - name: Download artifact
-      uses: actions/download-artifact@v3
-      with:
-        name: PasswordProtect.jar
 
     - name: Create Release
       id: create_release
@@ -65,6 +59,6 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
         upload_url: ${{ steps.create_release.outputs.upload_url }}
-        asset_path: PasswordProtect-${{ matrix.os }}-${{ matrix.java }}.jar
-        asset_name: PasswordProtect-${{ matrix.os }}-${{ matrix.java }}.jar
+        asset_path: ./staging
+        asset_name: PasswordProtect*.jar
         asset_content_type: application/java-archive
