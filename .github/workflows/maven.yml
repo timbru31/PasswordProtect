@@ -32,18 +32,6 @@ jobs:
 
     - name: Build with Maven
       run: mvn -D"http.keepAlive=false" -D"maven.wagon.http.pool=false" -D"maven.wagon.httpconnectionManager.ttlSeconds=120" -DskipTests=true -B -V clean package
-    - run: mkdir staging && cp target/*.jar staging
-    - run: ls
-
-    - name: Upload Artifact
-      uses: actions/upload-artifact@v4.3.1
-      with:
-        name: PasswordProtect-${{ matrix.os }}-${{ matrix.java }}.jar
-        path: staging
-    - run: ls -R
-
-    - name: Download artifact
-      uses: actions/download-artifact@v3
 
     - name: Create Release
       id: create_release
@@ -63,6 +51,6 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
         upload_url: ${{ steps.create_release.outputs.upload_url }}
-        asset_path: staging/PasswordProtect.jar
+        asset_path: target/PasswordProtect.jar
         asset_name: PasswordProtect-${{ matrix.os }}-${{ matrix.java }}.jar
         asset_content_type: application/java-archive
