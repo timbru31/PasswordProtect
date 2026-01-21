@@ -4,12 +4,12 @@
   <parent>
     <groupId>de.dustplanet</groupId>
     <artifactId>bukkit-plugin</artifactId>
-    <version>7.1.0</version>
+    <version>9.0.0</version>
     <relativePath />
   </parent>
 
   <artifactId>PasswordProtect</artifactId>
-  <version>3.1.1-SNAPSHOT</version>
+  <version>4.0.0-SNAPSHOT</version>
   <name>PasswordProtect</name>
   <description>Protect your server with a password</description>
   <url>https://dev.bukkit.org/projects/passwordprotect</url>
